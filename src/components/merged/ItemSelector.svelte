@@ -40,20 +40,20 @@
   /**
    * @prop {boolean} open - Controls whether the dropdown menu is open.
    */
-  let open = false;
+  let menuOpen = false;
 
   /**
    * Toggle the dropdown menu open/close state.
    */
   function toggleMenu() {
-    open = !open;
+    menuOpen = !menuOpen;
   }
 
   /**
    * Close the dropdown menu.
    */
   function closeMenu() {
-    open = false;
+    menuOpen = false;
   }
 
   /**
@@ -148,15 +148,21 @@
           - Clicking this element toggles the dropdown menu via `toggleMenu`.
           - The `|stopPropagation` modifier prevents click events from bubbling, avoiding unwanted dropdown toggles.
         -->
-        <div class="selector" on:click|stopPropagation={toggleMenu} on:keydown={toggleMenu}>
+        <div
+                class="selector"
+                role="button"
+                tabindex="0"
+                aria-haspopup="listbox"
+                aria-expanded={menuOpen}
+                on:click|stopPropagation={toggleMenu}
+                on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleMenu(e)}
+        >
             <p>{selectorTitle}</p>
             {#if selectorTitle === placeholder}
-                <!-- Placeholder Icon:
-                     Shown when no option is selected to indicate the selector is empty.
-                -->
                 <UniIcon size="16px"><span>R</span></UniIcon>
             {/if}
         </div>
+
 
         {#if selectorTitle !== placeholder}
             <!--
@@ -166,13 +172,13 @@
               - Clicking this icon clears the current selection by calling `clearSelection`.
               - `|stopPropagation` prevents the event from affecting the dropdown state.
             -->
-            <span class="clear-selection" on:click={clearSelection} on:keydown={clearSelection}>
+            <span class="clear-selection" role="button" tabindex="0" on:click={clearSelection} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && clearSelection()}>
                 <UniIcon size="12px"><span>X</span></UniIcon>
             </span>
         {/if}
     </div>
 
-    {#if open}
+    {#if menuOpen}
         <!--
           Dropdown Menu:
           --------------

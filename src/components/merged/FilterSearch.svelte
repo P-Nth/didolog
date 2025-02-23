@@ -135,12 +135,14 @@
       - If no options match: Shows a "not found" message and a button to create a new item.
     -->
     <div class="filter-results">
-        {#if !filterQuery && (itemInputType = false)}
+        {#if !filterQuery && (itemInputType = "")}
             <div class="">
                 <div
                         class="option-item"
+                        role="button"
+                        tabindex="0"
                         on:click={() => handleSelect(filteredOptions[0])}
-                        on:keydown={() => handleSelect(filteredOptions[0])}
+                        on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(filteredOptions[0])}
                 >
                     <!--
                       DropDownItem:
@@ -164,8 +166,10 @@
                 {#if (option.title !== "inbox")}
                     <div
                             class="option-item"
+                            role="button"
+                            tabindex="0"
                             on:click={() => handleSelect(option)}
-                            on:keydown={() => handleSelect(option)}
+                            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
                     >
                         <!--
                           DropDownItem:
@@ -188,8 +192,10 @@
                 {#each filteredOptions as option}
                     <div
                             class="option-item"
+                            role="button"
+                            tabindex="0"
                             on:click={() => handleSelect(option)}
-                            on:keydown={() => handleSelect(option)}
+                            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
                     >
                         <!--
                           DropDownItem:
