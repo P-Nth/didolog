@@ -135,7 +135,7 @@
       - If no options match: Shows a "not found" message and a button to create a new item.
     -->
     <div class="filter-results">
-        {#if !filterQuery && (itemInputType = "")}
+        {#if !filterQuery}
             <div class="">
                 <div
                         class="option-item"

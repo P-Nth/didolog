@@ -8,8 +8,6 @@
 	<!-- Web App Manifest -->
 	<link rel="manifest" href="/site.webmanifest">
 
-	<title>Didolog</title>
-
 	<!-- Standard Favicon -->
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -24,12 +22,14 @@
 
 	<!-- Stylesheets -->
 	<link rel="stylesheet" href="/global.css">
-	<link rel="stylesheet" href="/build/bundle.css">
 
-	<!-- Scripts -->
-	<script defer src="/build/bundle.js"></script>
+	<title>Didolog</title>
 </head>
 
 <body>
+	<div id="app"></div>
+
+	<!-- Vite handles JS and CSS bundling -->
+	<script type="module" src="/src/main.js"></script>
 </body>
 </html>
