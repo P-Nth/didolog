@@ -2,7 +2,7 @@
   /**
    * Import the store update function and child components.
    */
-  import { updateItem } from "../../store/store.js";
+  import { updateItem } from "../../store/store.ts";
   import InputField from "./InputField.svelte";
   import Button from "./Button.svelte";
 

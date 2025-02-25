@@ -15,8 +15,8 @@
 -->
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { workspaces } from '../../store/store.js';
-  import {capitalizeWords} from "../../hooks/reusable.js";
+  import { workspaces } from '../../store/store.ts';
+  import {capitalizeWords, toSentenceCase} from "../../hooks/reusable.ts";
   import Button from "../indivitual/Button.svelte";
   import UniIcon from "../indivitual/UniIcon.svelte";
   import InputField from "../indivitual/InputField.svelte";
@@ -33,22 +33,23 @@
    */
 
   // Props
-
   /**
    * @prop {Array<{ title: string, [key: string]: any }>} options - Array of selectable options.
    */
   export let options = [];
 
+  /** @type {string} itemInput - Checks if parent is an Item Input component (todos) */
+  export let itemInputType = '';
+
+  /** @type {Object} defaultOption - default option */
+  export let defaultOption = {};
+
+  // Internal state
   /**
    * @prop {string} filterPlaceholder - Placeholder text for the search input field.
    * @default ""
    */
-  export let filterPlaceholder = '';
-
-  /** @type {string} itemInput - Checks if parent is an Item Input component (todos) */
-  export let itemInputType = '';
-
-  // Internal state
+  let filterPlaceholder =`Type a {itemInputType} name`;
 
   /** @type {string} filterQuery - User's search input. */
   let filterQuery = '';
@@ -60,12 +61,10 @@
   let workspaceTitle =  $workspaces.find(workspace => workspace.id === options[0]?.workspaceId)?.title;
 
   // Event dispatcher
-
   /** @const dispatch - Emits 'select' and 'create' events for parent components. */
   const dispatch = createEventDispatcher();
 
   // Filtering logic
-
   /**
    * Filters the options array based on the user's query.
    * - Displays all options if the query is empty.
@@ -124,7 +123,7 @@
         <InputField
                 type="text"
                 bind:value={filterQuery}
-                placeholder={filterPlaceholder}
+                placeholder={toSentenceCase(filterPlaceholder)}
         />
     </div>
 
@@ -149,7 +148,7 @@
                       - Displays the option title with optional left and right icons.
                       - Clicking an option triggers a `select` event.
                     -->
-                    <DropDownItem text={filteredOptions[0].title} size="small">
+                    <DropDownItem text={capitalizeWords(defaultOption?.title)} size="small">
                         <svelte:fragment slot="leftIcon">
                             <UniIcon><span>L</span></UniIcon>
                         </svelte:fragment>
@@ -163,7 +162,7 @@
                 {/if}
             </div>
             {#each filteredOptions as option}
-                {#if (option.title !== "inbox")}
+                {#if (option.title !== defaultOption.title)}
                     <div
                             class="option-item"
                             role="button"

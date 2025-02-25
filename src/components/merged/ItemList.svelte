@@ -11,7 +11,7 @@
 -->
 <script>
   // Import tasks and todos from the global store.
-  import { tasks, todos } from '../../store/store.js';
+  import { tasks, todos } from '../../store/store.ts';
   // Import the ItemView component to render each individual item.
   import ItemView from "./ItemView.svelte";
 

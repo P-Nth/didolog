@@ -1,8 +1,8 @@
 <!-- ItemSelector Component -->
 <script>
   // Import the UniIcon function.
-  import { addItem } from '../../store/store.js';
-  import {toSentenceCase} from "../../hooks/reusable.js";
+  import { addItem } from '../../store/store.ts';
+  import {toSentenceCase} from "../../hooks/reusable.ts";
   import FilterSearch from "./FilterSearch.svelte";
   import UniIcon from "../indivitual/UniIcon.svelte";
 

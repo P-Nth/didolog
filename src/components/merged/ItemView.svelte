@@ -7,7 +7,7 @@
    * - `markComplete`: Function to mark an item (task or todo) as completed.
    * - `deleteItem`: Function to delete an item from the store.
    */
-  import { todos, tasks, markComplete, deleteItem } from '../../store/store.js';
+  import { todos, tasks } from '../../store/store.ts';
 
   /**
    * Import reusable UI components:

@@ -1,6 +1,12 @@
 <!-- InputField Component -->
 <script>
   /**
+   * The id of the input.
+   * @type {string}
+   */
+  export let id = "global-input-field";
+
+  /**
    * The current value of the input.
    * @type {string}
    */
@@ -76,35 +82,39 @@
   }
 </script>
 
+<!-- Input Html -->
 {#if type === "number"}
     <!-- Render an input field for numbers -->
     <input
-            type="number"
-            bind:value
-            placeholder={placeholder}
-            on:input={() => onInput(value)}
-            on:keydown={handleKeydown}
-            class="input-field"
+        type="number"
+        bind:value
+        id={id}
+        placeholder={placeholder}
+        on:input={() => onInput(value)}
+        on:keydown={handleKeydown}
+        class="input-field"
     />
 {:else if type === "date"}
     <!-- Render an input field for dates -->
     <input
-            type="date"
-            bind:value
-            on:input={() => onInput(value)}
-            on:keydown={handleKeydown}
-            class="input-field"
+        type="date"
+        bind:value
+        id={id}
+        on:input={() => onInput(value)}
+        on:keydown={handleKeydown}
+        class="input-field"
     />
 {:else}
     <!-- Render a text input field as the default case -->
     <input
-            type="text"
-            bind:value
-            bind:this={inputRef}
-            placeholder={placeholder}
-            on:input={() => onInput(value)}
-            on:keydown={handleKeydown}
-            class="input-field {textSize} {variant}"
+        type="text"
+        bind:value
+        id={id}
+        bind:this={inputRef}
+        placeholder={placeholder}
+        on:input={() => onInput(value)}
+        on:keydown={handleKeydown}
+        class="input-field {textSize} {variant}"
     />
 {/if}
 

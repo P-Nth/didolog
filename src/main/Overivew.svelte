@@ -1,7 +1,5 @@
 <script>
-  import ItemList from '../components/merged/ItemList.svelte';
   import ItemInput from "../components/merged/ItemInput.svelte";
-  import CalendarView from '../components/merged/CalendarView.svelte';
 </script>
 
 <div class="overview">
@@ -10,27 +8,17 @@
     <section class="list-items">
         <div class="todos">
             <div class="list-section">
-                <ItemList type="todo" />
+                <!--                <ItemList type="todo" />-->
             </div>
             <div class="input-section">
-                <ItemInput placeholder="Add a todo " type="todo" workspaceId={0} />
-            </div>
-        </div>
-
-
-        <div class="tasks">
-            <div class="list-section">
-                <ItemList />
-            </div>
-            <div class="input-section">
-                <ItemInput placeholder="Add a task" type="task" workspaceId={0} />
+                <ItemInput />
             </div>
         </div>
     </section>
 
     <section class="calendar">
         <h2>Calendar View</h2>
-        <CalendarView />
+        <!--        <CalendarView />-->
     </section>
 </div>
 
