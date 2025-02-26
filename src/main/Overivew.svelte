@@ -1,6 +1,7 @@
 <!-- Overview -->
 <script>
   import ItemInput from "../components/merged/ItemInput.svelte";
+  import ItemList from "../components/merged/ItemList.svelte";
 </script>
 
 <div class="overview">
@@ -9,7 +10,7 @@
     <section class="list-items">
         <div class="todos">
             <div class="list-section">
-                <!--                <ItemList type="todo" />-->
+                <ItemList type="todo" />
             </div>
             <div class="input-section">
                 <ItemInput />

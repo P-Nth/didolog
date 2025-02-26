@@ -4,6 +4,7 @@ export interface Workspace {
     title: string;
     description: string;
     isDefault?: boolean;
+    isComplete?: boolean;
 }
 
 export interface Task {
@@ -12,12 +13,14 @@ export interface Task {
     description: string;
     isDefault?: boolean;
     workspaceId: string;
+    isComplete?: boolean;
 }
 
 export interface Todo {
     id: string;
     title: string;
     description: string;
+    isComplete?: boolean;
     taskId: string ;
     priorityId: number | null;
     labelIds: string[];

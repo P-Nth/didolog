@@ -38,6 +38,58 @@ export function addToStore<T extends { id: string | number }>(
   ]);
 }
 
+/**
+ * 🗑️ Global function to delete an item from a given Svelte store.
+ *
+ * @template T - The type of items in the store.
+ * @param {Writable<T[]>} store - The writable store to modify.
+ * @param {string | number} id - The ID of the item to delete.
+ */
+export function deleteFromStore<T extends { id: string | number }>(
+    store: Writable<T[]>,
+    id: string | number): void {
+    store.update(items => items.filter(item => item.id !== id));
+}
+
+/**
+ * 🔄 Global function to updates an item in a store by its ID.
+ *
+ * @template T - The type of items in the store.
+ * @param {Writable<T[]>} store - The writable store to update.
+ * @param {string | number} id - The ID of the item to update.
+ * @param {Partial<T>} updatedFields - An object with the fields to update (e.g., { title: 'New Title' }).
+ */
+export function updateInStore<T extends { id: string | number }>(
+    store: Writable<T[]>,
+    id: string | number,
+    updatedFields: { title?: string, description?: string }
+): void {
+  store.update(items =>
+      items.map(item => (item.id === id ? { ...item, ...updatedFields } : item))
+  );
+}
+
+/**
+ * ✅ Marks an item as complete for todos, tasks, and workspaces.
+ * @param store - The store containing the items.
+ * @param id - The ID of the item to mark as complete.
+ */
+export function markAsComplete<T extends { id: string; isComplete?: boolean }>(
+    store: Writable<T[]>,
+    id: string
+) {
+  store.update((items) =>
+      items.map((item) =>
+          item.id === id
+              ? {
+                ...item,
+                isComplete: item.isComplete !== undefined ? true : item.isComplete,
+              }
+              : item
+      )
+  );
+}
+
 /* -------------------------- 📦 Store Definitions -------------------------- */
 
 /**

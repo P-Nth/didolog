@@ -28,7 +28,7 @@
     /**
      * Adds a new to-do item to the `todos` store.
      * - Requires a non-empty `title`.
-     * - Links the to-do item to the selected task, default priority, and default reminder.
+     * - Links the to-do item to the selected task, default priority, default reminder, and isComplete.
      * - Clears the form fields after successful addition.
      */
     const addItem = () => {
@@ -42,6 +42,7 @@
                 locationId: '',
                 reminderIds: [defaultReminder.id],
                 dueDate: null,
+                isComplete: false
             });
             title = '';
             description = '';

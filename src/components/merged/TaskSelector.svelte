@@ -33,7 +33,7 @@
      * `true` if the menu is open, `false` otherwise.
      * @type {boolean}
      */
-    let menuOpen = false;
+    let menuOpen: boolean = false;
 
     /**
      * Svelte event dispatcher for emitting custom events to parent components.
@@ -78,6 +78,7 @@
      * Handles the creation of a new task from the input field.
      * - Trims and validates the input title.
      * - Adds the new task to the `tasks` store under the `defaultWorkspace`.
+     * - Adds the new task to the `tasks` store with the `isComplete tag set to false`.
      *
      * @param {CustomEvent<{ title: string }>} event - Event containing the title of the new task.
      */
@@ -87,29 +88,37 @@
 
         const baseData = { title: title.trim(), description: "" };
 
-        addToStore(tasks, { ...baseData, workspaceId: defaultWorkspace.id });
+        addToStore(tasks, { ...baseData, workspaceId: defaultWorkspace.id, isComplete: false });
     }
 
     /**
-     * Svelte action that detects clicks outside the specified element and closes the menu.
+     * Svelte action that detects clicks outside the specified element and triggers a callback.
      *
-     * @param {HTMLElement} node - The DOM node to monitor for outside clicks.
-     * @returns {object} Cleanup function to remove the event listener when the element is destroyed.
+     * @param node - The DOM node to monitor for outside clicks.
+     * @param callback - Optional callback function to execute when an outside click is detected.
+     * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    export function clickOutside(
+        node: HTMLElement,
+        callback: () => void = () => {closeMenu()}
+    ): { destroy: () => void } {
         const handleClick = (event: MouseEvent) => {
-            if (!node.contains(event.target as Node)) {
-                closeMenu();
+            // Ensure the click is outside the node and not on it
+            if (node && !node.contains(event.target as Node)) {
+                callback();
             }
         };
 
-        document.addEventListener('click', handleClick, true);
+        // Use bubbling phase (remove 'true' to avoid capturing issues)
+        document.addEventListener('click', handleClick);
+
         return {
             destroy() {
-                document.removeEventListener('click', handleClick, true);
+                document.removeEventListener('click', handleClick);
             },
         };
     }
+
 </script>
 
 <!--

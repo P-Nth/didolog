@@ -10,39 +10,31 @@
     passing the `type` prop down for any type-specific logic in the child component.
 -->
 <script>
-  // Import tasks and todos from the global store.
-  import { tasks, todos } from '../../store/store.ts';
-  // Import the ItemView component to render each individual item.
-  import ItemView from "./ItemView.svelte";
+  import { todos } from '../../store/store.ts';
+  import TodoView from "./TodoView.svelte";
 
   /**
    * @prop {string} type - Determines the type of items to display.
    * If "task", the component will display tasks; otherwise, it will display todos.
    * Defaults to "task".
    */
-  export let type = "task";
+  export let type = "todo";
 </script>
 
-<!-- Item List Display -->
-{#if type === "task"}
-    <!-- Render list for tasks -->
-    <ul>
-        {#each $tasks as task}
-            <li>
-                <!-- Render each task using the ItemView component -->
-                <ItemView item={task} />
-            </li>
-        {/each}
-    </ul>
-{:else}
-    <!-- Render list for todos -->
-    <ul>
-        {#each $todos as todo}
-            <li>
-                <!-- Render each todo using the ItemView component and pass the type prop -->
-                <ItemView type={type} item={todo} />
-            </li>
-        {/each}
-    </ul>
-{/if}
+<div class="">
+    {#if (type === "todo")}
+        <!-- Render list for todos -->
+        <ul>
+            {#each $todos as todo}
+                <li>
+                    <!-- Render each todo using the TaskView component -->
+                    <TodoView item={todo} />
+                </li>
+            {/each}
+        </ul>
+    {:else}
+        <p>Tasks</p>
+    {/if}
+</div>
+
 
