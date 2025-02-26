@@ -49,7 +49,7 @@
    * @prop {string} filterPlaceholder - Placeholder text for the search input field.
    * @default ""
    */
-  let filterPlaceholder =`Type a {itemInputType} name`;
+  let filterPlaceholder =`Type a ${itemInputType} name`;
 
   /** @type {string} filterQuery - User's search input. */
   let filterQuery = '';
