@@ -1,4 +1,30 @@
-<!-- InputItem -->
+<!--
+InputItem.svelte
+
+Description:
+This component provides an interface for adding new to-do items. It includes:
+- Input fields for the to-do title and description.
+- A task selector for linking the to-do to a specific task.
+- A button to submit and add the to-do item.
+
+Props:
+None.
+
+State:
+- title (string): The entered to-do item title.
+- description (string): The entered to-do item description.
+- selectedTask (Task): The task linked to the to-do item, defaulting to `defaultTask`.
+
+Functions:
+- addItem(): Adds a new to-do item to the `todos` store with associated default values for priority, reminder, and completion status.
+- handleTaskSelect(event): Updates `selectedTask` when a task is selected from the `ItemSelector`.
+
+Usage:
+Fill in the title and description, select a task (optional), and click the add button to create a new to-do item.
+
+Example:
+<InputItem />
+-->
 <script lang="ts">
     import { addToStore, todos, tasks, defaultTask, defaultReminder, defaultPriority } from '../../store/store';
     import type { Task } from '../../store/types';

@@ -1,4 +1,41 @@
-<!-- ItemSelector -->
+<!--
+ItemSelector.svelte
+
+Description:
+This component provides a dropdown menu for selecting or creating tasks. It supports:
+- Displaying a list of task options.
+- Selecting an existing task.
+- Creating a new task with a title.
+- Clearing the current selection.
+- Closing the dropdown when clicking outside.
+
+Props:
+- options (Task[]): List of available task options.
+- defaultOption (Task): The fallback task option.
+- selectedOption (Task): The currently selected task option.
+
+Events:
+- select: Emitted when a task is selected or cleared, providing the selected task.
+
+Functions:
+- toggleMenu(): Opens or closes the dropdown menu.
+- closeMenu(): Closes the dropdown.
+- clearSelection(): Resets the selection to the default option.
+- handleSelect(event): Handles task selection and emits a `select` event.
+- handleCreate(event): Handles new task creation and adds it to the store.
+- clickOutside(node, callback): Detects clicks outside the dropdown and triggers a callback.
+
+Usage:
+Pass `options`, `defaultOption`, and `selectedOption` as props. Listen for the `select` event to capture the selected task.
+
+Example:
+<ItemSelector
+  {options}
+  {defaultOption}
+  bind:selectedOption
+  on:select={(e) => console.log(e.detail)}
+/>
+-->
 <script lang="ts">
     import { addToStore, tasks, defaultWorkspace } from '../../store/store';
     import { toSentenceCase } from "../../hooks/reusable";
