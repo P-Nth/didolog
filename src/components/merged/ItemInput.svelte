@@ -26,11 +26,12 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
-    import { addToStore, todos, tasks, defaultTask, defaultReminder, defaultPriority } from '../../store/store';
-    import type { Task } from '../../store/types';
-    import InputField from '../indivitual/InputField.svelte';
-    import TaskSelector from './TaskSelector.svelte';
+    import { addToStore, todos, tasks, priorities, defaultTask, defaultPriority, defaultReminder } from '../../store/store';
+    import type {Task, Priority} from '../../store/types';
     import Button from '../indivitual/Button.svelte';
+    import TaskSelector from './TaskSelector.svelte';
+    import InputField from '../indivitual/InputField.svelte';
+    import PrioritySelector from "./PrioritySelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -52,6 +53,14 @@ Example:
     let selectedTask: Task = defaultTask;
 
     /**
+     * Currently selected priority for the to-do item.
+     * - Determines the urgency or importance of the to-do item.
+     * - Defaults to the predefined `defaultPriority` if no selection is made.
+     * @type {Priority}
+     */
+    let selectedPriority: Priority = defaultPriority;
+
+    /**
      * Adds a new to-do item to the `todos` store.
      * - Requires a non-empty `title`.
      * - Links the to-do item to the selected task, default priority, default reminder, and isComplete.
@@ -63,7 +72,7 @@ Example:
                 title,
                 description,
                 taskId: selectedTask.id,
-                priorityId: defaultPriority.id,
+                priorityId: selectedPriority.id,
                 labelIds: [],
                 locationId: '',
                 reminderIds: [defaultReminder.id],
@@ -73,6 +82,7 @@ Example:
             title = '';
             description = '';
             selectedTask = defaultTask;
+            selectedPriority = defaultPriority;
         }
     };
 
@@ -84,6 +94,16 @@ Example:
      */
     const handleTaskSelect = (event: CustomEvent<Task>) => {
         selectedTask = event.detail;
+    };
+
+    /**
+     * Handles the selection of a priority from the priority selector component.
+     * - Updates the `selectedPriority` with the priority chosen by the user.
+     *
+     * @param {CustomEvent<Priority>} event - The custom event containing the selected priority in its `detail` property.
+     */
+    const handlePrioritySelect = (event: CustomEvent<Priority>) => {
+        selectedPriority = event.detail;
     };
 </script>
 
@@ -107,7 +127,6 @@ Example:
     <div class="input-section">
         <InputField
                 type="text"
-                id="add-todo-title"
                 textSize="medium"
                 bind:value={title}
                 placeholder="Type a todo"
@@ -115,7 +134,6 @@ Example:
         />
         <InputField
                 type="text"
-                id="add-todo-description"
                 variant="description"
                 bind:value={description}
                 placeholder="Notes"
@@ -127,7 +145,14 @@ Example:
       Placeholder for additional action buttons or future enhancements.
       Currently empty.
     -->
-    <div class="add-actions"></div>
+    <div class="add-actions">
+        <PrioritySelector
+                options={$priorities}
+                defaultOption={defaultPriority}
+                selectedOption={selectedPriority}
+                on:select={handlePrioritySelect}
+        />
+    </div>
 
     <!--
       Section for selecting the task type and submitting the to-do item.
