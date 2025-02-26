@@ -77,10 +77,8 @@
     function handleAction(action: 'complete' | 'delete'): void {
         if (action === 'complete') {
             markAsComplete(todos, item.id);
-            console.log(item);
         } else if (action === 'delete') {
             deleteFromStore(todos, item.id);
-            console.log(item);
         }
     }
 </script>
