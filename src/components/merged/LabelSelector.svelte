@@ -70,6 +70,7 @@
      */
     function clearSelection() {
         selectedOptions = [];
+        selectedLabels = [];
         dispatch('select', selectedOptions);
     }
 

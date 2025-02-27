@@ -113,8 +113,8 @@
     }
 
     .checkbox.checked {
-        background: #666;
-        border-color: #666;
+        background: rgba(87, 129, 165, 0.8);
+        border-color: rgba(87, 129, 165, 0.1);
     }
 
     /* Sizes */
