@@ -14,6 +14,7 @@ export interface Task {
     isDefault?: boolean;
     workspaceId: string;
     isComplete?: boolean;
+    colorId?: number;
 }
 
 export interface Todo {
@@ -22,7 +23,7 @@ export interface Todo {
     description: string;
     isComplete?: boolean;
     taskId: string ;
-    priorityId: number | null;
+    priorityId: number;
     labelIds: string[];
     reminderIds: string[];
     locationId: string;
