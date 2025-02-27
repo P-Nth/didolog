@@ -83,31 +83,21 @@
 
     /**
      * Svelte action that detects clicks outside the specified element and triggers a callback.
-     * - If a click occurs outside the provided node, the callback is invoked.
-     * - Useful for closing dropdowns or modals when clicking outside.
      *
-     * @param {HTMLElement} node - The DOM node to monitor for outside clicks.
-     * @param {() => void} [callback=() => {closeMenu()}] - Optional callback function to execute when an outside click is detected. Defaults to closing the menu.
-     * @returns {{ destroy: () => void }} An object with a `destroy` method to remove the event listener.
+     * @param node - The DOM node to monitor for outside clicks.
+     * @returns An object with a `destroy` method to clean up the event listener.
      */
-    export function clickOutside(
-        node: HTMLElement,
-        callback: () => void = () => { closeMenu() }
-    ): { destroy: () => void } {
+    function clickOutside(node: HTMLElement) {
         const handleClick = (event: MouseEvent) => {
-            // Ensure the click is outside the node and not on it
-            if (node && !node.contains(event.target as Node)) {
-                callback();
+            if (!node.contains(event.target as Node)) {
+                closeMenu();
             }
         };
 
-        // Add event listener for clicks during the bubbling phase
-        document.addEventListener('click', handleClick);
-
+        document.addEventListener('click', handleClick, true);
         return {
             destroy() {
-                // Clean up the event listener when the action is destroyed
-                document.removeEventListener('click', handleClick);
+                document.removeEventListener('click', handleClick, true);
             },
         };
     }
@@ -250,6 +240,19 @@
         display: flex;
         flex-direction: column;
         padding: .5em 0;
+    }
+
+    /* Option item styling */
+    .option-item {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        border-radius: .4em;
+        padding: .3em 0;
+        transition: background-color .25s ease-in-out;
+    }
+    .option-item:hover {
+        background-color: #f5f5f5;
     }
 </style>
 

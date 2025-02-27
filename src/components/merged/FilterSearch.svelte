@@ -15,13 +15,12 @@
 -->
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { workspaces } from '../../store/store.ts';
   import {capitalizeWords, toSentenceCase} from "../../hooks/reusable.ts";
   import Button from "../indivitual/Button.svelte";
   import UniIcon from "../indivitual/UniIcon.svelte";
   import InputField from "../indivitual/InputField.svelte";
   import DropDownItem from "../indivitual/DropDownItem.svelte";
- 
+
   /**
    * @component SearchFilter
    * @description
@@ -44,6 +43,12 @@
   /** @type {Object} defaultOption - default option */
   export let defaultOption = {};
 
+  /** @type {string} workspaceTitle - the workspace title */
+  export let workspaceTitle = "";
+
+  /** @type {Array} selectedLabels - Array of selected labels workspace title */
+  export let selectedLabels = [];
+
   // Internal state
   /**
    * @prop {string} filterPlaceholder - Placeholder text for the search input field.
@@ -56,9 +61,6 @@
 
   /** @type {Array} filteredOptions - Options filtered based on the search query. */
   let filteredOptions = [];
-
-  /** @type {String} workspaceTitle - Title displayed on the filter search */
-  let workspaceTitle =  $workspaces.find(workspace => workspace.id === options[0]?.workspaceId)?.title;
 
   // Event dispatcher
   /** @const dispatch - Emits 'select' and 'create' events for parent components. */
@@ -89,6 +91,16 @@
    */
   function handleSelect(option) {
     dispatch('select', option);
+  }
+
+  /**
+   * Handles selection of an existing option.
+   * Emits the `toggle` event with the selected option.
+   *
+   * @param {Object} option - The selected option object.
+   */
+  function handleToggle(option) {
+    dispatch('toggle', option);
   }
 
   /**
@@ -134,96 +146,69 @@
       - If no options match: Shows a "not found" message and a button to create a new item.
     -->
     <div class="filter-results">
-        {#if !filterQuery}
-            <div class="">
-                <div
-                        class="option-item"
-                        role="button"
-                        tabindex="0"
-                        on:click={() => handleSelect(filteredOptions[0])}
-                        on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(filteredOptions[0])}
+        {#if !filterQuery && itemInputType !== "label"}
+            <!-- Default Option -->
+            <div class="option-item"
+                 role="button"
+                 tabindex="0"
+                 on:click={() => handleSelect(filteredOptions[0])}
+                 on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(filteredOptions[0])}
+            >
+                <!--
+                      DropDownItem:
+                      - Displays the option title with optional left and right icons.
+                      - Clicking an option triggers a `select` event.
+                    -->
+                <DropDownItem text={capitalizeWords(defaultOption?.title)} size="small">
+                    <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
+                    <svelte:fragment slot="rightIcon"><UniIcon><span>R</span></UniIcon></svelte:fragment>
+                </DropDownItem>
+            </div>
+
+            {#if filteredOptions.length > 1}
+                <span>{capitalizeWords(workspaceTitle)}</span>
+            {/if}
+        {/if}
+
+        <!-- List Options -->
+        {#each filteredOptions as option}
+            {#if option.title !== defaultOption?.title || filterQuery || itemInputType === "label"}
+                <div class="option-item"
+                     role="button"
+                     tabindex="0"
+                     on:click={() => handleSelect(option)}
+                     on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
                 >
                     <!--
                       DropDownItem:
                       - Displays the option title with optional left and right icons.
                       - Clicking an option triggers a `select` event.
                     -->
-                    <DropDownItem text={capitalizeWords(defaultOption?.title)} size="small">
-                        <svelte:fragment slot="leftIcon">
-                            <UniIcon><span>L</span></UniIcon>
-                        </svelte:fragment>
-                        <svelte:fragment slot="rightIcon">
-                            <UniIcon><span>R</span></UniIcon>
-                        </svelte:fragment>
+                    <DropDownItem
+                            text={option.title} size="small"
+                            dropdownItemType={itemInputType}
+                            isChecked={selectedLabels.includes(option.id)}
+                            on:select={() => handleToggle(option)}
+                    >
+                        <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
+                        <svelte:fragment slot="rightIcon"><UniIcon><span>R</span></UniIcon></svelte:fragment>
                     </DropDownItem>
                 </div>
-                {#if (filteredOptions.length > 1)}
-                    <span>{capitalizeWords(workspaceTitle)}</span>
-                {/if}
-            </div>
-            {#each filteredOptions as option}
-                {#if (option.title !== defaultOption.title)}
-                    <div
-                            class="option-item"
-                            role="button"
-                            tabindex="0"
-                            on:click={() => handleSelect(option)}
-                            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
-                    >
-                        <!--
-                          DropDownItem:
-                          - Displays the option title with optional left and right icons.
-                          - Clicking an option triggers a `select` event.
-                        -->
-                        <DropDownItem text={option.title} size="small">
-                            <svelte:fragment slot="leftIcon">
-                                <UniIcon><span>L</span></UniIcon>
-                            </svelte:fragment>
-                            <svelte:fragment slot="rightIcon">
-                                <UniIcon><span>R</span></UniIcon>
-                            </svelte:fragment>
-                        </DropDownItem>
-                    </div>
-                {/if}
-            {/each}
-        {:else}
-            {#if (filteredOptions.length > 0)}
-                {#each filteredOptions as option}
-                    <div
-                            class="option-item"
-                            role="button"
-                            tabindex="0"
-                            on:click={() => handleSelect(option)}
-                            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
-                    >
-                        <!--
-                          DropDownItem:
-                          - Displays the option title with optional left and right icons.
-                          - Clicking an option triggers a `select` event.
-                        -->
-                        <DropDownItem text={option.title} size="small">
-                            <svelte:fragment slot="leftIcon">
-                                <UniIcon><span>L</span></UniIcon>
-                            </svelte:fragment>
-                            <svelte:fragment slot="rightIcon">
-                                <UniIcon><span>R</span></UniIcon>
-                            </svelte:fragment>
-                        </DropDownItem>
-                    </div>
-                {/each}
-            {:else}
-                <!--
-                  No Results Found:
-                  - Informs the user that no matching options were found.
-                  - Provides a button to create a new item with the current search query.
-                -->
-                <div class="no-results">
-                    <span class="no-type">{capitalizeWords(itemInputType)} not found.</span>
-                    <Button onClick={handleCreate} size="small" variant="tertiary">
-                        + Create "{filterQuery}"
-                    </Button>
-                </div>
             {/if}
+        {/each}
+
+        <!--
+          No Results Found:
+          - Informs the user that no matching options were found.
+          - Provides a button to create a new item with the current search query.
+        -->
+        {#if filteredOptions.length === 0}
+            <div class="no-results">
+                <span class="no-type">Add a {capitalizeWords(itemInputType)}.</span>
+                <Button onClick={handleCreate} size="small" variant="tertiary">
+                    + Create "{filterQuery}"
+                </Button>
+            </div>
         {/if}
     </div>
 </div>

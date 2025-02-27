@@ -1,19 +1,42 @@
 <!-- DropDown Items Component -->
-<script>
-  /**
-   * Optional text property.
-   * This value is used as fallback content if no default slot is provided.
-   *
-   * @type {string}
-   */
-  export let text = "Select";
+<script lang="ts">
+    import { createEventDispatcher } from "svelte";
 
-  /**
-   * The size of the button.
-   * This can be used to apply size-related styling (e.g., "small", "medium", "large").
-   * @type {string}
-   */
-  export let size = "medium";
+    /**
+    * Optional text property.
+    * This value is used as fallback content if no default slot is provided.
+    *
+    * @type {string}
+    */
+    export let text: string = "Select";
+
+    /**
+    * The size of the button.
+    * This can be used to apply size-related styling (e.g., "small", "medium", "large").
+    * @type {string}
+    */
+    export let size: string = "medium";
+
+    /**
+    * The size of the button.
+    * This can be used to apply size-related styling (e.g., "small", "medium", "large").
+    * @type {string}
+    */
+    export let dropdownItemType: string | undefined = "text";
+
+    /**
+     * Whether the checkbox is checked.
+     * Defaults to `false` if not provided.
+     */
+    export let isChecked: boolean = false;
+
+    /** Svelte event dispatcher for emitting custom events */
+    const dispatch = createEventDispatcher();
+
+    /** Toggles the checkbox state and dispatches the new checked state */
+    function toggleCheck() {
+        dispatch("select", !isChecked);
+    }
 
 </script>
 
@@ -25,7 +48,13 @@
   - A right icon (provided via the "rightIcon" named slot)
   - Text content (either passed as a prop or via the default slot)
 -->
-<div class="dropdown-item">
+<div
+    class="dropdown-item"
+    role="button"
+    tabindex="0"
+    on:click={toggleCheck}
+    on:keydown={(e) => (e.key === "Enter" || e.key === " ") && toggleCheck()}
+>
     {#if $$slots.leftIcon}
         <span class="icon left">
           <slot name="leftIcon" />
@@ -36,10 +65,16 @@
         <slot>{text}</slot>
     </span>
 
-    {#if $$slots.rightIcon}
+    {#if dropdownItemType === "text" && $$slots.rightIcon}
         <span class="icon right">
-          <slot name="rightIcon" />
+            <slot name="rightIcon" />
         </span>
+    {:else if dropdownItemType === "label"}
+        <div
+                class="checkbox {isChecked ? 'checked' : ''}"
+                aria-checked={isChecked}
+                role="checkbox"
+        />
     {/if}
 </div>
 
@@ -67,8 +102,24 @@
         flex: 1;
     }
 
+    /* Checkbox styling */
+    .checkbox {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .checkbox.checked {
+        background: #666;
+        border-color: #666;
+    }
+
     /* Sizes */
     .small { font-size: .88em; }
     .medium { font-size: 1em; }
     .large { font-size: 1.1em; }
 </style>
+

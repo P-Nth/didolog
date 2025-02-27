@@ -26,12 +26,13 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
-    import { addToStore, todos, tasks, priorities, defaultTask, defaultPriority, defaultReminder } from '../../store/store';
-    import type {Task, Priority} from '../../store/types';
+    import { addToStore, todos, tasks, priorities, labels, defaultTask, defaultPriority, defaultReminder } from '../../store/store';
+    import type {Task, Priority, Label} from '../../store/types';
     import Button from '../indivitual/Button.svelte';
     import TaskSelector from './TaskSelector.svelte';
     import InputField from '../indivitual/InputField.svelte';
     import PrioritySelector from "./PrioritySelector.svelte";
+    import LabelSelector from "./LabelSelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -61,6 +62,13 @@ Example:
     let selectedPriority: Priority = defaultPriority;
 
     /**
+     * Currently selected labels for the to-do item.
+     * Users can select one or more labels.
+     * @type {Label[]}
+     */
+    let selectedLabels: Label[] = [];
+
+    /**
      * Adds a new to-do item to the `todos` store.
      * - Requires a non-empty `title`.
      * - Links the to-do item to the selected task, default priority, default reminder, and isComplete.
@@ -73,7 +81,7 @@ Example:
                 description,
                 taskId: selectedTask.id,
                 priorityId: selectedPriority.id,
-                labelIds: [],
+                labelIds: selectedLabels.map(label => label.id),
                 locationId: '',
                 reminderIds: [defaultReminder.id],
                 dueDate: null,
@@ -83,6 +91,7 @@ Example:
             description = '';
             selectedTask = defaultTask;
             selectedPriority = defaultPriority;
+            selectedLabels = [];
         }
     };
 
@@ -105,6 +114,17 @@ Example:
     const handlePrioritySelect = (event: CustomEvent<Priority>) => {
         selectedPriority = event.detail;
     };
+
+    /**
+     * Handles selection of one or more labels.
+     * Updates `selectedLabels` with the selected labels.
+     *
+     * @param {CustomEvent<Label[]>} event - Event containing an array of selected labels.
+     */
+    const handleLabelSelect = (event: CustomEvent<Label[]>) => {
+        selectedLabels = event.detail;
+    };
+
 </script>
 
 <!--
@@ -151,6 +171,11 @@ Example:
                 defaultOption={defaultPriority}
                 selectedOption={selectedPriority}
                 on:select={handlePrioritySelect}
+        />
+        <LabelSelector
+                options={$labels}
+                selectedOptions={selectedLabels}
+                on:select={handleLabelSelect}
         />
     </div>
 

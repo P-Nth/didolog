@@ -37,7 +37,7 @@ Example:
 />
 -->
 <script lang="ts">
-    import { addToStore, tasks, defaultWorkspace } from '../../store/store';
+    import { addToStore, tasks, workspaces, defaultWorkspace } from '../../store/store';
     import { toSentenceCase } from "../../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
     import type { Task } from '../../store/types';
@@ -71,6 +71,9 @@ Example:
      * @type {boolean}
      */
     let menuOpen: boolean = false;
+
+    /** @type {String} workspaceTitle - Title displayed on the filter search */
+    let workspaceTitle: string | undefined =  $workspaces.find(workspace => workspace.id === options[0]?.workspaceId)?.title;
 
     /**
      * Svelte event dispatcher for emitting custom events to parent components.
@@ -132,26 +135,19 @@ Example:
      * Svelte action that detects clicks outside the specified element and triggers a callback.
      *
      * @param node - The DOM node to monitor for outside clicks.
-     * @param callback - Optional callback function to execute when an outside click is detected.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    export function clickOutside(
-        node: HTMLElement,
-        callback: () => void = () => {closeMenu()}
-    ): { destroy: () => void } {
+    function clickOutside(node: HTMLElement) {
         const handleClick = (event: MouseEvent) => {
-            // Ensure the click is outside the node and not on it
-            if (node && !node.contains(event.target as Node)) {
-                callback();
+            if (!node.contains(event.target as Node)) {
+                closeMenu();
             }
         };
 
-        // Use bubbling phase (remove 'true' to avoid capturing issues)
-        document.addEventListener('click', handleClick);
-
+        document.addEventListener('click', handleClick, true);
         return {
             destroy() {
-                document.removeEventListener('click', handleClick);
+                document.removeEventListener('click', handleClick, true);
             },
         };
     }
@@ -217,8 +213,9 @@ Example:
             <div class="dropdown-menu-content">
                 <FilterSearch
                         {options}
-                        itemInputType="todo"
                         {defaultOption}
+                        {workspaceTitle}
+                        itemInputType="todo"
                         on:select={handleSelect}
                         on:create={handleCreate}
                 />

@@ -24,8 +24,8 @@ export interface Todo {
     taskId: string ;
     priorityId: number | null;
     labelIds: string[];
-    locationId: string;
     reminderIds: string[];
+    locationId: string;
     dueDate: string | null;
 }
 

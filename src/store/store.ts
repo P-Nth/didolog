@@ -126,11 +126,11 @@ export const tasks: Writable<Task[]> = writable<Task[]>([defaultTask]);
  *
  * @type {Writable<Priority[]>}
  */
-export const defaultPriority: Priority = { id: 4, title: 'priority 4', description: 'low priority', isDefault: true };
+export const defaultPriority: Priority = { id: 4, title: 'none', description: 'low priority', isDefault: true };
 export const priorities: Writable<Priority[]> = writable<Priority[]>([
-  { id: 1, title: 'priority 1', description: 'very high priority' },
-  { id: 2, title: 'priority 2', description: 'high priority' },
-  { id: 3, title: 'priority 3', description: 'medium priority' },
+  { id: 1, title: 'high', description: 'very high priority' },
+  { id: 2, title: 'medium', description: 'high priority' },
+  { id: 3, title: 'low', description: 'medium priority' },
   defaultPriority
 ]);
 
