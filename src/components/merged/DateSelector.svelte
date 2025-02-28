@@ -1,202 +1,127 @@
 <!-- ItemSelector Component -->
-<script>
-  // Import the UniIcon function.
-  import { addItem } from '../../store/store.ts';
-  import {toSentenceCase} from "../../hooks/reusable.ts";
-  import FilterSearch from "./FilterSearch.svelte";
-  import UniIcon from "../indivitual/UniIcon.svelte";
+<script lang="ts">
+    // Import the UniIcon function.
+    import { createEventDispatcher } from 'svelte';
+    import UniIcon from "../indivitual/UniIcon.svelte";
+    import DatePicker from "../indivitual/DatePicker.svelte";
 
-  /**
-   * @prop {Array<Object>} items - Array of dropdown item objects.
-   * Each item should have:
-   * - id: Unique identifier.
-   * - text: The text to display.
-   * - leftIcon (optional): URL for a left icon.
-   * - rightIcon (optional): URL for a right icon.
-   */
-  export let options = []
+    /**
+    * @prop {string} selectorTitle - Text displayed as the initial selector title (task, workspace)
+    */
+    export let selectorTitle: [string, string] = ["", ""];
 
-  /**
-   * @prop {string} placeholder - Text shown when no option is selected.
-   */
-  export let placeholder = '';
+    /**
+    * @prop {boolean} open - Controls whether the dropdown menu is open.
+    */
+    let menuOpen = false;
 
-  /**
-   * @prop {string} filterPlaceholder - Text shown in the search filter input.
-   */
-  export let filterPlaceholder = 'Type a task name';
+    const dispatch = createEventDispatcher();
 
-  /**
-   * @prop {string} type - Type of data being selected (task, workspace)
-   */
-  export let type = "task";
-
-  /**
-   * @prop {string} selectorTitle - Text displayed as the initial selector title (task, workspace)
-   * @prop {string} selectorTitle - ID if  the initial selected task or workspace
-   */
-  export let selectorTitle = placeholder;
-  export let selectedItemId = options[0]?.id;
-  /**
-   * @prop {boolean} open - Controls whether the dropdown menu is open.
-   */
-  let open = false;
-
-  /**
-   * Toggle the dropdown menu open/close state.
-   */
-  function toggleMenu() {
-    open = !open;
-  }
-
-  /**
-   * Close the dropdown menu.
-   */
-  function closeMenu() {
-    open = false;
-  }
-
-  /**
-   * Clear the selection made.
-   */
-  function clearSelection() {
-    selectedItemId = options[0]?.id;
-    selectorTitle = placeholder;
-    closeMenu()
-  }
-
-  /**
-   * Handle the selection of a dropdown item.
-   * Updates the selected text and closes the dropdown.
-   *
-   * @param {Object} event - Custom event with selected item in detail.
-   */
-  function handleSelect(event) {
-    const item = event.detail;
-
-    if (item.id === "none") {
-      // If the user doesn't select a task, link it to the default option
-      selectorTitle = placeholder;
-      selectedItemId = options[0]?.id;
-    } else {
-      // Otherwise, link it to the selected item
-      selectedItemId = item.id;
-      selectorTitle = toSentenceCase(item.title);
+    /**
+    * Toggle the dropdown menu open/close state.
+    */
+    function toggleMenu() {
+        menuOpen = !menuOpen;
     }
 
-    closeMenu();
-  }
+    /**
+    * Close the dropdown menu.
+    */
+    function closeMenu() {
+        menuOpen = false;
+    }
 
-  /**
-   * Handle creating a new item.
-   * Adds the item to the store and waits for store update before selecting it.
-   *
-   * @param {Object} event - Custom event with item details
-   */
-  function handleCreate(event) {
-    const { title } = event.detail;
+    /**
+    * Clear the selection made.
+    */
+    function clearSelection() {
+        selectorTitle = ["", ""];
 
-    // Add the item to the store
-    addItem(title, '', type);
-  }
+        dispatch("select", selectorTitle);
+        closeMenu()
+    }
 
-  /**
-   * Custom Svelte action to detect clicks outside a given node.
-   * When a click occurs outside the node, a "clickOutside" event is dispatched.
-   *
-   * @param {HTMLElement} node - The element to watch.
-   * @returns {Object} - An object with a destroy function to remove the event listener.
-   */
-  function clickOutside(node) {
-    const handleClick = event => {
-      if (!node.contains(event.target)) {
-        node.dispatchEvent(new CustomEvent('clickOutside'));
-      }
-    };
-    document.addEventListener('click', handleClick, true);
-    return {
-      destroy() {
-        document.removeEventListener('click', handleClick, true);
-      }
-    };
-  }
+    /**
+     * Handles the selection of a label.
+     * - Adds the label if not already selected.
+     * - Removes the label if it's already selected.
+     * - Dispatches a 'select' event with updated selections.
+     *
+     * @param {CustomEvent<Label>} event - The event containing the selected label.
+     */
+    function handleSelect(event: CustomEvent<[string, string]>) {
+        selectorTitle = event.detail;
+
+        dispatch("select", selectorTitle);
+        closeMenu();
+    }
+
+    /**
+     * Svelte action that detects clicks outside the specified element and triggers a callback.
+     *
+     * @param node - The DOM node to monitor for outside clicks.
+     * @returns An object with a `destroy` method to clean up the event listener.
+     */
+    function clickOutside(node: HTMLElement) {
+        const handleClick = (event: MouseEvent) => {
+            if (!node.contains(event.target as Node)) {
+                closeMenu();
+            }
+        };
+
+        document.addEventListener('click', handleClick, true);
+        return {
+            destroy() {
+                document.removeEventListener('click', handleClick, true);
+            },
+        };
+    }
 </script>
 
-<!--
-  Selector Component
-  ------------------
-  This component provides a dropdown selector with search functionality.
-  - Clicking the selector opens the dropdown containing a `SearchFilter` component.
-  - Users can search through provided options (e.g., tasks or projects).
-  - If no match is found, the `SearchFilter` allows adding a new option.
-  - Selected items update the selector title and trigger selection handling.
--->
-<div class="selector-container" use:clickOutside on:clickOutside={closeMenu}>
-    <!--
-      Selector Container:
-      -------------------
-      - Wraps the entire selector and dropdown.
-      - Uses the `clickOutside` action to detect clicks outside the container and close the dropdown.
-      - The `on:clickOutside` event calls the `closeMenu` function.
-    -->
+<div class="selector-container" use:clickOutside>
+    <div
+            class="selector"
+            role="button"
+            tabindex="0"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            on:click|stopPropagation={toggleMenu}
+            on:keydown={toggleMenu}
+    >
+        <!-- Displays the selected task title in sentence case -->
+        <span>
+            {selectorTitle[0]
+              ? `${selectorTitle[0]} ${selectorTitle[1] ? selectorTitle[1] : ""}`.trim()
+              : "Date"}
+        </span>
 
-    <div class="selector-content">
-        <!--
-          Selector Button:
-          ----------------
-          - Displays the currently selected option (`selectorTitle`) or the placeholder if none is selected.
-          - Clicking this element toggles the dropdown menu via `toggleMenu`.
-          - The `|stopPropagation` modifier prevents click events from bubbling, avoiding unwanted dropdown toggles.
-        -->
-        <div class="selector" on:click|stopPropagation={toggleMenu} on:keydown={toggleMenu}>
-            <p>{selectorTitle}</p>
-            {#if selectorTitle === placeholder}
-                <!-- Placeholder Icon:
-                     Shown when no option is selected to indicate the selector is empty.
-                -->
+        <div class="flex items-center gap-2">
+            {#if (selectorTitle === null)}
+                <!-- Icon indicating the default option is selected -->
                 <UniIcon size="16px"><span>R</span></UniIcon>
+            {:else}
+                <!--
+                  Clear selection button:
+                  - Appears only when the selected option is not the default one.
+                  - Clicking or pressing 'Enter'/'Space' clears the selection.
+                -->
+                <span
+                        class="clear-selection"
+                        role="button"
+                        tabindex="0"
+                        on:click={(clearSelection)}
+                        on:keydown={(e) => (e.key === 'Enter') && clearSelection()}
+                >
+                    <UniIcon><span>X</span></UniIcon>
+                </span>
             {/if}
         </div>
-
-        {#if selectorTitle !== placeholder}
-            <!--
-              Clear Selection Button:
-              -----------------------
-              - Appears when an option is selected.
-              - Clicking this icon clears the current selection by calling `clearSelection`.
-              - `|stopPropagation` prevents the event from affecting the dropdown state.
-            -->
-            <span class="clear-selection" on:click={clearSelection} on:keydown={clearSelection}>
-                <UniIcon size="12px"><span>X</span></UniIcon>
-            </span>
-        {/if}
     </div>
 
-    {#if open}
-        <!--
-          Dropdown Menu:
-          --------------
-          - Rendered when the `open` state is true.
-          - Contains the `SearchFilter` component for searching and selecting options.
-          - Clicking outside this container triggers `clickOutside` to close the menu.
-        -->
+    {#if menuOpen}
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
-                <!--
-                  SearchFilter Component:
-                  -----------------------
-                  - Provides real-time filtering of the given `options`.
-                  - Displays "Task not found" when no matches are found.
-                  - Offers a button to add a new task when no existing match is found.
-                  - Emits a `select` event handled by `handleSelect` to update the selection.
-                -->
-                <FilterSearch
-                        {options}
-                        type={type}
-                        {filterPlaceholder}
-                        on:select={handleSelect}
-                        on:create={handleCreate}
-                />
+                <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />
             </div>
         </div>
     {/if}
@@ -211,7 +136,7 @@
     }
 
     /* Styles for the clickable selector */
-    .selector-content {
+    .selector {
         cursor: pointer;
         user-select: none;
         gap: 1em;
@@ -224,15 +149,9 @@
         width: 100%;
     }
 
-    /* Hover effect for the selector-content */
-    .selector-content:hover {
+    /* Hover effect for the selector */
+    .selector:hover {
         background-color: #f2f2f2;
-    }
-
-    .selector {
-        gap: 1em;
-        display: flex;
-        align-items: center;
     }
 
 

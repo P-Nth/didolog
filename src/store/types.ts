@@ -27,7 +27,7 @@ export interface Todo {
     labelIds: string[];
     reminderIds: string[];
     locationId: string;
-    dueDate: string | null;
+    dueDate: [string, string];
 }
 
 export interface Priority {

@@ -28,11 +28,12 @@ Example:
 <script lang="ts">
     import { addToStore, todos, tasks, priorities, labels, defaultTask, defaultPriority, defaultReminder } from '../../store/store';
     import type {Task, Priority, Label} from '../../store/types';
-    import Button from '../indivitual/Button.svelte';
     import TaskSelector from './TaskSelector.svelte';
+    import Button from '../indivitual/Button.svelte';
     import InputField from '../indivitual/InputField.svelte';
     import PrioritySelector from "./PrioritySelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
+    import DateSelector from "./DateSelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -52,6 +53,9 @@ Example:
      * @type {Task}
      */
     let selectedTask: Task = defaultTask;
+
+    // Store selected date & time as an array
+    let dueDate: [string, string] = ["", ""];
 
     /**
      * Currently selected priority for the to-do item.
@@ -84,9 +88,9 @@ Example:
                 labelIds: selectedLabels.map(label => label.id),
                 locationId: '',
                 reminderIds: [defaultReminder.id],
-                dueDate: null,
+                dueDate: dueDate,
                 isComplete: false
-            });
+            })
             title = '';
             description = '';
             selectedTask = defaultTask;
@@ -104,6 +108,10 @@ Example:
     const handleTaskSelect = (event: CustomEvent<Task>) => {
         selectedTask = event.detail;
     };
+
+    const handleDateSelect = (event: CustomEvent<[string, string]>) => {
+        dueDate = event.detail;
+    }
 
     /**
      * Handles the selection of a priority from the priority selector component.
@@ -124,7 +132,6 @@ Example:
     const handleLabelSelect = (event: CustomEvent<Label[]>) => {
         selectedLabels = event.detail;
     };
-
 </script>
 
 <!--
@@ -146,14 +153,12 @@ Example:
     -->
     <div class="input-section">
         <InputField
-                type="text"
                 textSize="medium"
                 bind:value={title}
                 placeholder="Type a todo"
                 onEnter={addItem}
         />
         <InputField
-                type="text"
                 variant="description"
                 bind:value={description}
                 placeholder="Notes"
@@ -166,6 +171,10 @@ Example:
       Currently empty.
     -->
     <div class="add-actions">
+        <DateSelector
+                selectorTitle={dueDate}
+                on:select={handleDateSelect}
+        />
         <PrioritySelector
                 options={$priorities}
                 defaultOption={defaultPriority}

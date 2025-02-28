@@ -63,7 +63,7 @@
         border: none;
         cursor: pointer;
         display: flex;
-        font-weight: 600;
+        font-weight: 400;
         border-radius: 5px;
         transition: all 0.2s ease-in-out;
         padding: 8px 12px;

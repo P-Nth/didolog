@@ -133,7 +133,6 @@
     -->
     <div class="filter-input-container">
         <InputField
-                type="text"
                 bind:value={filterQuery}
                 placeholder={toSentenceCase(filterPlaceholder)}
         />
