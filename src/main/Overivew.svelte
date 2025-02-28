@@ -2,6 +2,7 @@
 <script>
   import ItemInput from "../components/merged/ItemInput.svelte";
   import ItemList from "../components/merged/ItemList.svelte";
+  import DatePicker from "../components/indivitual/DatePicker.svelte";
 </script>
 
 <div class="overview">

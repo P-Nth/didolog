@@ -25,23 +25,17 @@
 -->
 <script lang="ts">
     /**
-     * The unique id of the input. If no id is provided, a UUID is generated.
+     * The type attribute for the input element.
+     * Typically, "text", but can be "password", "email", etc.
      * @type {string}
      */
-    export let id: string = crypto.randomUUID();
+    export let type: string = "text";
 
     /**
      * The current value of the input.
      * @type {string}
      */
     export let value: string = "";
-
-    /**
-     * The type attribute for the input element.
-     * Typically, "text", but can be "password", "email", etc.
-     * @type {string}
-     */
-    export let type: string = "text";
 
     /**
      * Defines the size styling for the input.
@@ -65,21 +59,24 @@
 
     /**
      * Callback function called when the input value changes.
-     * @type {(value: string) => void}
      */
     export let onInput: (value: string) => void = () => {};
 
     /**
      * Callback function called when the "Enter" key is pressed.
-     * @type {() => void}
      */
     export let onEnter: () => void = () => {};
 
     /**
      * Callback function called when the "Escape" key is pressed.
-     * @type {() => void}
      */
     export let onEscape: () => void = () => {};
+
+    /**
+     * The unique id of the input. If no id is provided, a UUID is generated.
+     * @type {string}
+     */
+    let id: string = crypto.randomUUID();
 
     /**
      * Reference to the input element. Used to programmatically blur the input.
@@ -106,39 +103,30 @@
 </script>
 
 <!-- Input Html -->
-{#if type === "number"}
-    <!-- Render an input field for numbers -->
+{#if type === "text"}
     <input
-        type="number"
-        bind:value
-        id={id}
-        placeholder={placeholder}
-        on:input={() => onInput(value)}
-        on:keydown={handleKeydown}
-        class="input-field"
+            type="text"
+            bind:value
+            id={id}
+            bind:this={inputRef}
+            placeholder={placeholder}
+            on:input={() => onInput(value)}
+            on:keydown={handleKeydown}
+            class="input-field {textSize} {variant}"
     />
-{:else if type === "date"}
-    <!-- Render an input field for dates -->
+{:else if type === "time"}
     <input
-        type="date"
-        bind:value
-        id={id}
-        on:input={() => onInput(value)}
-        on:keydown={handleKeydown}
-        class="input-field"
+            type="time"
+            id={id}
+            bind:value
+            bind:this={inputRef}
+            step="600"
+            on:change={() => onInput(value)}
+            on:keydown={handleKeydown}
+            class="input-field {textSize} {variant}"
     />
 {:else}
-    <!-- Render a text input field as the default case -->
-    <input
-        type="text"
-        bind:value
-        id={id}
-        bind:this={inputRef}
-        placeholder={placeholder}
-        on:input={() => onInput(value)}
-        on:keydown={handleKeydown}
-        class="input-field {textSize} {variant}"
-    />
+    <span>No Input</span>
 {/if}
 
 <!-- InputField Styles -->
