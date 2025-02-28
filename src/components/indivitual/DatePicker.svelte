@@ -23,9 +23,6 @@
     /** The currently selected time (HH:MM) */
     let selectedTime: string = selectedDateTime[1];
 
-    /** Tracks if the user manually picked a date */
-    let userSelectedDate = false;
-
     /** Datepicker instance for handling date selection */
     let datepickerInstance: Datepicker | null = null;
 
@@ -58,7 +55,6 @@
      */
     const selectToday = () => {
         selectedDate = formatDate(new Date());
-        userSelectedDate = true;
     }
 
     /**
@@ -68,7 +64,6 @@
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         selectedDate = formatDate(tomorrow);
-        userSelectedDate = true;
     }
 
     /**
@@ -79,7 +74,6 @@
         const nextMonday = new Date();
         nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7 || 7));
         selectedDate = formatDate(nextMonday);
-        userSelectedDate = true;
     }
 
     /**
@@ -90,7 +84,6 @@
         const nextMonth = new Date(today);
         nextMonth.setMonth(today.getMonth() + 1);
         selectedDate = formatDate(nextMonth);
-        userSelectedDate = true;
     }
 
     /**
@@ -99,7 +92,6 @@
     const clearDate = () => {
         selectedDate = "";
         selectedTime = "";
-        userSelectedDate = false;
     }
 
     /**
@@ -111,7 +103,7 @@
         selectedTime = event.detail;
 
         // If no manual date is selected, set date automatically
-        if (!userSelectedDate) {
+        if (selectedDate === "") {
             if (hasTimePassedToday(selectedTime)) {
                 selectTomorrow();
             } else {
@@ -127,7 +119,6 @@
     const handleDateSelect = (event: Event) => {
         const date = (event.target as HTMLInputElement).value;
         selectedDate = date || "";
-        userSelectedDate = true;
     }
 
     /**
@@ -201,5 +192,4 @@
     <!-- Time Picker Component: Enables users to pick a time -->
     <TimePicker on:select={handleTimeSelect} />
 </div>
-
 
