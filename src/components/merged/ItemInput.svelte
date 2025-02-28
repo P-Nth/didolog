@@ -43,7 +43,6 @@ Example:
     import PrioritySelector from "./PrioritySelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
-    import ReminderSelector from "./ReminderSelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -213,6 +212,9 @@ Example:
         <DateSelector
                 selectorTitle={dueDate}
                 on:select={handleDateSelect}
+                reminderOptions={$reminders}
+                selectedReminderOptions={selectedReminders}
+                on:reminderSelect={handleReminderSelect}
         />
         <PrioritySelector
                 options={$priorities}
@@ -224,11 +226,6 @@ Example:
                 options={$labels}
                 selectedOptions={selectedLabels}
                 on:select={handleLabelSelect}
-        />
-        <ReminderSelector
-                options={$reminders}
-                selectedOptions={selectedReminders}
-                on:select={handleReminderSelect}
         />
     </div>
 

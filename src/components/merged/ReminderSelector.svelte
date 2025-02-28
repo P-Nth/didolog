@@ -28,7 +28,13 @@
      * Array of currently selected reminders.
      * @type {Reminder[]}
      */
-    export let selectedOptions: Reminder[] = []
+    export let selectedOptions: Reminder[] = [];
+
+    /**
+     * Tracks if a time has been selected.
+     * @type {string}
+     */
+    export let selectedTime: string = "";
 
     /**
      * Tracks whether the dropdown menu is open or closed.
@@ -181,11 +187,14 @@
                          - Displays the option title with optional left and right icons.
                          - Clicking an option triggers a `select` event.
                        -->
-                        <DropDownItem text={toSentenceCase(option.title)} size="small">
+                        <DropDownItem size="small">
                             <svelte:fragment slot="leftIcon">
                                 <UniIcon><span>L</span></UniIcon>
                             </svelte:fragment>
-
+                            <span>
+                                <span>{option.title}</span>
+                                <span class="reminder-time">{selectedTime === "" ? "(9:45AM)" : ""}</span>
+                            </span>
                             <svelte:fragment slot="rightIcon">
                                 {#if selectedOptions.some(selected => selected.id === option.id)}
                                     <UniIcon><span>✔</span></UniIcon>
@@ -272,6 +281,13 @@
     }
     .dropdown-item:hover {
         background-color: #f5f5f5;
+    }
+
+
+    .reminder-time {
+        color: #5781A5;
+        font-size: 11px;
+        font-weight: 300;
     }
 </style>
 

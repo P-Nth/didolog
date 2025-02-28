@@ -2,13 +2,27 @@
 <script lang="ts">
     // Import the UniIcon function.
     import { createEventDispatcher } from 'svelte';
+    import type {Reminder} from "../../store/types";
     import UniIcon from "../indivitual/UniIcon.svelte";
     import DatePicker from "../indivitual/DatePicker.svelte";
+    import ReminderSelector from "./ReminderSelector.svelte";
 
     /**
     * @prop {string} selectorTitle - Text displayed as the initial selector title (task, workspace)
     */
     export let selectorTitle: [string, string] = ["", ""];
+
+    /**
+     * Array of all reminder options.
+     * @type {Reminder[]}
+     */
+    export let reminderOptions: Reminder[] = [];
+
+    /**
+     * Array of currently selected reminders.
+     * @type {Reminder[]}
+     */
+    export let selectedReminderOptions: Reminder[] = [];
 
     /**
     * @prop {boolean} open - Controls whether the dropdown menu is open.
@@ -46,18 +60,61 @@
     }
 
     /**
-     * Handles the selection of a label.
-     * - Adds the label if not already selected.
-     * - Removes the label if it's already selected.
+     * Handles the selection of a reminder.
      * - Dispatches a 'select' event with updated selections.
      *
-     * @param {CustomEvent<Label>} event - The event containing the selected label.
+     * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
      */
     function handleSelect(event: CustomEvent<[string, string]>) {
         selectorTitle = event.detail;
 
         dispatch("select", selectorTitle);
+
         closeMenu();
+    }
+
+    /**
+     * Sets the selected date and time based on the current time for the reminder.
+     * - Will be of reset if the time and date are already selected
+     * - If the time is past 9:45 AM, set to tomorrow at 9:45 AM.
+     * - Otherwise, set to today at 9:45 AM.
+     */
+    const handleReminderDate = () => {
+        const now = new Date();
+        const targetHour = 9;
+        const targetMinute = 45;
+
+        // Check if current time is past 9:45 AM today
+        if (now.getHours() > targetHour || (now.getHours() === targetHour && now.getMinutes() > targetMinute)) {
+            // Set to tomorrow at 9:45 AM
+            now.setDate(now.getDate() + 1);
+        }
+
+        // Format date as YYYY-MM-DD
+        const formattedDate = now.toISOString().split("T")[0];
+
+        // Format time as HH:MM
+        const formattedTime = `${targetHour.toString().padStart(2, "0")}:${targetMinute.toString().padStart(2, "0")}`;
+
+        // Update the stores
+        selectorTitle = [
+            selectorTitle[0] === "" ? formattedDate : selectorTitle[0],
+            selectorTitle[1] === "" ? formattedTime : selectorTitle[1]
+        ];
+    }
+
+    /**
+     * Handles the selection of a reminder.
+     * - Dispatches a 'select' event with updated selections.
+     *
+     * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
+     */
+    function handleReminderSelect(event: CustomEvent<Reminder[]>) {
+        selectedReminderOptions = event.detail;
+
+        handleReminderDate();
+
+        dispatch("reminderSelect", selectedReminderOptions);
     }
 
     /**
@@ -128,6 +185,12 @@
             <div class="dropdown-menu-content">
                 <!-- DatePicker component allows selecting date and time -->
                 <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />
+                <ReminderSelector
+                        options={reminderOptions}
+                        selectedOptions={selectedReminderOptions}
+                        selectedTime={selectorTitle[1]}
+                        on:select={handleReminderSelect}
+                />
             </div>
         </div>
     {/if}
@@ -183,7 +246,7 @@
 
     /* Dropdown item styling */
     .dropdown-menu-content {
-        gap: .3em;
+        gap: 1em;
         display: flex;
         flex-direction: column;
         padding: .5em 0;

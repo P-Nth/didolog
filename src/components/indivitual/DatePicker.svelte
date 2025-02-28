@@ -37,7 +37,7 @@
      * @param {Date} date - The date object to format.
      * @returns {string} - The formatted date string.
      */
-    function formatDate(date: Date): string {
+    const formatDate = (date: Date): string => {
         return date.toISOString().split("T")[0];
     }
 
@@ -46,7 +46,7 @@
      * @param {string} time - Time in "HH:MM" format.
      * @returns {boolean} - True if the time has passed today, otherwise false.
      */
-    function hasTimePassedToday(time: string): boolean {
+    const hasTimePassedToday = (time: string): boolean => {
         const now = new Date();
         const [hour, minute] = time.split(":").map(Number);
 
@@ -56,7 +56,7 @@
     /**
      * Sets the selected date to today.
      */
-    function selectToday() {
+    const selectToday = () => {
         selectedDate = formatDate(new Date());
         userSelectedDate = true;
     }
@@ -64,7 +64,7 @@
     /**
      * Sets the selected date to tomorrow.
      */
-    function selectTomorrow() {
+    const selectTomorrow = () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         selectedDate = formatDate(tomorrow);
@@ -74,7 +74,7 @@
     /**
      * Sets the selected date to next Monday.
      */
-    function selectNextWeek() {
+    const selectNextWeek = () => {
         const today = new Date();
         const nextMonday = new Date();
         nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7 || 7));
@@ -85,7 +85,7 @@
     /**
      * Sets the selected date to the same day next month.
      */
-    function selectNextMonth() {
+    const selectNextMonth = () => {
         const today = new Date();
         const nextMonth = new Date(today);
         nextMonth.setMonth(today.getMonth() + 1);
@@ -96,7 +96,7 @@
     /**
      * Clears both the selected date and time.
      */
-    function clearDate() {
+    const clearDate = () => {
         selectedDate = "";
         selectedTime = "";
         userSelectedDate = false;
@@ -107,7 +107,7 @@
      * If no date is manually selected, it sets the date to today or tomorrow based on the time.
      * @param {CustomEvent} event - The event object from the TimePicker.
      */
-    function handleTimeSelect(event: CustomEvent) {
+    const handleTimeSelect = (event: CustomEvent) => {
         selectedTime = event.detail;
 
         // If no manual date is selected, set date automatically
@@ -124,7 +124,7 @@
      * Handles manual selection of a date from the date picker.
      * @param {Event} event - The event object triggered by date selection.
      */
-    function handleDateSelect(event: Event) {
+    const handleDateSelect = (event: Event) => {
         const date = (event.target as HTMLInputElement).value;
         selectedDate = date || "";
         userSelectedDate = true;

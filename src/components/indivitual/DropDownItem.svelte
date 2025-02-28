@@ -87,6 +87,8 @@
     /* Ensures the text content takes available space */
     .dropdown-text {
         flex: 1;
+        display: flex;
+        align-items: center;
     }
 
     /* Sizes */
