@@ -21,13 +21,13 @@ export interface Todo {
     id: string;
     title: string;
     description: string;
-    isComplete?: boolean;
     taskId: string ;
+    dueDate: [string, string];
     priorityId: number;
     labelIds: string[];
     reminderIds: string[];
     locationId: string;
-    dueDate: [string, string];
+    isComplete?: boolean;
 }
 
 export interface Priority {
@@ -45,7 +45,7 @@ export interface Label {
 
 export interface Reminder {
     id: string;
-    time: string;
+    title: string;
     isDefault?: boolean;
 }
 

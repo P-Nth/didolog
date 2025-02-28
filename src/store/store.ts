@@ -148,8 +148,13 @@ export const labels: Writable<Label[]> = writable<Label[]>([]);
  *
  * @type {Writable<Reminder[]>}
  */
-export const defaultReminder: Reminder = { id: crypto.randomUUID(), time: 'none', isDefault: true };
-export const reminders: Writable<Reminder[]> = writable<Reminder[]>([defaultReminder]);
+export const reminders: Writable<Reminder[]> = writable<Reminder[]>([
+    { id: crypto.randomUUID(), title:"on time", isDefault: true },
+    { id: crypto.randomUUID(), title: '5 minutes ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '30 minutes ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '1 hour ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '1 day ahead', isDefault: true }
+]);
 
 /**
  * 📍 **Location Store**

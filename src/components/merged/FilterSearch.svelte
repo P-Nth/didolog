@@ -47,7 +47,7 @@
   export let workspaceTitle = "";
 
   /** @type {Array} selectedLabels - Array of selected labels workspace title */
-  export let selectedLabels = [];
+  export let selectedOptions = [];
 
   // Internal state
   /**
@@ -91,16 +91,6 @@
    */
   function handleSelect(option) {
     dispatch('select', option);
-  }
-
-  /**
-   * Handles selection of an existing option.
-   * Emits the `toggle` event with the selected option.
-   *
-   * @param {Object} option - The selected option object.
-   */
-  function handleToggle(option) {
-    dispatch('toggle', option);
   }
 
   /**
@@ -183,14 +173,15 @@
                       - Displays the option title with optional left and right icons.
                       - Clicking an option triggers a `select` event.
                     -->
-                    <DropDownItem
-                            text={option.title} size="small"
-                            dropdownItemType={itemInputType}
-                            isChecked={selectedLabels.includes(option.id)}
-                            on:select={() => handleToggle(option)}
-                    >
+                    <DropDownItem text={option.title} size="small" >
                         <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
-                        <svelte:fragment slot="rightIcon"><UniIcon><span>R</span></UniIcon></svelte:fragment>
+                        <svelte:fragment slot="rightIcon">
+                            {#if selectedOptions.some(selected => selected.id === option.id)}
+                                <UniIcon><span>✔</span></UniIcon>
+                            {:else}
+                                <UniIcon><span>R</span></UniIcon>
+                            {/if}
+                        </svelte:fragment>
                     </DropDownItem>
                 </div>
             {/if}

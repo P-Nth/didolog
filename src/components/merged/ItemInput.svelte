@@ -26,14 +26,24 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
-    import { addToStore, todos, tasks, priorities, labels, defaultTask, defaultPriority, defaultReminder } from '../../store/store';
-    import type {Task, Priority, Label} from '../../store/types';
+    import {
+        addToStore,
+        todos,
+        tasks,
+        priorities,
+        labels,
+        defaultTask,
+        defaultPriority,
+        reminders
+    } from '../../store/store';
+    import type {Task, Priority, Label, Reminder} from '../../store/types';
     import TaskSelector from './TaskSelector.svelte';
     import Button from '../indivitual/Button.svelte';
     import InputField from '../indivitual/InputField.svelte';
     import PrioritySelector from "./PrioritySelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
+    import ReminderSelector from "./ReminderSelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -54,8 +64,20 @@ Example:
      */
     let selectedTask: Task = defaultTask;
 
-    // Store selected date & time as an array
+    /**
+     * Represents the due date for the to-do item.
+     * Stored as a tuple with two string values: [startDate, endDate].
+     * Defaults to empty strings, indicating no due date is set.
+     * @type {[string, string]}
+     */
     let dueDate: [string, string] = ["", ""];
+
+    /**
+     * Currently selected labels for the to-do item.
+     * Users can select one or more labels.
+     * @type {Reminder[]}
+     */
+    let selectedReminders: Reminder[] = [];
 
     /**
      * Currently selected priority for the to-do item.
@@ -80,22 +102,28 @@ Example:
      */
     const addItem = () => {
         if (title.trim()) {
+
             addToStore(todos, {
                 title,
                 description,
                 taskId: selectedTask.id,
+                dueDate: dueDate,
                 priorityId: selectedPriority.id,
                 labelIds: selectedLabels.map(label => label.id),
+                reminderIds: selectedReminders.map(reminder => reminder.id),
                 locationId: '',
-                reminderIds: [defaultReminder.id],
-                dueDate: dueDate,
                 isComplete: false
             })
+
+            console.log($todos)
+
             title = '';
             description = '';
             selectedTask = defaultTask;
+            dueDate = ["", ""];
             selectedPriority = defaultPriority;
             selectedLabels = [];
+            selectedReminders = [];
         }
     };
 
@@ -132,6 +160,17 @@ Example:
     const handleLabelSelect = (event: CustomEvent<Label[]>) => {
         selectedLabels = event.detail;
     };
+
+    /**
+     * Handles selection of one or more labels.
+     * Updates `selectedLabels` with the selected labels.
+     *
+     * @param {CustomEvent<Reminder>} event - Event containing an array of selected labels.
+     */
+    const handleReminderSelect = (event: CustomEvent<Reminder[]>) => {
+        selectedReminders = event.detail;
+    };
+
 </script>
 
 <!--
@@ -185,6 +224,11 @@ Example:
                 options={$labels}
                 selectedOptions={selectedLabels}
                 on:select={handleLabelSelect}
+        />
+        <ReminderSelector
+                options={$reminders}
+                selectedOptions={selectedReminders}
+                on:select={handleReminderSelect}
         />
     </div>
 

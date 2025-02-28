@@ -15,6 +15,10 @@
     */
     let menuOpen = false;
 
+    /**
+     * Creates a Svelte event dispatcher for emitting custom events.
+     * Used to notify parent components of changes (e.g., selection updates).
+     */
     const dispatch = createEventDispatcher();
 
     /**
@@ -78,7 +82,12 @@
     }
 </script>
 
+<!--
+  Container for the Date selector dropdown.
+  - Uses the `clickOutside` action to close the menu when clicking outside.
+-->
 <div class="selector-container" use:clickOutside>
+    <!-- Selector button to open the dropdown menu -->
     <div
             class="selector"
             role="button"
@@ -88,7 +97,7 @@
             on:click|stopPropagation={toggleMenu}
             on:keydown={toggleMenu}
     >
-        <!-- Displays the selected task title in sentence case -->
+        <!-- Displays the selected date and time, or "Date" if none is selected -->
         <span>
             {selectorTitle[0]
               ? `${selectorTitle[0]} ${selectorTitle[1] ? selectorTitle[1] : ""}`.trim()
@@ -96,31 +105,28 @@
         </span>
 
         <div class="flex items-center gap-2">
-            {#if (selectorTitle === null)}
-                <!-- Icon indicating the default option is selected -->
-                <UniIcon size="16px"><span>R</span></UniIcon>
-            {:else}
-                <!--
-                  Clear selection button:
-                  - Appears only when the selected option is not the default one.
-                  - Clicking or pressing 'Enter'/'Space' clears the selection.
-                -->
-                <span
-                        class="clear-selection"
-                        role="button"
-                        tabindex="0"
-                        on:click={(clearSelection)}
-                        on:keydown={(e) => (e.key === 'Enter') && clearSelection()}
-                >
-                    <UniIcon><span>X</span></UniIcon>
-                </span>
-            {/if}
+            <!--
+              Clear selection button:
+              - Appears only when a date/time is selected.
+              - Clicking or pressing 'Enter' clears the selection.
+            -->
+            <span
+                    class="clear-selection"
+                    role="button"
+                    tabindex="0"
+                    on:click={clearSelection}
+                    on:keydown={(e) => (e.key === 'Enter') && clearSelection()}
+            >
+                <UniIcon><span>{selectorTitle[0] !== "" || selectorTitle[1] !== "" ? 'X' : 'R'}</span></UniIcon>
+            </span>
         </div>
     </div>
 
+    <!-- Dropdown menu for date and time selection -->
     {#if menuOpen}
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
+                <!-- DatePicker component allows selecting date and time -->
                 <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />
             </div>
         </div>

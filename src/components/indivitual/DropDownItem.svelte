@@ -18,13 +18,6 @@
     export let size: string = "medium";
 
     /**
-    * The size of the button.
-    * This can be used to apply size-related styling (e.g., "small", "medium", "large").
-    * @type {string}
-    */
-    export let dropdownItemType: string | undefined = "text";
-
-    /**
      * Whether the checkbox is checked.
      * Defaults to `false` if not provided.
      */
@@ -65,16 +58,10 @@
         <slot>{text}</slot>
     </span>
 
-    {#if dropdownItemType === "text" && $$slots.rightIcon}
+    {#if $$slots.leftIcon}
         <span class="icon right">
             <slot name="rightIcon" />
         </span>
-    {:else if dropdownItemType === "label"}
-        <div
-                class="checkbox {isChecked ? 'checked' : ''}"
-                aria-checked={isChecked}
-                role="checkbox"
-        />
     {/if}
 </div>
 
@@ -100,21 +87,6 @@
     /* Ensures the text content takes available space */
     .dropdown-text {
         flex: 1;
-    }
-
-    /* Checkbox styling */
-    .checkbox {
-        width: 16px;
-        height: 16px;
-        border: 2px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.2s ease;
-    }
-
-    .checkbox.checked {
-        background: rgba(87, 129, 165, 0.8);
-        border-color: rgba(87, 129, 165, 0.1);
     }
 
     /* Sizes */
