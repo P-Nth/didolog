@@ -159,11 +159,11 @@
 
 <!-- ItemView Styles-->
 <style>
-    .item-view {
+    .item-view-container {
+        border-radius: 6px;
         border: 1px solid #ccc;
         padding: 12px;
-        margin: 8px;
-        border-radius: 6px;
+        width: 100%;
     }
 
     .action-buttons {

@@ -12,6 +12,9 @@
 <script>
   import { todos } from '../../store/store.ts';
   import TodoView from "./TodoView.svelte";
+  import DropZone from "../indivitual/DropZone.svelte";
+  import Draggable from "../indivitual/Draggable.svelte";
+
 
   /**
    * @prop {string} type - Determines the type of items to display.
@@ -24,17 +27,18 @@
 <div class="">
     {#if (type === "todo")}
         <!-- Render list for todos -->
-        <ul>
+        <DropZone id="todo-list" accepts={["todo"]} customClass="custom-dropzone">
             {#each $todos as todo}
-                <li>
-                    <!-- Render each todo using the TaskView component -->
-                    <TodoView item={todo} />
-                </li>
+                <!-- Draggable Task with Custom Styling -->
+                <div class="option-item">
+                    <Draggable id={todo.id} type={todo.type} customClass="custom-draggable">
+                        <TodoView item={todo} />
+                    </Draggable>
+                </div>
             {/each}
-        </ul>
+        </DropZone>
     {:else}
         <p>Tasks</p>
     {/if}
 </div>
-
 
