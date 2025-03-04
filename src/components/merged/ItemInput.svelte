@@ -43,6 +43,7 @@ Example:
     import PrioritySelector from "./PrioritySelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
+    import ItemSelector from "./ItemSelector.svelte";
 
     /**
      * Title of the to-do item entered by the user.
@@ -160,6 +161,15 @@ Example:
         selectedLabels = event.detail;
     };
 
+    // Handle new label creation
+    const handleLabelCreate = (event: CustomEvent<{title: string, description: string}>) => {
+        const { title, description } = event.detail;
+        if (!title.trim()) return;
+
+        const baseData = { title: title.trim(), description: description.trim() };
+        addToStore(labels, { ...baseData });
+    }
+
     /**
      * Handles selection of one or more labels.
      * Updates `selectedLabels` with the selected labels.
@@ -226,6 +236,13 @@ Example:
                 options={$labels}
                 selectedOptions={selectedLabels}
                 on:select={handleLabelSelect}
+        />
+        <ItemSelector
+                itemType="label"
+                options={$labels}
+                selectedOptions={selectedLabels}
+                on:select={handleLabelSelect}
+                on:create={handleLabelCreate}
         />
     </div>
 

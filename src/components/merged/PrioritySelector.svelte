@@ -162,10 +162,12 @@
                 {#each options as option}
                     <div
                             class="option-item"
-                            role="button"
+                            class:selected={options.some(item => item.id === option.id)}
+                            role="option"
                             tabindex="0"
-                            on:click={() => handleSelect(option)}
-                            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option)}
+                            aria-selected={options.some(item => item.id === option.id)}
+                            on:click|stopPropagation={() => handleSelect(option)}
+                            on:keydown={(e) => (e.key === 'Enter') && handleSelect(option)}
                     >
                         <!--
                           DropDownItem:

@@ -5,6 +5,7 @@ export interface Workspace {
     description: string;
     isDefault?: boolean;
     isComplete?: boolean;
+    colorId?: number;
 }
 
 export interface Task {
@@ -14,7 +15,9 @@ export interface Task {
     isDefault?: boolean;
     workspaceId: string;
     isComplete?: boolean;
-    colorId?: number;
+    access?: string;
+    colorId?: string;
+    viewId?: string;
 }
 
 export interface Todo {

@@ -68,6 +68,11 @@
     export let onEnter: () => void = () => {};
 
     /**
+     * Callback function called when the "Backspace" key is pressed.
+     */
+    export let onBackspace: () => void = () => {};
+
+    /**
      * Callback function called when the "Escape" key is pressed.
      */
     export let onEscape: () => void = () => {};
@@ -93,11 +98,15 @@
      */
     function handleKeydown(event: KeyboardEvent): void {
         if (event.key === "Enter") {
+            event.preventDefault();
             onEnter();
             inputRef?.blur();
         } else if (event.key === "Escape") {
+            event.preventDefault();
             onEscape();
             inputRef?.blur();
+        } else if (event.key === 'Backspace') {
+            onBackspace();
         }
     }
 </script>
@@ -111,6 +120,8 @@
             bind:this={inputRef}
             placeholder={placeholder}
             on:input={() => onInput(value)}
+            on:focus={() => onInput(value)}
+            on:click={() => onInput(value)}
             on:keydown={handleKeydown}
             class="input-field {textSize} {variant}"
     />
@@ -122,6 +133,8 @@
             bind:this={inputRef}
             step="600"
             on:change={() => onInput(value)}
+            on:focus={() => onInput(value)}
+            on:click={() => onInput(value)}
             on:keydown={handleKeydown}
             class="input-field {textSize} {variant}"
     />
