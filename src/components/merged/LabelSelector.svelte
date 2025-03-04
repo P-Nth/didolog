@@ -233,7 +233,7 @@
 
     /* Dropdown menu styling */
     .dropdown-menu {
-        z-index: 100;
+        z-index: 90;
         left: 0;
         right: 0;
         top: 100%;

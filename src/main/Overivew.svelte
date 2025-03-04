@@ -5,7 +5,7 @@
 </script>
 
 <div class="overview">
-    <h1>Overview</h1>
+    <h1 class="text-base text-black-300">Overview</h1>
 
     <section class="list-items">
         <div class="todos">

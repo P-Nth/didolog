@@ -147,6 +147,7 @@
     /**
      * Dispatches the selected date and time whenever either value changes.
      */
+
     $: dispatch("select", [selectedDate, selectedTime]);
 
 </script>
@@ -163,7 +164,7 @@
 -->
 <div class="flex flex-col gap-2">
     <!-- Predefined Buttons: Allow users to quickly select common date options -->
-    <div class="flex gap-2">
+    <div class="flex flex-col gap-2">
         <!-- Selects today's date -->
         <button on:click={selectToday} class="px-3 py-1 border rounded hover:bg-gray-100">Today</button>
 
@@ -181,15 +182,17 @@
     </div>
 
     <!-- Date Picker Input: Allows manual date selection -->
-    <input
-            type="text"
-            id="datepicker"
-            bind:value={selectedDate}
-            placeholder="YYYY-MM-DD"
-            class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
+    <div class="relative">
+        <input
+                type="text"
+                id="datepicker"
+                bind:value={selectedDate}
+                placeholder="Select a date"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+    </div>
 
     <!-- Time Picker Component: Enables users to pick a time -->
     <TimePicker on:select={handleTimeSelect} />
 </div>
-
