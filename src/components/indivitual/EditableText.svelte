@@ -1,105 +1,111 @@
-<script>
-  /**
-   * Import the store update function and child components.
-   */
-  import { updateItem } from "../../store/store.ts";
-  import InputField from "./InputField.svelte";
-  import Button from "./Button.svelte";
+<!--
+  editableText.svelte
 
-  /**
-   * @prop {Object} item - The item object to be edited.
-   */
-  export let item = {};
+  This component provides editable text fields for a to-do item's title and description.
+  Features:
+  - Two input fields for editing the title and description.
+  - Change detection to enable/disable save functionality.
+  - Dispatches an 'updateTodo' event with updated title and description when saved.
+  - Provides cancel functionality to revert changes to their original values.
+  - Prevents saving empty titles and trims whitespace from inputs.
 
-  /**
-   * @prop {string} text - The current text for the item (derived from the store).
-   */
-  export let title = "";
+  Props:
+  - title (string): The initial title of the to-do item.
+  - description (string): The initial description of the to-do item.
 
-  /**
-   * @prop {string} text - The current description for the item (derived from the store).
-   */
-  export let description = "";
+  Events:
+  - updateTodo: Dispatched with { title, description } when edits are saved.
+-->
+<script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+    import InputField from "./InputField.svelte";
+    import Button from "./Button.svelte";
 
-  /**
-   * @prop {string} type - The type/category of the item. Defaults to "task".
-   */
-  export let type = "task";
+    /**
+     * Props: title and description for the editable todo.
+     */
+    export let title: string = "";
+    export let description: string = "";
 
-  /**
-   * Local state:
-   * - `value1` holds the editable title value, initialized with the store's `title`.
-   * - `value2` holds the editable description value, initialized with the store's `description`.
-   * - `hasChanges` tracks whether the local value has been modified compared to `title/description`.
-   */
-  let value1 = title;
-  let value2 = description || '';
-  let hasChanges = false;
+    /**
+     * Local state variables for input fields.
+     */
+    let value1: string = title;
+    let value2: string = description ?? '';
 
-  /**
-   * Reactive statement to ensure that when external changes occur to `title/description`
-   * (and there are no unsaved local changes), the local `value` is updated.
-   */
-  $: if (!hasChanges) {
-    value1 = title;
-    value2 = description;
-  }
+    /**
+     * Tracks whether changes have been made to the inputs.
+     */
+    let hasChanges: boolean = false;
 
-  /**
-   * Check if there are changes in either field.
-   */
-  function checkForChanges() {
-    hasChanges = (value1 !== title || value2 !== description) && value1 !== ""; // Ensure title is not empty
-  }
+    /**
+     * Dispatcher for sending events to parent components.
+     */
+    const dispatch = createEventDispatcher<{ updateTodo: { title: string; description: string } }>();
 
-  /**
-   * Handle input events from the InputField.
-   * Updates the local value and sets the change flag if the trimmed value differs from the original text.
-   *
-   * @param {string} newValue - The new value entered by the user.
-   */
-  function handleInput1(newValue) {
-    value1 = newValue;
-    checkForChanges();
-  }
+    /**
+     * Reactive statement:
+     * Resets input fields if there are no changes (e.g., after save or cancel).
+     */
+    $: if (!hasChanges) {
+        value1 = title;
+        value2 = description;
+    }
 
-  function handleInput2(newValue) {
-    value2 = newValue;
-    checkForChanges();
-  }
+    /**
+     * Checks if the input fields differ from the original props.
+     * Ensures the title is not empty to enable saving.
+     */
+    function checkForChanges(): void {
+        hasChanges = (value1.trim() !== title || value2.trim() !== description) && value1.trim() !== "";
+    }
 
-  /**
-   * Save the edited text if changes exist.
-   * Calls the updateItem function to update the store, updates the local text, and resets the change flag.
-   */
-  function saveEdit() {
-    if (!hasChanges) return;
+    /**
+     * Handles input for the title field.
+     * @param newValue - New value from the input field.
+     */
+    function handleInput1(newValue: string): void {
+        value1 = newValue;
+        checkForChanges();
+    }
 
-    let updatedTitle = value1;
-    let updatedDescription = value2;
+    /**
+     * Handles input for the description field.
+     * @param newValue - New value from the input field.
+     */
+    function handleInput2(newValue: string): void {
+        value2 = newValue;
+        checkForChanges();
+    }
 
-    updateItem(item.id, updatedTitle, updatedDescription, type);
+    /**
+     * Saves the edits by dispatching an `updateTodo` event with updated values.
+     * Resets the `hasChanges` flag afterward.
+     */
+    function saveEdit(): void {
+        if (!hasChanges) return;
 
-    title = updatedTitle;
-    description = updatedDescription;
-    hasChanges = false;
-  }
+        dispatch('updateTodo', { title: value1.trim(), description: value2.trim() });
 
-  /**
-   * Cancel the edit process.
-   * Resets the local value to the current store text and clears any unsaved changes.
-   */
-  function cancelEdit() {
-    value1 = title; // ✅ Reset input field to store value
-    value2 = description; // ✅ Reset input field to store value
-    hasChanges = false; // ✅ Disable button after reset
-  }
+        title = value1.trim();
+        description = value2.trim();
+        hasChanges = false;
+    }
 
-  /**
-   * Ensure reactivity is properly updating
-   */
-  $: checkForChanges(); // Runs reactively whenever `value1` or `value2` change
+    /**
+     * Cancels edits by reverting input fields to the original values.
+     * Disables the save button afterward.
+     */
+    function cancelEdit(): void {
+        value1 = title;
+        value2 = description;
+        hasChanges = false;
+    }
 
+    /**
+     * Reactive call to check for changes whenever `value1` or `value2` are updated.
+     */
+    $: checkForChanges();
 </script>
 
 <!--

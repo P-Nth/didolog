@@ -1,19 +1,35 @@
 <!-- DropDown Items Component -->
-<script>
-  /**
-   * Optional text property.
-   * This value is used as fallback content if no default slot is provided.
-   *
-   * @type {string}
-   */
-  export let text = "Select";
+<script lang="ts">
+    import { createEventDispatcher } from "svelte";
 
-  /**
-   * The size of the button.
-   * This can be used to apply size-related styling (e.g., "small", "medium", "large").
-   * @type {string}
-   */
-  export let size = "medium";
+    /**
+    * Optional text property.
+    * This value is used as fallback content if no default slot is provided.
+    *
+    * @type {string}
+    */
+    export let text: string = "Select";
+
+    /**
+    * The size of the button.
+    * This can be used to apply size-related styling (e.g., "small", "medium", "large").
+    * @type {string}
+    */
+    export let size: string = "medium";
+
+    /**
+     * Whether the checkbox is checked.
+     * Defaults to `false` if not provided.
+     */
+    export let isChecked: boolean = false;
+
+    /** Svelte event dispatcher for emitting custom events */
+    const dispatch = createEventDispatcher();
+
+    /** Toggles the checkbox state and dispatches the new checked state */
+    function toggleCheck() {
+        dispatch("select", !isChecked);
+    }
 
 </script>
 
@@ -25,7 +41,13 @@
   - A right icon (provided via the "rightIcon" named slot)
   - Text content (either passed as a prop or via the default slot)
 -->
-<div class="dropdown-item">
+<div
+    class="dropdown-item"
+    role="button"
+    tabindex="0"
+    on:click={toggleCheck}
+    on:keydown={(e) => (e.key === "Enter" || e.key === " ") && toggleCheck()}
+>
     {#if $$slots.leftIcon}
         <span class="icon left">
           <slot name="leftIcon" />
@@ -36,9 +58,9 @@
         <slot>{text}</slot>
     </span>
 
-    {#if $$slots.rightIcon}
+    {#if $$slots.leftIcon}
         <span class="icon right">
-          <slot name="rightIcon" />
+            <slot name="rightIcon" />
         </span>
     {/if}
 </div>
@@ -65,6 +87,8 @@
     /* Ensures the text content takes available space */
     .dropdown-text {
         flex: 1;
+        display: flex;
+        align-items: center;
     }
 
     /* Sizes */
@@ -72,3 +96,4 @@
     .medium { font-size: 1em; }
     .large { font-size: 1.1em; }
 </style>
+

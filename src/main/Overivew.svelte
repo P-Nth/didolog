@@ -1,15 +1,16 @@
 <!-- Overview -->
 <script>
   import ItemInput from "../components/merged/ItemInput.svelte";
+  import ItemList from "../components/merged/ItemList.svelte";
 </script>
 
 <div class="overview">
-    <h1>Overview</h1>
+    <h1 class="text-base text-black-300">Overview</h1>
 
     <section class="list-items">
         <div class="todos">
             <div class="list-section">
-                <!--                <ItemList type="todo" />-->
+                <ItemList type="todo" />
             </div>
             <div class="input-section">
                 <ItemInput />
@@ -46,4 +47,5 @@
         border-radius: 8px;
     }
 </style>
+
 

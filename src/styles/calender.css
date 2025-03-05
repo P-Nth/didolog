@@ -1,0 +1,140 @@
+/* Calendar container */
+.flatpickr-input {
+    display: none;
+}
+
+.flatpickr-calendar {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.flatpickr-months {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures spacing */
+    width: 100%;
+
+    /* Month & Year aligned to the left */
+
+    .flatpickr-month {
+        order: 0;
+
+        .flatpickr-current-month {
+            gap: .25em;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            padding-top: .3em;
+
+            input {
+                width: 80px;
+                pointer-events: none;
+            }
+
+            select {
+                pointer-events: none;
+                cursor: default;
+                background-color: transparent;
+                outline: none;
+                appearance: none;
+            }
+        }
+    }
+
+    /* Navigation buttons with "o" separator */
+
+    .flatpickr-prev-month {
+        order: 1;
+    }
+
+    .flatpickr-next-month {
+        order: 2;
+    }
+
+    .flatpickr-prev-month,
+    .flatpickr-next-month {
+        width: 25px;
+        height: 25px;
+        padding: 6px;
+        display: inline-flex;
+        justify-content: center;
+        border-radius: .5em;
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+    }
+
+    .flatpickr-prev-month:hover,
+    .flatpickr-next-month:hover {
+        background: rgba(0, 123, 255, 0.1);
+    }
+}
+
+/* Selecting Dates */
+.flatpickr-rContainer {
+    padding: .9em 0;
+
+    /* Weekdays */
+    .flatpickr-weekdaycontainer {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        justify-content: space-between;
+        padding: .5em 0;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 11px;
+        color: #535353;
+    }
+
+    /* Dates grid */
+    .dayContainer {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+
+        /* Default date style */
+        .flatpickr-day {
+            height: 32px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #333;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        /* Selected date */
+        .flatpickr-day.today {
+            color: #007bff;
+        }
+
+        /* Selected date */
+        .flatpickr-day.selected {
+            color: #ef2400;
+        }
+
+        /* Hover effect */
+        .flatpickr-day:hover {
+            color: #ef2400;
+            font-weight: 600;
+        }
+    }
+
+
+    /* Passed dates */
+
+    .flatpickr-day.past {
+        color: #bbb;
+    }
+
+    /* Inactive (outside current month) */
+
+    .flatpickr-day.flatpickr-disabled {
+        color: #ddd !important;
+    }
+}
+

@@ -4,6 +4,8 @@ export interface Workspace {
     title: string;
     description: string;
     isDefault?: boolean;
+    isComplete?: boolean;
+    colorId?: number;
 }
 
 export interface Task {
@@ -12,6 +14,10 @@ export interface Task {
     description: string;
     isDefault?: boolean;
     workspaceId: string;
+    isComplete?: boolean;
+    access?: string;
+    colorId?: string;
+    viewId?: string;
 }
 
 export interface Todo {
@@ -19,11 +25,12 @@ export interface Todo {
     title: string;
     description: string;
     taskId: string ;
-    priorityId: number | null;
+    dueDate: [string, string];
+    priorityId: number;
     labelIds: string[];
-    locationId: string;
     reminderIds: string[];
-    dueDate: string | null;
+    locationId: string;
+    isComplete?: boolean;
 }
 
 export interface Priority {
@@ -41,7 +48,7 @@ export interface Label {
 
 export interface Reminder {
     id: string;
-    time: string;
+    title: string;
     isDefault?: boolean;
 }
 

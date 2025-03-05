@@ -1,201 +1,195 @@
 <!-- ItemSelector Component -->
-<script>
-  // Import the UniIcon function.
-  import { addItem } from '../../store/store.ts';
-  import {toSentenceCase} from "../../hooks/reusable.ts";
-  import FilterSearch from "./FilterSearch.svelte";
-  import UniIcon from "../indivitual/UniIcon.svelte";
+<script lang="ts">
+    // Import the UniIcon function.
+    import { createEventDispatcher } from 'svelte';
+    import type {Reminder} from "../../store/types";
+    import UniIcon from "../indivitual/UniIcon.svelte";
+    import DatePicker from "../indivitual/DatePicker.svelte";
+    import ReminderSelector from "./ReminderSelector.svelte";
 
-  /**
-   * @prop {Array<Object>} items - Array of dropdown item objects.
-   * Each item should have:
-   * - id: Unique identifier.
-   * - text: The text to display.
-   * - leftIcon (optional): URL for a left icon.
-   * - rightIcon (optional): URL for a right icon.
-   */
-  export let options = []
+    /**
+    * @prop {string} selectorTitle - Text displayed as the initial selector title (task, workspace)
+    */
+    export let selectorTitle: [string, string] = ["", ""];
 
-  /**
-   * @prop {string} placeholder - Text shown when no option is selected.
-   */
-  export let placeholder = '';
+    /**
+     * Array of all reminder options.
+     * @type {Reminder[]}
+     */
+    export let reminderOptions: Reminder[] = [];
 
-  /**
-   * @prop {string} filterPlaceholder - Text shown in the search filter input.
-   */
-  export let filterPlaceholder = 'Type a task name';
+    /**
+     * Array of currently selected reminders.
+     * @type {Reminder[]}
+     */
+    export let selectedReminderOptions: Reminder[] = [];
 
-  /**
-   * @prop {string} type - Type of data being selected (task, workspace)
-   */
-  export let type = "task";
+    /**
+    * @prop {boolean} open - Controls whether the dropdown menu is open.
+    */
+    let menuOpen = false;
 
-  /**
-   * @prop {string} selectorTitle - Text displayed as the initial selector title (task, workspace)
-   * @prop {string} selectorTitle - ID if  the initial selected task or workspace
-   */
-  export let selectorTitle = placeholder;
-  export let selectedItemId = options[0]?.id;
-  /**
-   * @prop {boolean} open - Controls whether the dropdown menu is open.
-   */
-  let open = false;
+    /**
+     * Creates a Svelte event dispatcher for emitting custom events.
+     * Used to notify parent components of changes (e.g., selection updates).
+     */
+    const dispatch = createEventDispatcher();
 
-  /**
-   * Toggle the dropdown menu open/close state.
-   */
-  function toggleMenu() {
-    open = !open;
-  }
-
-  /**
-   * Close the dropdown menu.
-   */
-  function closeMenu() {
-    open = false;
-  }
-
-  /**
-   * Clear the selection made.
-   */
-  function clearSelection() {
-    selectedItemId = options[0]?.id;
-    selectorTitle = placeholder;
-    closeMenu()
-  }
-
-  /**
-   * Handle the selection of a dropdown item.
-   * Updates the selected text and closes the dropdown.
-   *
-   * @param {Object} event - Custom event with selected item in detail.
-   */
-  function handleSelect(event) {
-    const item = event.detail;
-
-    if (item.id === "none") {
-      // If the user doesn't select a task, link it to the default option
-      selectorTitle = placeholder;
-      selectedItemId = options[0]?.id;
-    } else {
-      // Otherwise, link it to the selected item
-      selectedItemId = item.id;
-      selectorTitle = toSentenceCase(item.title);
+    /**
+    * Toggle the dropdown menu open/close state.
+    */
+    function toggleMenu() {
+        menuOpen = !menuOpen;
     }
 
-    closeMenu();
-  }
+    /**
+    * Close the dropdown menu.
+    */
+    function closeMenu() {
+        menuOpen = false;
+    }
 
-  /**
-   * Handle creating a new item.
-   * Adds the item to the store and waits for store update before selecting it.
-   *
-   * @param {Object} event - Custom event with item details
-   */
-  function handleCreate(event) {
-    const { title } = event.detail;
+    /**
+    * Clear the selection made.
+    */
+    function clearSelection() {
+        selectorTitle = ["", ""];
 
-    // Add the item to the store
-    addItem(title, '', type);
-  }
+        dispatch("select", selectorTitle);
+        closeMenu()
+    }
 
-  /**
-   * Custom Svelte action to detect clicks outside a given node.
-   * When a click occurs outside the node, a "clickOutside" event is dispatched.
-   *
-   * @param {HTMLElement} node - The element to watch.
-   * @returns {Object} - An object with a destroy function to remove the event listener.
-   */
-  function clickOutside(node) {
-    const handleClick = event => {
-      if (!node.contains(event.target)) {
-        node.dispatchEvent(new CustomEvent('clickOutside'));
-      }
-    };
-    document.addEventListener('click', handleClick, true);
-    return {
-      destroy() {
-        document.removeEventListener('click', handleClick, true);
-      }
-    };
-  }
+    /**
+     * Handles the selection of a reminder.
+     * - Dispatches a 'select' event with updated selections.
+     *
+     * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
+     */
+    function handleSelect(event: CustomEvent<[string, string]>) {
+        selectorTitle = event.detail;
+
+        dispatch("select", selectorTitle);
+
+        // closeMenu();
+    }
+
+    /**
+     * Sets the selected date and time based on the current time for the reminder.
+     * - Will be of reset if the time and date are already selected
+     * - If the time is past 9:45 AM, set to tomorrow at 9:45 AM.
+     * - Otherwise, set to today at 9:45 AM.
+     */
+    const handleReminderDate = () => {
+        const now = new Date();
+        const targetHour = 9;
+        const targetMinute = 45;
+
+        // Check if current time is past 9:45 AM today
+        if (now.getHours() > targetHour || (now.getHours() === targetHour && now.getMinutes() > targetMinute)) {
+            // Set to tomorrow at 9:45 AM
+            now.setDate(now.getDate() + 1);
+        }
+
+        // Format date as YYYY-MM-DD
+        const formattedDate = now.toISOString().split("T")[0];
+
+        // Format time as HH:MM
+        const formattedTime = `${targetHour.toString().padStart(2, "0")}:${targetMinute.toString().padStart(2, "0")}`;
+
+        // Update the stores
+        selectorTitle = [
+            selectorTitle[0] === "" ? formattedDate : selectorTitle[0],
+            selectorTitle[1] === "" ? formattedTime : selectorTitle[1]
+        ];
+    }
+
+    /**
+     * Handles the selection of a reminder.
+     * - Dispatches a 'select' event with updated selections.
+     *
+     * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
+     */
+    function handleReminderSelect(event: CustomEvent<Reminder[]>) {
+        selectedReminderOptions = event.detail;
+
+        handleReminderDate();
+
+        dispatch("reminderSelect", selectedReminderOptions);
+    }
+
+    /**
+     * Svelte action that detects clicks outside the specified element and triggers a callback.
+     *
+     * @param node - The DOM node to monitor for outside clicks.
+     * @returns An object with a `destroy` method to clean up the event listener.
+     */
+    function clickOutside(node: HTMLElement) {
+        const handleClick = (event: MouseEvent) => {
+            if (!node.contains(event.target as Node)) {
+                closeMenu();
+            }
+        };
+
+        document.addEventListener('click', handleClick, true);
+        return {
+            destroy() {
+                document.removeEventListener('click', handleClick, true);
+            },
+        };
+    }
 </script>
 
 <!--
-  Selector Component
-  ------------------
-  This component provides a dropdown selector with search functionality.
-  - Clicking the selector opens the dropdown containing a `SearchFilter` component.
-  - Users can search through provided options (e.g., tasks or projects).
-  - If no match is found, the `SearchFilter` allows adding a new option.
-  - Selected items update the selector title and trigger selection handling.
+  Container for the Date selector dropdown.
+  - Uses the `clickOutside` action to close the menu when clicking outside.
 -->
-<div class="selector-container" use:clickOutside on:clickOutside={closeMenu}>
-    <!--
-      Selector Container:
-      -------------------
-      - Wraps the entire selector and dropdown.
-      - Uses the `clickOutside` action to detect clicks outside the container and close the dropdown.
-      - The `on:clickOutside` event calls the `closeMenu` function.
-    -->
+<div class="selector-container" use:clickOutside>
+    <!-- Selector button to open the dropdown menu -->
+    <div
+            class="selector"
+            role="button"
+            tabindex="0"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            on:click|stopPropagation={toggleMenu}
+            on:keydown={toggleMenu}
+    >
+        <!-- Displays the selected date and time, or "Date" if none is selected -->
+        <span>
+            {selectorTitle[0]
+              ? `${selectorTitle[0]} ${selectorTitle[1] ? selectorTitle[1] : ""}`.trim()
+              : "Date"}
+        </span>
 
-    <div class="selector-content">
-        <!--
-          Selector Button:
-          ----------------
-          - Displays the currently selected option (`selectorTitle`) or the placeholder if none is selected.
-          - Clicking this element toggles the dropdown menu via `toggleMenu`.
-          - The `|stopPropagation` modifier prevents click events from bubbling, avoiding unwanted dropdown toggles.
-        -->
-        <div class="selector" on:click|stopPropagation={toggleMenu} on:keydown={toggleMenu}>
-            <p>{selectorTitle}</p>
-            {#if selectorTitle === placeholder}
-                <!-- Placeholder Icon:
-                     Shown when no option is selected to indicate the selector is empty.
-                -->
-                <UniIcon size="16px"><span>R</span></UniIcon>
-            {/if}
-        </div>
-
-        {#if selectorTitle !== placeholder}
+        <div class="flex items-center gap-2">
             <!--
-              Clear Selection Button:
-              -----------------------
-              - Appears when an option is selected.
-              - Clicking this icon clears the current selection by calling `clearSelection`.
-              - `|stopPropagation` prevents the event from affecting the dropdown state.
+              Clear selection button:
+              - Appears only when a date/time is selected.
+              - Clicking or pressing 'Enter' clears the selection.
             -->
-            <span class="clear-selection" on:click={clearSelection} on:keydown={clearSelection}>
-                <UniIcon size="12px"><span>X</span></UniIcon>
+            <span
+                    class="clear-selection"
+                    role="button"
+                    tabindex="0"
+                    on:click={clearSelection}
+                    on:keydown={(e) => (e.key === 'Enter') && clearSelection()}
+            >
+                <UniIcon><span>{selectorTitle[0] !== "" || selectorTitle[1] !== "" ? 'X' : 'R'}</span></UniIcon>
             </span>
-        {/if}
+        </div>
     </div>
 
-    {#if open}
-        <!--
-          Dropdown Menu:
-          --------------
-          - Rendered when the `open` state is true.
-          - Contains the `SearchFilter` component for searching and selecting options.
-          - Clicking outside this container triggers `clickOutside` to close the menu.
-        -->
+    <!-- Dropdown menu for date and time selection -->
+    {#if menuOpen}
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
-                <!--
-                  SearchFilter Component:
-                  -----------------------
-                  - Provides real-time filtering of the given `options`.
-                  - Displays "Task not found" when no matches are found.
-                  - Offers a button to add a new task when no existing match is found.
-                  - Emits a `select` event handled by `handleSelect` to update the selection.
-                -->
-                <FilterSearch
-                        {options}
-                        type={type}
-                        {filterPlaceholder}
-                        on:select={handleSelect}
-                        on:create={handleCreate}
+                <!-- DatePicker component allows selecting date and time -->
+                <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />
+                <ReminderSelector
+                        options={reminderOptions}
+                        selectedOptions={selectedReminderOptions}
+                        selectedTime={selectorTitle[1]}
+                        on:select={handleReminderSelect}
                 />
             </div>
         </div>
@@ -211,7 +205,7 @@
     }
 
     /* Styles for the clickable selector */
-    .selector-content {
+    .selector {
         cursor: pointer;
         user-select: none;
         gap: 1em;
@@ -224,15 +218,9 @@
         width: 100%;
     }
 
-    /* Hover effect for the selector-content */
-    .selector-content:hover {
+    /* Hover effect for the selector */
+    .selector:hover {
         background-color: #f2f2f2;
-    }
-
-    .selector {
-        gap: 1em;
-        display: flex;
-        align-items: center;
     }
 
 
@@ -243,7 +231,7 @@
 
     /* Dropdown menu styling */
     .dropdown-menu {
-        z-index: 100;
+        z-index: 90;
         left: 0;
         right: 0;
         top: 100%;
@@ -252,13 +240,13 @@
         border-radius: .25em;
         border: 1px solid #ccc;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        width: 200px;
+        width: 250px;
         padding: .3em .3em;
     }
 
     /* Dropdown item styling */
     .dropdown-menu-content {
-        gap: .3em;
+        gap: 1em;
         display: flex;
         flex-direction: column;
         padding: .5em 0;

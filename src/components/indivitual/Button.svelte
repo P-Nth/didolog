@@ -63,7 +63,7 @@
         border: none;
         cursor: pointer;
         display: flex;
-        font-weight: bold;
+        font-weight: 400;
         border-radius: 5px;
         transition: all 0.2s ease-in-out;
         padding: 8px 12px;
@@ -72,11 +72,11 @@
     }
 
     /* Variants */
-    .primary { background-color: #007bff; color: white; }
-    .secondary { background-color: #6c757d; color: white; }
-    .tertiary { background-color: #ffc28f; color: inherit}
-    .danger { background-color: #dc3545; color: white; }
-    .success { background-color: #28a745; color: white; }
+    .primary { background-color: rgb(87, 129, 165); color: #F5F5F5; opacity: .9; }
+    .secondary { background-color: rgb(234, 234, 234); color: #5781A5; opacity: .9; }
+    .tertiary { color: inherit }
+    .danger { background-color: #E34E5C; color: #F5F5F5; opacity: .9; }
+    .success { background-color: #42B75D; color: #F5F5F5; opacity: .9; }
 
     /* Sizes */
     .small { padding: .25em .88em; font-size: .88em; }
@@ -85,7 +85,10 @@
 
     /* Button Hover State */
     button:hover {
-        opacity: 0.8;
+        opacity: 1;
+    }
+    .tertiary:hover {
+        background-color: rgba(255, 233, 221, 0.9);
     }
 
     /* Disabled State */

@@ -1,69 +1,39 @@
 <!--
-ItemSelector.svelte
+  PrioritySelector Component
 
-Description:
-This component provides a dropdown menu for selecting or creating tasks. It supports:
-- Displaying a list of task options.
-- Selecting an existing task.
-- Creating a new task with a title.
-- Clearing the current selection.
-- Closing the dropdown when clicking outside.
-
-Props:
-- options (Task[]): List of available task options.
-- defaultOption (Task): The fallback task option.
-- selectedOption (Task): The currently selected task option.
-
-Events:
-- select: Emitted when a task is selected or cleared, providing the selected task.
-
-Functions:
-- toggleMenu(): Opens or closes the dropdown menu.
-- closeMenu(): Closes the dropdown.
-- clearSelection(): Resets the selection to the default option.
-- handleSelect(event): Handles task selection and emits a `select` event.
-- handleCreate(event): Handles new task creation and adds it to the store.
-- clickOutside(node, callback): Detects clicks outside the dropdown and triggers a callback.
-
-Usage:
-Pass `options`, `defaultOption`, and `selectedOption` as props. Listen for the `select` event to capture the selected task.
-
-Example:
-<ItemSelector
-  {options}
-  {defaultOption}
-  bind:selectedOption
-  on:select={(e) => console.log(e.detail)}
-/>
+  This component provides a dropdown menu for selecting a priority.
+  - Displays a list of priority options.
+  - Allows clearing the current selection and resetting to the default option.
+  - Emits a `select` event with the chosen priority when an option is selected.
+  - Handles closing the dropdown when clicking outside the component.
 -->
 <script lang="ts">
-    import { addToStore, tasks, workspaces, defaultWorkspace } from '../../store/store';
-    import { toSentenceCase } from "../../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
-    import type { Task } from '../../store/types';
+    import { toSentenceCase } from "../../hooks/reusable";
+    import type { Priority } from '../../store/types';
     import UniIcon from "../indivitual/UniIcon.svelte";
-    import FilterSearch from "./FilterSearch.svelte";
+    import DropDownItem from "../indivitual/DropDownItem.svelte";
 
     /**
-     * List of selectable task options.
+     * Array of selectable priority options.
      * Provided as a prop to the component.
-     * @type {Task[]}
+     * @type {Priority[]}
      */
-    export let options: Task[] = [];
+    export let options: Priority[] = [];
 
     /**
-     * The default task option.
-     * Used when no specific task is selected.
-     * @type {Task}
+     * The default priority option.
+     * Used when no specific priority is selected.
+     * @type {Priority}
      */
-    export let defaultOption: Task;
+    export let defaultOption: Priority;
 
     /**
-     * Currently selected task option.
+     * Currently selected priority option.
      * Defaults to `defaultOption` if none is selected.
-     * @type {Task}
+     * @type {Priority}
      */
-    export let selectedOption: Task = defaultOption;
+    export let selectedOption: Priority = defaultOption;
 
     /**
      * Tracks the state of the dropdown menu.
@@ -71,9 +41,6 @@ Example:
      * @type {boolean}
      */
     let menuOpen: boolean = false;
-
-    /** @type {String} workspaceTitle - Title displayed on the filter search */
-    let workspaceTitle: string | undefined =  $workspaces.find(workspace => workspace.id === options[0]?.workspaceId)?.title;
 
     /**
      * Svelte event dispatcher for emitting custom events to parent components.
@@ -95,7 +62,7 @@ Example:
     }
 
     /**
-     * Clears the current task selection by resetting it to the default option.
+     * Clears the current priority selection by resetting it to the default option.
      * Dispatches a `select` event with the `defaultOption`.
      */
     function clearSelection() {
@@ -104,31 +71,14 @@ Example:
     }
 
     /**
-     * Handles selection of a task from the dropdown menu.
-     * Dispatches a `select` event with the selected task and closes the menu.
+     * Handles the selection of a priority from the dropdown menu.
+     * Dispatches a `select` event with the selected priority and closes the menu.
      *
-     * @param {CustomEvent<Task>} event - Event containing the selected task.
+     * @param {Priority} option - The selected priority option.
      */
-    function handleSelect(event: CustomEvent<Task>) {
-        dispatch('select', event.detail);
+    function handleSelect(option: Priority) {
+        dispatch('select', option);
         closeMenu();
-    }
-
-    /**
-     * Handles the creation of a new task from the input field.
-     * - Trims and validates the input title.
-     * - Adds the new task to the `tasks` store under the `defaultWorkspace`.
-     * - Adds the new task to the `tasks` store with the `isComplete tag set to false`.
-     *
-     * @param {CustomEvent<{ title: string }>} event - Event containing the title of the new task.
-     */
-    function handleCreate(event: CustomEvent<{ title: string }>) {
-        const { title } = event.detail;
-        if (!title.trim()) return;
-
-        const baseData = { title: title.trim(), description: "" };
-
-        addToStore(tasks, { ...baseData, workspaceId: defaultWorkspace.id, isComplete: false });
     }
 
     /**
@@ -151,7 +101,6 @@ Example:
             },
         };
     }
-
 </script>
 
 <!--
@@ -159,7 +108,6 @@ Example:
   - Uses the `clickOutside` action to detect clicks outside and close the menu.
 -->
 <div class="selector-container" use:clickOutside>
-
     <!--
       Selector button that displays the currently selected option.
       - Acts as a button with accessible roles and keyboard interactions.
@@ -179,7 +127,7 @@ Example:
             on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleMenu()}
     >
         <!-- Displays the selected task title in sentence case -->
-        <span>{toSentenceCase(selectedOption.title)}</span>
+        <span>{toSentenceCase(selectedOption.title === "none" ? "Priority" : selectedOption.title)}</span>
 
         <div class="flex items-center gap-2">
             {#if selectedOption?.id === defaultOption?.id}
@@ -195,7 +143,7 @@ Example:
                         class="clear-selection"
                         role="button"
                         tabindex="0"
-                        on:click={clearSelection}
+                        on:click={(clearSelection)}
                         on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && clearSelection()}
                 >
                     <UniIcon><span>X</span></UniIcon>
@@ -211,14 +159,31 @@ Example:
     {#if menuOpen}
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
-                <FilterSearch
-                        {options}
-                        {defaultOption}
-                        {workspaceTitle}
-                        itemInputType="todo"
-                        on:select={handleSelect}
-                        on:create={handleCreate}
-                />
+                {#each options as option}
+                    <div
+                            class="option-item"
+                            class:selected={options.some(item => item.id === option.id)}
+                            role="option"
+                            tabindex="0"
+                            aria-selected={options.some(item => item.id === option.id)}
+                            on:click|stopPropagation={() => handleSelect(option)}
+                            on:keydown={(e) => (e.key === 'Enter') && handleSelect(option)}
+                    >
+                        <!--
+                          DropDownItem:
+                          - Displays the option title with optional left and right icons.
+                          - Clicking an option triggers a `select` event.
+                        -->
+                        <DropDownItem text={toSentenceCase(option.title)} size="small">
+                            <svelte:fragment slot="leftIcon">
+                                <UniIcon><span>L</span></UniIcon>
+                            </svelte:fragment>
+                            <svelte:fragment slot="rightIcon">
+                                <UniIcon><span>R</span></UniIcon>
+                            </svelte:fragment>
+                        </DropDownItem>
+                    </div>
+                {/each}
             </div>
         </div>
     {/if}
@@ -277,6 +242,19 @@ Example:
         display: flex;
         flex-direction: column;
         padding: .5em 0;
+    }
+
+    /* Option item styling */
+    .option-item {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        border-radius: .4em;
+        padding: .3em 0;
+        transition: background-color .25s ease-in-out;
+    }
+    .option-item:hover {
+        background-color: #f5f5f5;
     }
 </style>
 

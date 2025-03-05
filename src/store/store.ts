@@ -38,6 +38,58 @@ export function addToStore<T extends { id: string | number }>(
   ]);
 }
 
+/**
+ * 🗑️ Global function to delete an item from a given Svelte store.
+ *
+ * @template T - The type of items in the store.
+ * @param {Writable<T[]>} store - The writable store to modify.
+ * @param {string | number} id - The ID of the item to delete.
+ */
+export function deleteFromStore<T extends { id: string | number }>(
+    store: Writable<T[]>,
+    id: string | number): void {
+    store.update(items => items.filter(item => item.id !== id));
+}
+
+/**
+ * 🔄 Global function to updates an item in a store by its ID.
+ *
+ * @template T - The type of items in the store.
+ * @param {Writable<T[]>} store - The writable store to update.
+ * @param {string | number} id - The ID of the item to update.
+ * @param {Partial<T>} updatedFields - An object with the fields to update (e.g., { title: 'New Title' }).
+ */
+export function updateInStore<T extends { id: string | number }>(
+    store: Writable<T[]>,
+    id: string | number,
+    updatedFields: { title?: string, description?: string }
+): void {
+  store.update(items =>
+      items.map(item => (item.id === id ? { ...item, ...updatedFields } : item))
+  );
+}
+
+/**
+ * ✅ Marks an item as complete for todos, tasks, and workspaces.
+ * @param store - The store containing the items.
+ * @param id - The ID of the item to mark as complete.
+ */
+export function markAsComplete<T extends { id: string; isComplete?: boolean }>(
+    store: Writable<T[]>,
+    id: string
+) {
+  store.update((items) =>
+      items.map((item) =>
+          item.id === id
+              ? {
+                ...item,
+                isComplete: item.isComplete !== undefined ? true : item.isComplete,
+              }
+              : item
+      )
+  );
+}
+
 /* -------------------------- 📦 Store Definitions -------------------------- */
 
 /**
@@ -74,11 +126,11 @@ export const tasks: Writable<Task[]> = writable<Task[]>([defaultTask]);
  *
  * @type {Writable<Priority[]>}
  */
-export const defaultPriority: Priority = { id: 4, title: 'priority 4', description: 'low priority', isDefault: true };
+export const defaultPriority: Priority = { id: 4, title: 'none', description: 'low priority', isDefault: true };
 export const priorities: Writable<Priority[]> = writable<Priority[]>([
-  { id: 1, title: 'priority 1', description: 'very high priority' },
-  { id: 2, title: 'priority 2', description: 'high priority' },
-  { id: 3, title: 'priority 3', description: 'medium priority' },
+  { id: 1, title: 'high', description: 'very high priority' },
+  { id: 2, title: 'medium', description: 'high priority' },
+  { id: 3, title: 'low', description: 'medium priority' },
   defaultPriority
 ]);
 
@@ -96,8 +148,13 @@ export const labels: Writable<Label[]> = writable<Label[]>([]);
  *
  * @type {Writable<Reminder[]>}
  */
-export const defaultReminder: Reminder = { id: crypto.randomUUID(), time: 'none', isDefault: true };
-export const reminders: Writable<Reminder[]> = writable<Reminder[]>([defaultReminder]);
+export const reminders: Writable<Reminder[]> = writable<Reminder[]>([
+    { id: crypto.randomUUID(), title:"on time", isDefault: true },
+    { id: crypto.randomUUID(), title: '5 minutes ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '30 minutes ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '1 hour ahead', isDefault: true },
+    { id: crypto.randomUUID(), title: '1 day ahead', isDefault: true }
+]);
 
 /**
  * 📍 **Location Store**
