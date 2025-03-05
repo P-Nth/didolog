@@ -5,8 +5,8 @@ import { sveltePreprocess } from "svelte-preprocess";
 export default defineConfig({
   plugins: [svelte({
     preprocess: sveltePreprocess({
-      postcss: true,
-    }),
+        postcss: true,
+      }),
   })],
   server: {
     open: true,
@@ -16,4 +16,5 @@ export default defineConfig({
     sourcemap: true,
   },
 });
+
 

@@ -8,9 +8,11 @@
     - Dispatch an event with the selected date and time whenever either changes.
 -->
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
-    import Datepicker from "flowbite-datepicker/Datepicker";
+    import { createEventDispatcher } from "svelte";
     import TimePicker from "./TimePicker.svelte";
+
+    import Flatpickr from 'svelte-flatpickr';
+    import '../../styles/calender.css';
 
     /**
      * Props: The currently selected date and time as a tuple [date, time].
@@ -23,9 +25,6 @@
     /** The currently selected time (HH:MM) */
     let selectedTime: string = selectedDateTime[1];
 
-    /** Datepicker instance for handling date selection */
-    let datepickerInstance: Datepicker | null = null;
-
     /** Event dispatcher to notify parent components when selection changes */
     const dispatch = createEventDispatcher();
 
@@ -34,8 +33,58 @@
      * @param {Date} date - The date object to format.
      * @returns {string} - The formatted date string.
      */
-    const formatDate = (date: Date): string => {
-        return date.toISOString().split("T")[0];
+    const formatDate = (date: Date): string => date.toISOString().split("T")[0];
+
+    /**
+     * Sets the selected date to today.
+     */
+    const selectToday = () => {
+        selectedDate = formatDate(new Date());
+    };
+
+    /**
+     * Sets the selected date to tomorrow.
+     */
+    const selectTomorrow = () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        selectedDate = formatDate(tomorrow);
+    };
+
+    /**
+     * Sets the selected date to next Monday.
+     */
+    const selectNextWeek = () => {
+        const today = new Date();
+        const nextMonday = new Date();
+        nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7 || 7));
+        selectedDate = formatDate(nextMonday);
+    };
+
+    /**
+     * Sets the selected date to the same day next month.
+     */
+    const selectNextMonth = () => {
+        const today = new Date();
+        const nextMonth = new Date(today);
+        nextMonth.setMonth(today.getMonth() + 1);
+        selectedDate = formatDate(nextMonth);
+    };
+
+    /**
+     * Reset both the selected date and time.
+     *
+     */
+    const clearDate = () => {
+        selectedTime = "";
+    };
+
+    /**
+     * Handle when the user selects a date.
+     * Handles selection of Date from the Datepicker component from flowbite.
+     */
+    const handleDateSelect = (event: CustomEvent) => {
+        selectedDate = event.detail[1];
     }
 
     /**
@@ -51,50 +100,6 @@
     }
 
     /**
-     * Sets the selected date to today.
-     */
-    const selectToday = () => {
-        selectedDate = formatDate(new Date());
-    }
-
-    /**
-     * Sets the selected date to tomorrow.
-     */
-    const selectTomorrow = () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        selectedDate = formatDate(tomorrow);
-    }
-
-    /**
-     * Sets the selected date to next Monday.
-     */
-    const selectNextWeek = () => {
-        const today = new Date();
-        const nextMonday = new Date();
-        nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7 || 7));
-        selectedDate = formatDate(nextMonday);
-    }
-
-    /**
-     * Sets the selected date to the same day next month.
-     */
-    const selectNextMonth = () => {
-        const today = new Date();
-        const nextMonth = new Date(today);
-        nextMonth.setMonth(today.getMonth() + 1);
-        selectedDate = formatDate(nextMonth);
-    }
-
-    /**
-     * Clears both the selected date and time.
-     */
-    const clearDate = () => {
-        selectedDate = "";
-        selectedTime = "";
-    }
-
-    /**
      * Handles selection of time from the TimePicker component.
      * If no date is manually selected, it sets the date to today or tomorrow based on the time.
      * @param {CustomEvent} event - The event object from the TimePicker.
@@ -103,52 +108,26 @@
         selectedTime = event.detail;
 
         // If no manual date is selected, set date automatically
-        if (selectedDate === "") {
+        if (!selectedDate) {
             if (hasTimePassedToday(selectedTime)) {
                 selectTomorrow();
             } else {
                 selectToday();
             }
         }
-    }
-
-    /**
-     * Handles manual selection of a date from the date picker.
-     * @param {Event} event - The event object triggered by date selection.
-     */
-    const handleDateSelect = (event: Event) => {
-        const date = (event.target as HTMLInputElement).value;
-        selectedDate = date || "";
-    }
-
-    /**
-     * Initializes the date picker on component mount and syncs with `selectedDate`.
-     */
-    onMount(() => {
-        const datepickerEl = document.getElementById("datepicker") as HTMLInputElement;
-        if (datepickerEl) {
-            datepickerInstance = new Datepicker(datepickerEl, {
-                autohide: true,
-                format: "yyyy-mm-dd",
-                minDate: new Date(new Date().setDate(new Date().getDate() - 4)), // Min selectable date: 4 days ago
-            });
-
-            datepickerEl.addEventListener("changeDate", handleDateSelect);
-        }
-
-        return () => {
-            if (datepickerInstance) {
-                datepickerInstance.destroy();
-                datepickerInstance = null;
-            }
-        };
-    });
+    };
 
     /**
      * Dispatches the selected date and time whenever either value changes.
      */
-
     $: dispatch("select", [selectedDate, selectedTime]);
+
+    // Flatpickr configuration
+    const options = {
+        minDate: formatDate(new Date()),
+        inline: true,
+        shorthandCurrentMonth: true
+    };
 
 </script>
 
@@ -182,17 +161,9 @@
     </div>
 
     <!-- Date Picker Input: Allows manual date selection -->
-    <div class="relative">
-        <input
-                type="text"
-                id="datepicker"
-                bind:value={selectedDate}
-                placeholder="Select a date"
-                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-
-    </div>
+    <Flatpickr children {options} on:change={handleDateSelect} />
 
     <!-- Time Picker Component: Enables users to pick a time -->
     <TimePicker on:select={handleTimeSelect} />
 </div>
+

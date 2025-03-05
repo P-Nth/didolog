@@ -240,7 +240,7 @@
         border-radius: .25em;
         border: 1px solid #ccc;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        width: 200px;
+        width: 250px;
         padding: .3em .3em;
     }
 
