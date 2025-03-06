@@ -9,10 +9,8 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import FlatCalender from "./FlatCalender.svelte";
     import TimePicker from "./TimePicker.svelte";
-
-    import Flatpickr from 'svelte-flatpickr';
-    import '../../styles/calender.css';
 
     /**
      * Props: The currently selected date and time as a tuple [date, time].
@@ -122,13 +120,6 @@
      */
     $: dispatch("select", [selectedDate, selectedTime]);
 
-    // Flatpickr configuration
-    const options = {
-        minDate: formatDate(new Date()),
-        inline: true,
-        shorthandCurrentMonth: true
-    };
-
 </script>
 
 <!--
@@ -161,7 +152,7 @@
     </div>
 
     <!-- Date Picker Input: Allows manual date selection -->
-    <Flatpickr children {options} on:change={handleDateSelect} />
+    <FlatCalender on:select={handleDateSelect} />
 
     <!-- Time Picker Component: Enables users to pick a time -->
     <TimePicker on:select={handleTimeSelect} />
