@@ -1,6 +1,6 @@
 /* ------------------------ Store.ts ------------------------ */
 import { writable, type Writable } from 'svelte/store';
-import type { Workspace, Task, Priority, Label, Reminder, Loc, Todo } from './types';
+import type { Workspace, Task, Section, Note, Todo, Priority, Label, Reminder, Loc } from './types';
 
 /**
  * ✅ Global function to add an item to a given Svelte store.
@@ -39,19 +39,6 @@ export function addToStore<T extends { id: string | number }>(
 }
 
 /**
- * 🗑️ Global function to delete an item from a given Svelte store.
- *
- * @template T - The type of items in the store.
- * @param {Writable<T[]>} store - The writable store to modify.
- * @param {string | number} id - The ID of the item to delete.
- */
-export function deleteFromStore<T extends { id: string | number }>(
-    store: Writable<T[]>,
-    id: string | number): void {
-    store.update(items => items.filter(item => item.id !== id));
-}
-
-/**
  * 🔄 Global function to updates an item in a store by its ID.
  *
  * @template T - The type of items in the store.
@@ -62,11 +49,24 @@ export function deleteFromStore<T extends { id: string | number }>(
 export function updateInStore<T extends { id: string | number }>(
     store: Writable<T[]>,
     id: string | number,
-    updatedFields: { title?: string, description?: string }
+    updatedFields: Partial<T>
 ): void {
   store.update(items =>
       items.map(item => (item.id === id ? { ...item, ...updatedFields } : item))
   );
+}
+
+/**
+ * 🗑️ Global function to delete an item from a given Svelte store.
+ *
+ * @template T - The type of items in the store.
+ * @param {Writable<T[]>} store - The writable store to modify.
+ * @param {string | number} id - The ID of the item to delete.
+ */
+export function deleteFromStore<T extends { id: string | number }>(
+    store: Writable<T[]>,
+    id: string | number): void {
+    store.update(items => items.filter(item => item.id !== id));
 }
 
 /**
@@ -101,6 +101,14 @@ export function markAsComplete<T extends { id: string; isComplete?: boolean }>(
 export const todos: Writable<Todo[]> = writable<Todo[]>([]);
 
 /**
+ * 🗒️ **Notes Store**
+ * Contains tasks linked to specific workspaces.
+ *
+ * @type {Writable<Note[]>}
+ */
+export const notes: Writable<Note[]> = writable<Note[]>([]);
+
+/**
  * 🗂️ **Workspace Store**
  * Holds user workspaces, with one default workspace (`My Tasks`).
  *
@@ -119,6 +127,14 @@ export const workspaces: Writable<Workspace[]> = writable<Workspace[]>([defaultW
 export const defaultTask: Task =
   { id: crypto.randomUUID(), title: 'inbox', description: 'default task for all todos', isDefault: true, workspaceId: defaultWorkspace.id };
 export const tasks: Writable<Task[]> = writable<Task[]>([defaultTask]);
+
+/**
+ * 📂 **Sections Store**
+ * Contains tasks linked to specific workspaces.
+ *
+ * @type {Writable<Section[]>}
+ */
+export const sections: Writable<Section[]> = writable<Section[]>([]);
 
 /**
  * 🚦 **Priority Store**

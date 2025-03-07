@@ -20,11 +20,24 @@ export interface Task {
     viewId?: string;
 }
 
+export type Section = {
+    id: string;
+    title: string;
+    taskId: string;
+};
+
+export type Note = {
+    id: string;
+    title: string;
+    sectionId?: string;
+};
+
 export interface Todo {
     id: string;
     title: string;
     description: string;
-    taskId: string ;
+    taskId?: string ;
+    sectionId?: string ;
     dueDate: [string, string];
     priorityId: number;
     labelIds: string[];
