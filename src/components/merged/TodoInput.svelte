@@ -1,5 +1,5 @@
 <!--
-InputItem.svelte
+TodoItem.svelte
 
 Description:
 This component provides an interface for adding new to-do items. It includes:
@@ -26,6 +26,7 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
+    import {createEventDispatcher} from "svelte";
     import {
         addToStore,
         todos,
@@ -34,7 +35,7 @@ Example:
         labels,
         defaultTask,
         defaultPriority,
-        reminders
+        reminders,
     } from '../../store/store';
     import type {Task, Priority, Label, Reminder} from '../../store/types';
     import TaskSelector from './TaskSelector.svelte';
@@ -95,6 +96,12 @@ Example:
     let selectedLabels: Label[] = [];
 
     /**
+     * Creates a Svelte event dispatcher for emitting custom events.
+     * Used to notify parent components of changes (e.g., selection updates).
+     */
+    const dispatch = createEventDispatcher();
+
+    /**
      * Adds a new to-do item to the `todos` store.
      * - Requires a non-empty `title`.
      * - Links the to-do item to the selected task, default priority, default reminder, and isComplete.
@@ -115,8 +122,6 @@ Example:
                 isComplete: false
             })
 
-            console.log($todos)
-
             title = '';
             description = '';
             selectedTask = defaultTask;
@@ -124,8 +129,19 @@ Example:
             selectedPriority = defaultPriority;
             selectedLabels = [];
             selectedReminders = [];
+
+            dispatch("complete");
         }
     };
+
+    /**
+     * Handles the backspace events
+     * - Requires an empty `title`.
+     * - Dispatches an event complete if the title is empty & backspace is being pressed
+     */
+    const handleBackspace = () => {
+        title.trim() === "" && dispatch("complete");
+    }
 
     /**
      * Handles the selection of a task from the `ItemSelector` component.
@@ -205,6 +221,7 @@ Example:
                 bind:value={title}
                 placeholder="Type a todo"
                 onEnter={addItem}
+                onBackspace={handleBackspace}
         />
         <InputField
                 variant="description"
@@ -272,7 +289,7 @@ Example:
     </div>
 </div>
 
-<!-- ItemInput Styles -->
+<!-- TodoItem Styles -->
 <style>
     .input-container {
         gap: 1em;
