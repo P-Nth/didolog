@@ -38,6 +38,12 @@
     export let value: string = "";
 
     /**
+     * Defines the custom class for styling for the input.
+     * @type {string}
+     */
+    export let className: string = "";
+
+    /**
      * Defines the size styling for the input.
      * Used to apply CSS classes for different sizes (e.g., "small", "medium", "large").
      * @type {string}
@@ -84,10 +90,21 @@
     let id: string = crypto.randomUUID();
 
     /**
-     * Reference to the input element. Used to programmatically blur the input.
+     * Reference to the input and textarea elements. Used to programmatically blur the input and textarea.
      * @type {HTMLInputElement | null}
+     * @type {HTMLTextAreaElement | null}
      */
-    let inputRef: HTMLInputElement | null = null;
+    let inputRef: HTMLInputElement | HTMLTextAreaElement | null = null;
+
+    /**
+     * Adjusts textarea dynamically.
+     */
+    function adjustHeight() {
+        if (inputRef && type === "note") {
+            inputRef.style.height = "auto";
+            inputRef.style.height = `${inputRef.scrollHeight}px`;
+        }
+    }
 
     /**
      * Handles keydown events on the input field.
@@ -101,6 +118,9 @@
             event.preventDefault();
             onEnter();
             inputRef?.blur();
+        } else if (event.key === "Enter" && type === "note" && event.shiftKey) {
+            event.preventDefault();
+            onEnter();
         } else if (event.key === "Escape") {
             event.preventDefault();
             onEscape();
@@ -123,7 +143,19 @@
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {textSize} {variant}"
+            class="input-field {className} {textSize} {variant}"
+    />
+{:else if type === "note"}
+    <textarea
+            id={id}
+            bind:value
+            bind:this={inputRef}
+            placeholder={placeholder}
+            on:input={() => onInput(value)}
+            on:focus={() => onInput(value)}
+            on:click={() => onInput(value)}
+            on:keydown={handleKeydown}
+            class="textarea-field {className} {textSize} {variant}"
     />
 {:else if type === "time"}
     <input
@@ -132,11 +164,11 @@
             bind:value
             bind:this={inputRef}
             step="600"
-            on:change={() => onInput(value)}
-            on:focus={() => onInput(value)}
+            on:input={() => {onInput(value); adjustHeight();}}
+            on:focus={() => {onInput(value); adjustHeight();}}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {textSize} {variant}"
+            class="input-field {className} {textSize} {variant}"
     />
 {:else}
     <span>No Input</span>
@@ -144,15 +176,27 @@
 
 <!-- InputField Styles -->
 <style>
-    .input-field {
+    .input-field, .textarea-field {
         padding: 0 .63em;
         border-radius: .25em;
-        background-color: inherit;
         width: 100%;
     }
 
+    .textarea-field {
+        resize: none;
+        overflow: hidden;
+        white-space: pre-wrap;
+        box-sizing: border-box;
+        height: auto;
+        min-height: 1.5rem;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: inherit;
+    }
+
     /* Variants */
-    .main { font-weight: 600 }
+    .main { font-weight: 600; }
     .description { font-weight: 400; }
 
     /* Sizes */
