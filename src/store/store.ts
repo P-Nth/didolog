@@ -125,16 +125,8 @@ export const workspaces: Writable<Workspace[]> = writable<Workspace[]>([defaultW
  * @type {Writable<Task[]>}
  */
 export const defaultTask: Task =
-  { id: crypto.randomUUID(), title: 'inbox', description: 'default task for all todos', isDefault: true, workspaceId: defaultWorkspace.id };
+  { id: crypto.randomUUID(), title: 'inbox', description: 'default task for all todos', isDefault: true, workspaceId: defaultWorkspace.id, sections: [] };
 export const tasks: Writable<Task[]> = writable<Task[]>([defaultTask]);
-
-/**
- * 📂 **Sections Store**
- * Contains tasks linked to specific workspaces.
- *
- * @type {Writable<Section[]>}
- */
-export const sections: Writable<Section[]> = writable<Section[]>([]);
 
 /**
  * 🚦 **Priority Store**

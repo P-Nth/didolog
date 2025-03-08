@@ -18,12 +18,13 @@ export interface Task {
     access?: string;
     colorId?: string;
     viewId?: string;
+    sections: Section[];
 }
 
 export type Section = {
     id: string;
     title: string;
-    taskId: string;
+    taskId?: string;
 };
 
 export type Note = {
