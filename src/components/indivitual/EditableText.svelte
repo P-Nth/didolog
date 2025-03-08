@@ -19,7 +19,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import InputField from "./InputField.svelte";
-    import Button from "./Button.svelte";
 
     /**
      * Props: title and description for the editable todo.
@@ -34,48 +33,30 @@
     let value2: string = description ?? '';
 
     /**
-     * Tracks whether changes have been made to the inputs.
-     */
-    let hasChanges: boolean = false;
-
-    /**
      * Dispatcher for sending events to parent components.
      */
     const dispatch = createEventDispatcher<{ updateTodo: { title: string; description: string } }>();
 
     /**
-     * Reactive statement:
-     * Resets input fields if there are no changes (e.g., after save or cancel).
-     */
-    $: if (!hasChanges) {
-        value1 = title;
-        value2 = description;
-    }
-
-    /**
-     * Checks if the input fields differ from the original props.
-     * Ensures the title is not empty to enable saving.
-     */
-    function checkForChanges(): void {
-        hasChanges = (value1.trim() !== title || value2.trim() !== description) && value1.trim() !== "";
-    }
-
-    /**
      * Handles input for the title field.
      * @param newValue - New value from the input field.
+     *
+     * Saves the edit whenever the value changes.
      */
     function handleInput1(newValue: string): void {
         value1 = newValue;
-        checkForChanges();
+        saveEdit();
     }
 
     /**
      * Handles input for the description field.
      * @param newValue - New value from the input field.
+     *
+     * Saves the edit whenever the value changes.
      */
     function handleInput2(newValue: string): void {
         value2 = newValue;
-        checkForChanges();
+        saveEdit();
     }
 
     /**
@@ -83,29 +64,11 @@
      * Resets the `hasChanges` flag afterward.
      */
     function saveEdit(): void {
-        if (!hasChanges) return;
-
-        dispatch('updateTodo', { title: value1.trim(), description: value2.trim() });
-
-        title = value1.trim();
-        description = value2.trim();
-        hasChanges = false;
+        if (value1 !== title || value2 !== description) {
+            dispatch('updateTodo', { title: value1, description: value2 });
+        }
     }
 
-    /**
-     * Cancels edits by reverting input fields to the original values.
-     * Disables the save button afterward.
-     */
-    function cancelEdit(): void {
-        value1 = title;
-        value2 = description;
-        hasChanges = false;
-    }
-
-    /**
-     * Reactive call to check for changes whenever `value1` or `value2` are updated.
-     */
-    $: checkForChanges();
 </script>
 
 <!--
@@ -117,15 +80,15 @@
     - Saving updates to the store via updateItem.
     - Canceling edits with the Escape key.
 -->
-<div class="editable-text-container">
-    <div class="editable-texts">
+<div class="editable-text-container flex gap-2">
+    <div class="editable-texts flex flex-col gap-0.5">
         <div class="editable-title">
             <InputField
                     bind:value={value1}
                     placeholder="Type edited text"
                     textSize="medium"
-                    onEnter={saveEdit}
-                    onEscape={cancelEdit}
+                    onEnter={() => value1.trim() && saveEdit}
+                    onEscape={() => (value1 = title)}
                     onInput={handleInput1}
             />
         </div>
@@ -134,26 +97,11 @@
                     bind:value={value2}
                     variant="description"
                     placeholder="Description"
-                    onEnter={saveEdit}
-                    onEscape={cancelEdit}
+                    onEnter={() => value2.trim() && saveEdit}
+                    onEscape={() => (value2 = description)}
                     onInput={handleInput2}
             />
         </div>
     </div>
-
-    <Button onClick={saveEdit} disabled={!hasChanges} size="small">Update</Button>
 </div>
-
-<!-- EditableText Style -->
-<style>
-    .editable-text-container {
-        gap: .5rem;
-        display: flex;
-    }
-    .editable-texts {
-        gap: .1em;
-        display: flex;
-        flex-direction: column;
-    }
-</style>
 

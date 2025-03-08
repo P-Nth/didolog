@@ -95,7 +95,7 @@
   - EditableText: Provides editable fields for title and description.
   - Button: Handles complete and delete actions.
 -->
-<div class="item-view-container">
+<div class="item-view-container border border-gray-300 rounded-[5px] p-3 w-full">
     {#if (defaultTask?.id !== "inbox")}
         <div class="item-view">
             {#if item.taskId}
@@ -129,7 +129,7 @@
                     on:updateTodo={(e) => handleTodoUpdate(e.detail.title, e.detail.description)}
             />
 
-            <div class="action-buttons">
+            <div class="action-buttons mt-3 flex gap-x-2 justify-between">
                 <!--
                   Button to mark the to-do item as complete.
                   Props:
@@ -156,20 +156,4 @@
         </div>
     {/if}
 </div>
-
-<!-- ItemView Styles-->
-<style>
-    .item-view-container {
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        padding: 12px;
-        width: 100%;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
-    }
-</style>
 
