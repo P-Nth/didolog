@@ -47,6 +47,20 @@ Example:
     import ItemSelector from "./ItemSelector.svelte";
 
     /**
+     * The task selector options.
+     *
+     * @type {Task[]}
+     */
+    export let selectorOptions: Task[] = $tasks;
+
+    /**
+     * Currently selected task for the to-do item.
+     * Defaults to the predefined default task.
+     * @type {Task}
+     */
+    export let selectedTask: Task = defaultTask;
+
+    /**
      * Title of the to-do item entered by the user.
      * @type {string}
      */
@@ -57,13 +71,6 @@ Example:
      * @type {string}
      */
     let description: string = '';
-
-    /**
-     * Currently selected task for the to-do item.
-     * Defaults to the predefined default task.
-     * @type {Task}
-     */
-    let selectedTask: Task = defaultTask;
 
     /**
      * Represents the due date for the to-do item.
@@ -275,7 +282,7 @@ Example:
     -->
     <div class="type-selector">
         <TaskSelector
-                options={$tasks}
+                options={selectorOptions}
                 defaultOption={defaultTask}
                 selectedOption={selectedTask}
                 on:select={handleTaskSelect}

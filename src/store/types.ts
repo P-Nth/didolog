@@ -29,6 +29,7 @@ export type Section = {
 export type Note = {
     id: string;
     title: string;
+    taskId?: string;
     sectionId?: string;
 };
 

@@ -1,7 +1,7 @@
 <!-- Overview -->
 <script>
-  import ItemInput from "../components/merged/ItemInput.svelte";
   import ItemList from "../components/merged/ItemList.svelte";
+  import ItemInput from "../components/merged/ItemInput.svelte";
 </script>
 
 <div class="overview">
