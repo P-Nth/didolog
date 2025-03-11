@@ -1,4 +1,9 @@
 // src/types.ts
+/** 🏢 Workspace Store: Holds all Workspaces */
+export interface WorkspaceStore {
+    [id: string]: Workspace;
+}
+
 export interface Workspace {
     id: string;
     title: string;
@@ -6,45 +11,55 @@ export interface Workspace {
     isDefault?: boolean;
     isComplete?: boolean;
     colorId?: number;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
-export interface Task {
+/** 🌍 Block Store: Holds all Blocks (Tasks, Sections, Notes, Todos) */
+export interface BlockStore {
+    [id: string]: Block;
+}
+
+type BlockType = "task" | "section" | "todo" | "note";
+
+export interface Block {
     id: string;
+    type: BlockType;
+    parentId: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface Task extends Block {
+    type: "task";
     title: string;
     description: string;
     isDefault?: boolean;
-    workspaceId: string;
     isComplete?: boolean;
-    access?: string;
-    colorId?: string;
-    viewId?: string;
-    sections: Section[];
 }
 
-export type Section = {
-    id: string;
+export interface Section extends Block {
+    type: "section";
     title: string;
-    taskId?: string;
-};
+    parentId: string;
+}
 
-export type Note = {
-    id: string;
+export interface Note extends Block {
+    type: "note";
     title: string;
-    taskId?: string;
-    sectionId?: string;
-};
+    parentId: string;
+}
 
-export interface Todo {
-    id: string;
+export interface Todo extends Block {
+    type: "todo";
     title: string;
     description: string;
-    taskId?: string ;
-    sectionId?: string ;
-    dueDate: [string, string];
+    parentId: string;
+    dueDate: [string, string] | null;
     priorityId: number;
-    labelIds: string[];
-    reminderIds: string[];
-    locationId: string;
+    labelIds: string[] | null;
+    reminderIds: string[] | null;
+    locationId: string | null;
     isComplete?: boolean;
 }
 

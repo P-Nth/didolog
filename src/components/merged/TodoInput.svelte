@@ -28,16 +28,15 @@ Example:
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {
-        addToStore,
         todos,
         tasks,
         priorities,
         labels,
         defaultTask,
         defaultPriority,
-        reminders,
+        reminders, addBlock,
     } from '../../store/store';
-    import type {Task, Priority, Label, Reminder} from '../../store/types';
+    import type {Task, Todo, Priority, Label, Reminder} from '../../store/types';
     import TaskSelector from './TaskSelector.svelte';
     import Button from '../indivitual/Button.svelte';
     import InputField from '../indivitual/InputField.svelte';
@@ -117,10 +116,10 @@ Example:
     const addItem = () => {
         if (title.trim()) {
 
-            addToStore(todos, {
+            addBlock<Todo>({
                 title,
                 description,
-                taskId: selectedTask.id,
+                parentId: selectedTask.id,
                 dueDate: dueDate,
                 priorityId: selectedPriority.id,
                 labelIds: selectedLabels.map(label => label.id),
