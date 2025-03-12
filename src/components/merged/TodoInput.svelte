@@ -28,13 +28,12 @@ Example:
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {
-        todos,
+        addBlock,
         tasks,
+        addToStore,
         priorities,
         labels,
-        defaultTask,
-        defaultPriority,
-        reminders, addBlock,
+        reminders, selectedTask,
     } from '../../store/store';
     import type {Task, Todo, Priority, Label, Reminder} from '../../store/types';
     import TaskSelector from './TaskSelector.svelte';
@@ -46,18 +45,11 @@ Example:
     import ItemSelector from "./ItemSelector.svelte";
 
     /**
-     * The task selector options.
-     *
-     * @type {Task[]}
-     */
-    export let selectorOptions: Task[] = $tasks;
-
-    /**
      * Currently selected task for the to-do item.
      * Defaults to the predefined default task.
      * @type {Task}
      */
-    export let selectedTask: Task = defaultTask;
+    let newSelectedTask: Task = $selectedTask;
 
     /**
      * Title of the to-do item entered by the user.
@@ -92,7 +84,8 @@ Example:
      * - Defaults to the predefined `defaultPriority` if no selection is made.
      * @type {Priority}
      */
-    let selectedPriority: Priority = defaultPriority;
+    const defaultPriority: Priority = $priorities.find(item => item.isDefault)!;
+    let selectedPriority = defaultPriority;
 
     /**
      * Currently selected labels for the to-do item.
@@ -117,9 +110,10 @@ Example:
         if (title.trim()) {
 
             addBlock<Todo>({
+                type: "todo",
                 title,
                 description,
-                parentId: selectedTask.id,
+                parentId: newSelectedTask.id,
                 dueDate: dueDate,
                 priorityId: selectedPriority.id,
                 labelIds: selectedLabels.map(label => label.id),
@@ -130,9 +124,9 @@ Example:
 
             title = '';
             description = '';
-            selectedTask = defaultTask;
+            newSelectedTask = $selectedTask;
             dueDate = ["", ""];
-            selectedPriority = defaultPriority;
+            selectedPriority = $priorities.find(item => item.isDefault)!;
             selectedLabels = [];
             selectedReminders = [];
 
@@ -156,7 +150,7 @@ Example:
      * @param {CustomEvent<Task>} event - The custom event containing the selected task.
      */
     const handleTaskSelect = (event: CustomEvent<Task>) => {
-        selectedTask = event.detail;
+        newSelectedTask = event.detail;
     };
 
     const handleDateSelect = (event: CustomEvent<[string, string]>) => {
@@ -281,9 +275,9 @@ Example:
     -->
     <div class="type-selector">
         <TaskSelector
-                options={selectorOptions}
-                defaultOption={defaultTask}
-                selectedOption={selectedTask}
+                options={$tasks}
+                defaultOption={$selectedTask}
+                selectedOption={newSelectedTask}
                 on:select={handleTaskSelect}
         />
 

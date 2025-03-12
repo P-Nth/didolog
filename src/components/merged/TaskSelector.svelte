@@ -37,10 +37,10 @@ Example:
 />
 -->
 <script lang="ts">
-    import { addToStore, tasks, workspaces, defaultWorkspace } from '../../store/store';
+    import {addBlock, selectedWorkspace} from '../../store/store';
     import { toSentenceCase } from "../../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
-    import type { Task } from '../../store/types';
+    import type {Task} from '../../store/types';
     import UniIcon from "../indivitual/UniIcon.svelte";
     import FilterSearch from "./FilterSearch.svelte";
 
@@ -73,7 +73,7 @@ Example:
     let menuOpen: boolean = false;
 
     /** @type {String} workspaceTitle - Title displayed on the filter search */
-    let workspaceTitle: string | undefined =  $workspaces.find(workspace => workspace.id === options[0]?.workspaceId)?.title;
+    let workspaceTitle: string =  $selectedWorkspace!.title;
 
     /**
      * Svelte event dispatcher for emitting custom events to parent components.
@@ -126,9 +126,14 @@ Example:
         const { title } = event.detail;
         if (!title.trim()) return;
 
-        const baseData = { title: title.trim(), description: "" };
-
-        addToStore(tasks, { ...baseData, workspaceId: defaultWorkspace.id, isComplete: false });
+        addBlock<Task>({
+            type: "task",
+            title: title.trim(),
+            description: "",
+            parentId: $selectedWorkspace.id,
+            isSelected: false,
+            isComplete: false,
+        })
     }
 
     /**

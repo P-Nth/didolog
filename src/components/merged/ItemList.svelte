@@ -10,11 +10,10 @@
     passing the `type` prop down for any type-specific logic in the child component.
 -->
 <script>
-  import { todos } from '../../store/store.ts';
+  import {notes, tasks, todos} from '../../store/store.ts';
   import TodoView from "./TodoView.svelte";
   import DropZone from "../indivitual/DropZone.svelte";
   import Draggable from "../indivitual/Draggable.svelte";
-
 
   /**
    * @prop {string} type - Determines the type of items to display.
@@ -22,6 +21,10 @@
    * Defaults to "task".
    */
   export let type = "todo";
+
+  $: console.log("notes here: ",$notes)
+  $: console.log("todos here: ",$todos)
+  $: console.log("tasks here: ",$tasks)
 </script>
 
 <div class="">

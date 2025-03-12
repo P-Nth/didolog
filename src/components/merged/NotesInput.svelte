@@ -1,17 +1,15 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
-    import type {Task} from "../../store/types";
-    import {addToStore, defaultTask, tasks, notes} from '../../store/store';
+    import type {Note, Task} from "../../store/types";
+    import {addBlock, tasks, selectedTask} from '../../store/store';
     import TaskSelector from "./TaskSelector.svelte";
     import InputField from '../indivitual/InputField.svelte';
-
-    export let selectorOptions: Task[] = $tasks;
 
     let title: string = '';
     let type: string = 'note';
     let showMenu: boolean = false;
 
-    let selectedTask: Task = defaultTask;
+    let newSelectedTask: Task = $selectedTask;
 
     $: {
         if (title.startsWith("/") && title.length === 1) {
@@ -37,14 +35,14 @@
     const dispatch = createEventDispatcher();
 
     const addItem = () => {
-        title.trim() && addToStore(notes, {title, taskId: selectedTask.id});
+        title.trim() && addBlock<Note>({type: "note", title, parentId: $selectedTask.id});
 
         title = "";
-        selectedTask = defaultTask;
+        newSelectedTask = $selectedTask;
     }
 
     const handleTaskSelect = (event: CustomEvent<Task>) => {
-        selectedTask = event.detail;
+        newSelectedTask = event.detail;
     };
 
     $: dispatch("input", title);
@@ -64,9 +62,9 @@
 
         <div class="list-selector">
             <TaskSelector
-                    options={selectorOptions}
-                    defaultOption={defaultTask}
-                    selectedOption={selectedTask}
+                    options={$tasks}
+                    defaultOption={$selectedTask}
+                    selectedOption={newSelectedTask}
                     on:select={handleTaskSelect}
             />
         </div>

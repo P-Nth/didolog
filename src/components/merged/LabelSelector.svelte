@@ -14,10 +14,10 @@
   - Implements accessibility features such as keyboard navigation and ARIA attributes.
 -->
 <script lang="ts">
-    import { addToStore, labels } from '../../store/store';
-    import { toSentenceCase } from "../../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
     import type { Label } from '../../store/types';
+    import { addToStore, labels } from '../../store/store';
+    import { toSentenceCase } from "../../hooks/reusable";
     import UniIcon from "../indivitual/UniIcon.svelte";
     import FilterSearch from "./FilterSearch.svelte";
 

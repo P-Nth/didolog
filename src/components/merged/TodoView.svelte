@@ -19,9 +19,9 @@
   - linkedTaskTitle: The title of the task linked to the to-do item.
 -->
 <script lang="ts">
-    import { todos, tasks, defaultTask, updateInStore, markAsComplete, deleteFromStore } from '../../store/store';
+    import {updateBlock, tasks, selectedTask, deleteBlock,} from '../../store/store';
     import { toSentenceCase } from "../../hooks/reusable";
-    import type { Todo, Task } from '../../store/types';
+    import type {Todo, Task, Block} from '../../store/types';
     import EditableText from "../indivitual/EditableText.svelte";
     import Button from "../indivitual/Button.svelte";
     import Pin from "../indivitual/Pin.svelte";
@@ -53,7 +53,7 @@
      * If no matching task is found, defaults to an empty string.
      * @type {string}
      */
-    const linkedTaskTitle: string = $tasks.find((task: Task) => task.id === item.taskId)?.title ?? "";
+    const linkedTaskTitle: string = $tasks.find((task: Task) => task.id === item.parentId)?.title ?? "";
 
     /**
      * Handles the update of a to-do item’s title and/or description.
@@ -62,8 +62,8 @@
      * @param {string} [newDescription] - The new description to update (optional).
      * @returns {void}
      */
-    function handleTodoUpdate(newTitle?: string, newDescription?: string): void {
-        updateInStore(todos, item.id, { title: newTitle, description: newDescription });
+    function handleTodoUpdate(newTitle: string, newDescription: string): void {
+        updateBlock(item.id, { title: newTitle, description: newDescription } as Partial<Block>);
     }
 
     /**
@@ -76,9 +76,9 @@
      */
     function handleAction(action: 'complete' | 'delete'): void {
         if (action === 'complete') {
-            markAsComplete(todos, item.id);
+            updateBlock(item.id, { isComplete: true } as Partial<Block>);
         } else if (action === 'delete') {
-            deleteFromStore(todos, item.id);
+            deleteBlock(item.id);
         }
     }
 </script>
@@ -96,9 +96,9 @@
   - Button: Handles complete and delete actions.
 -->
 <div class="item-view-container border border-gray-300 rounded-[5px] p-3 w-full">
-    {#if (defaultTask?.id !== "inbox")}
+    {#if ($selectedTask.id !== "inbox")}
         <div class="item-view">
-            {#if item.taskId}
+            {#if item.parentId}
                 <!--
                   Pin component indicating the linked task.
                   Props:

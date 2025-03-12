@@ -1,4 +1,9 @@
 // src/types.ts
+export const MAX_FREE_WORKSPACES: number = 1;
+export const MAX_FREE_TASKS: number = 8;
+export const MAX_FREE_LABELS: number = 5;
+export const MAX_FREE_LOCATIONS: number = 1;
+
 /** 🏢 Workspace Store: Holds all Workspaces */
 export interface WorkspaceStore {
     [id: string]: Workspace;
@@ -9,6 +14,7 @@ export interface Workspace {
     title: string;
     description: string;
     isDefault?: boolean;
+    isSelected: boolean;
     isComplete?: boolean;
     colorId?: number;
     createdAt?: string;
@@ -34,7 +40,7 @@ export interface Task extends Block {
     type: "task";
     title: string;
     description: string;
-    isDefault?: boolean;
+    isSelected: boolean;
     isComplete?: boolean;
 }
 
@@ -58,7 +64,7 @@ export interface Todo extends Block {
     dueDate: [string, string] | null;
     priorityId: number;
     labelIds: string[] | null;
-    reminderIds: string[] | null;
+    reminderIds: string[];
     locationId: string | null;
     isComplete?: boolean;
 }
