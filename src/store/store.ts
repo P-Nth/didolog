@@ -1,5 +1,5 @@
 /* ------------------------ Store.ts ------------------------ */
-import {derived, writable, type Writable} from 'svelte/store';
+import {derived, get, writable, type Writable} from 'svelte/store';
 import type {
     WorkspaceStore,
     Block,
@@ -106,6 +106,12 @@ export const blockStore: Writable<BlockStore> = writable({
         isComplete: false,
     },
 });
+export const blocksByParent = (parentId: string) => {derived(blockStore, ($blockStore) =>
+        Object.values($blockStore)
+            .filter(block => block.parentId === parentId)
+            .sort((a, b) => new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime())
+    );
+}
 
 /** 🌍 Store for all tasks */
 export const tasks = derived(blockStore, ($blockStore) =>

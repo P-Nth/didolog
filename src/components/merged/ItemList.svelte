@@ -9,35 +9,28 @@
   - Otherwise, it iterates over the todos store and renders an `ItemView` for each todo,
     passing the `type` prop down for any type-specific logic in the child component.
 -->
-<script>
-  import {notes, tasks, todos} from '../../store/store.ts';
-  import TodoView from "./TodoView.svelte";
-  import DropZone from "../indivitual/DropZone.svelte";
-  import Draggable from "../indivitual/Draggable.svelte";
+<script lang="ts">
+    import {blocksByTask} from "../../hooks/blocksByTask";
+    import TodoView from "./TodoView.svelte";
+    import NoteView from "./NoteView.svelte";
+    import SectionView from "./SectionView.svelte";
 
-  /**
-   * @prop {string} type - Determines the type of items to display.
-   * If "task", the component will display tasks; otherwise, it will display todos.
-   * Defaults to "task".
-   */
-  export let type = "todo";
+    const componentMap: any = {
+        todo: TodoView,
+        note: NoteView,
+        section: SectionView,
+    };
+
+    $: console.log($blocksByTask)
 </script>
 
 <div class="">
-    {#if (type === "todo")}
-        <!-- Render list for todos -->
-        <DropZone id="todo-list" accepts={["todo"]} customClass="custom-dropzone">
-            {#each $todos as todo}
-                <!-- Draggable Task with Custom Styling -->
-                <div class="option-item">
-                    <Draggable id={todo.id} type={todo.type} customClass="custom-draggable">
-                        <TodoView item={todo} />
-                    </Draggable>
-                </div>
-            {/each}
-        </DropZone>
-    {:else}
-        <p>Tasks</p>
-    {/if}
+    <!-- Render list for todos -->
+    {#each $blocksByTask as block}
+        {#if componentMap[block.type]}
+            <svelte:component this={componentMap[block.type]} {block} />
+        {/if}
+    {/each}
+
 </div>
 
