@@ -238,7 +238,6 @@ Example:
     -->
     <div class="input-section">
         <InputField
-                textSize="medium"
                 bind:value={title}
                 bind:this={inputRef}
                 placeholder="Type a todo"
@@ -246,7 +245,6 @@ Example:
                 onBackspace={handleBackspace}
         />
         <InputField
-                variant="description"
                 bind:value={description}
                 placeholder="Notes"
                 onEnter={addItem}

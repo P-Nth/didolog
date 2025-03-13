@@ -106,17 +106,6 @@
     }
 
     /**
-     * Converts a time string ("HH:MM") to minutes.
-     *
-     * @param {string} time - The time string in "HH:MM" format.
-     * @returns {number} - The total minutes since midnight.
-     */
-    function timeToMinutes(time: string): number {
-        const [hours, minutes] = time.split(":").map(Number);
-        return hours * 60 + minutes;
-    }
-
-    /**
      * Handles time selection from the quick-select dropdown.
      * Updates the selected time and dispatches an event.
      *
@@ -136,7 +125,7 @@
     - Select from a list of predefined time options using a quick-select menu.
     - Dispatch the selected time when a user interacts with either the input field or quick-select options.
 -->
-<div class="time-picker">
+<div class="time-picker flex flex-col gap-2">
     <!-- Time Input Field: Allows users to manually enter a time -->
     <InputField
             type="time"
@@ -145,10 +134,10 @@
     />
 
     <!-- Quick Select: Provides predefined time options for faster selection -->
-    <div class="quick-select">
+    <div class="quick-select flex gap-2 overflow-x-auto">
         {#each timeOptions as time}
             <div
-                    class="option-item"
+                    class="option-item cursor-pointer flex flex-col rounded[6.4px] pt-2 pb-2 transition-colors duration-300 ease-in-out hover:bg-[#f5f5f5]"
                     role="button"
                     tabindex="0"
                     on:click={() => handleSelect(time)}
@@ -165,33 +154,4 @@
         {/each}
     </div>
 </div>
-
-<!-- Time Picker Styles-->
-<style>
-    /* Picker styling */
-    .time-picker {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    /* Quick select styling */
-    .quick-select {
-        display: flex;
-        gap: 0.5rem;
-        overflow-x: auto;
-    }
-
-    /* Option item styling */
-    .option-item {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        border-radius: .4em;
-        padding: .3em 0;
-        transition: background-color .25s ease-in-out;
-    }
-    .option-item:hover {
-        background-color: #f5f5f5;
-    }
-</style>
 

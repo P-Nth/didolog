@@ -31,12 +31,12 @@
 
 <div class="section-input flex mt-2.5 gap-2">
     <InputField
-            type="note"
-            textSize="large"
+            type="text"
             bind:value={title}
             bind:this={inputRef}
             placeholder="Add a section title..."
             onEnter={handleAddSection}
+            className="text-xl font-semibold text-gray-700"
     />
 </div>
 

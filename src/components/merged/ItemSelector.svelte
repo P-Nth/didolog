@@ -277,8 +277,6 @@
                 <!-- Editable input field for other modes -->
                 <InputField
                         type="text"
-                        textSize="medium"
-                        variant="description"
                         bind:value={searchInput}
                         placeholder={placeholder}
                         onInput={openMenu}

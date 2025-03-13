@@ -86,7 +86,6 @@
             <InputField
                     bind:value={value1}
                     placeholder="Type edited text"
-                    textSize="medium"
                     onEnter={() => value1.trim() && saveEdit}
                     onEscape={() => (value1 = title)}
                     onInput={handleInput1}
@@ -95,7 +94,6 @@
         <div class="editable-description">
             <InputField
                     bind:value={value2}
-                    variant="description"
                     placeholder="Description"
                     onEnter={() => value2.trim() && saveEdit}
                     onEscape={() => (value2 = description)}

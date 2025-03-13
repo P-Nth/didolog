@@ -46,20 +46,6 @@
     export let className: string = "";
 
     /**
-     * Defines the size styling for the input.
-     * Used to apply CSS classes for different sizes (e.g., "small", "medium", "large").
-     * @type {string}
-     */
-    export let textSize: string = "small";
-
-    /**
-     * Defines the variant styling for the input.
-     * Used to apply CSS classes for different variants (e.g., "main", "description").
-     * @type {string}
-     */
-    export let variant: string = "main";
-
-    /**
      * Placeholder text for the input when it is empty.
      * @type {string}
      */
@@ -111,7 +97,7 @@
     const adjustHeight = () => {
         if (inputRef && type === "note") {
             inputRef.style.height = "auto";
-            inputRef.style.height = `${inputRef.scrollHeight}px`;
+            inputRef.style.height = inputRef.scrollHeight + "px";
         }
     }
 
@@ -152,7 +138,7 @@
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {className} {textSize} {variant}"
+            class="input-field {className}"
     />
 {:else if type === "note"}
     <textarea
@@ -160,11 +146,11 @@
             bind:value
             bind:this={inputRef}
             placeholder={placeholder}
-            on:input={() => onInput(value)}
+            on:input={() => {onInput(value); adjustHeight();}}
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="textarea-field {className} {textSize} {variant}"
+            class="textarea-field {className}"
     />
 {:else if type === "time"}
     <input
@@ -173,11 +159,11 @@
             bind:value
             bind:this={inputRef}
             step="600"
-            on:input={() => {onInput(value); adjustHeight();}}
-            on:focus={() => {onInput(value); adjustHeight();}}
+            on:input={() => onInput(value)}
+            on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {className} {textSize} {variant}"
+            class="input-field {className}"
     />
 {:else}
     <span>No Input</span>
@@ -196,21 +182,10 @@
         overflow: hidden;
         white-space: pre-wrap;
         box-sizing: border-box;
-        height: auto;
-        min-height: 1.5rem;
         border: none;
         outline: none;
         background: transparent;
         font-size: inherit;
     }
-
-    /* Variants */
-    .main { font-weight: 600; }
-    .description { font-weight: 400; }
-
-    /* Sizes */
-    .small { font-size: 13px; }
-    .medium { font-size: 15px; }
-    .large { font-size: 18px; }
 </style>
 

@@ -63,8 +63,6 @@
     <div class="notes-input-container flex justify-between">
         <InputField
                 type="note"
-                textSize="medium"
-                variant="description"
                 bind:value={title}
                 bind:this={inputRef}
                 placeholder="Type something... (Press '/' to see options)"
