@@ -219,13 +219,13 @@
 </script>
 
 <!-- Container for the dynamic selector dropdown -->
-<div class="selector-container" use:clickOutside>
+<div class="selector-container relative w-full" use:clickOutside>
     <div class="selector-content">
         <!-- Selectors -->
         {#if selectionMode === "single-only" || selectionMode === "multiple-only"}
             <!-- Non-editable selection display -->
             <div
-                    class="normal-selector"
+                    class="normal-selector cursor-pointer select-none gap-4 flex items-center bg-white border border-[#1d2846] pl-1.5 pr-1.5 w-full hover:bg-[#f2f2f2]"
                     role="button"
                     tabindex="0"
                     aria-label="Select option"
@@ -357,29 +357,6 @@
 
 <!-- ItemSelector Styles-->
 <style>
-    .selector-container {
-        position: relative;
-        width: 100%;
-    }
-
-    .normal-selector {
-        cursor: pointer;
-        user-select: none;
-        gap: 1em;
-        display: flex;
-        align-items: center;
-        background-color: white;
-        border-radius: .25em;
-        border: 1px solid #1d2846;
-        padding: 0 .4em;
-        width: 100%;
-    }
-
-    /* Hover effect for the selector-content */
-    .normal-selector:hover {
-        background-color: #f2f2f2;
-    }
-
     .selector {
         display: flex;
         align-items: center;

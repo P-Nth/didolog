@@ -26,7 +26,7 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
     import {
         addBlock,
         tasks,
@@ -93,6 +93,27 @@ Example:
      * @type {Label[]}
      */
     let selectedLabels: Label[] = [];
+
+    /**
+     * Reference to the `InputField` component.
+     * This allows us to call functions exposed by `InputField`.
+     */
+    let inputRef: InputField | null = null;
+
+    /**
+     * Focuses the todo input field.
+     * Calls the `focusInput()` method exposed by the `InputField` component.
+     */
+    export function focusTodoInput() {
+        inputRef?.focusInput();
+    }
+
+    /**
+     * Ensures focus is on the input on mount
+     */
+    onMount(() => {
+        focusTodoInput();
+    });
 
     /**
      * Creates a Svelte event dispatcher for emitting custom events.
@@ -219,6 +240,7 @@ Example:
         <InputField
                 textSize="medium"
                 bind:value={title}
+                bind:this={inputRef}
                 placeholder="Type a todo"
                 onEnter={addItem}
                 onBackspace={handleBackspace}

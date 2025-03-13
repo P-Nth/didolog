@@ -24,6 +24,8 @@
   - Provides input element reference for programmatic focus management.
 -->
 <script lang="ts">
+    import {onMount} from "svelte";
+
     /**
      * The type attribute for the input element.
      * Typically, "text", but can be "password", "email", etc.
@@ -97,9 +99,16 @@
     let inputRef: HTMLInputElement | HTMLTextAreaElement | null = null;
 
     /**
+     * Ensures focus is on the input
+     */
+    export function focusInput() {
+        inputRef?.focus();
+    }
+
+    /**
      * Adjusts textarea dynamically.
      */
-    function adjustHeight() {
+    const adjustHeight = () => {
         if (inputRef && type === "note") {
             inputRef.style.height = "auto";
             inputRef.style.height = `${inputRef.scrollHeight}px`;
@@ -113,7 +122,7 @@
      *
      * @param {KeyboardEvent} event - The keydown event object.
      */
-    function handleKeydown(event: KeyboardEvent): void {
+    const handleKeydown = (event: KeyboardEvent): void => {
         if (event.key === "Enter") {
             event.preventDefault();
             onEnter();

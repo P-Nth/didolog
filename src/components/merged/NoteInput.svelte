@@ -1,15 +1,22 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
-    import type {Note, Task} from "../../store/types";
-    import {addBlock, tasks, selectedTask} from '../../store/store';
-    import TaskSelector from "./TaskSelector.svelte";
+    import {createEventDispatcher, onMount, tick} from "svelte";
+    import type {Note} from "../../store/types";
+    import {addBlock, selectedTask} from '../../store/store';
     import InputField from '../indivitual/InputField.svelte';
 
     let title: string = '';
     let type: string = 'note';
     let showMenu: boolean = false;
 
-    let newSelectedTask: Task = $selectedTask;
+    let inputRef: InputField | null = null;
+
+    export function focusNoteInput() {
+        inputRef?.focusInput();
+    }
+
+    onMount(() => {
+        focusNoteInput();
+    });
 
     $: {
         if (title.startsWith("/") && title.length === 1) {
@@ -19,12 +26,16 @@
         }
     }
 
+    const dispatch = createEventDispatcher();
+
     const options = [
         { id: 1, type: "todo" },
+        { id: 2, type: "section" },
     ];
 
     const handleSelect = (option: any) => {
         if (option.type === "todo") type = "todo";
+        if (option.type === "section") type = "section";
 
         dispatch("select", type);
 
@@ -32,18 +43,17 @@
         showMenu = false;
     };
 
-    const dispatch = createEventDispatcher();
+    const addItem = async () => {
+        if (!title.trim()) return;
 
-    const addItem = () => {
-        title.trim() && addBlock<Note>({type: "note", title, parentId: $selectedTask.id});
+        addBlock<Note>({type: "note", title, parentId: $selectedTask.id});
 
         title = "";
-        newSelectedTask = $selectedTask;
-    }
+        type = "notes";
 
-    const handleTaskSelect = (event: CustomEvent<Task>) => {
-        newSelectedTask = event.detail;
-    };
+        await tick();
+        focusNoteInput();
+    }
 
     $: dispatch("input", title);
 
@@ -56,18 +66,10 @@
                 textSize="medium"
                 variant="description"
                 bind:value={title}
+                bind:this={inputRef}
                 placeholder="Type something... (Press '/' to see options)"
                 onEnter={addItem}
         />
-
-        <div class="list-selector">
-            <TaskSelector
-                    options={$tasks}
-                    defaultOption={$selectedTask}
-                    selectedOption={newSelectedTask}
-                    on:select={handleTaskSelect}
-            />
-        </div>
     </div>
 
     {#if showMenu}

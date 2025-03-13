@@ -21,10 +21,6 @@
    * Defaults to "task".
    */
   export let type = "todo";
-
-  $: console.log("notes here: ",$notes)
-  $: console.log("todos here: ",$todos)
-  $: console.log("tasks here: ",$tasks)
 </script>
 
 <div class="">
