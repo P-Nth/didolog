@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { blocksByTask } from "../../hooks/blocksByTask";
+
     import TodoInput from "./TodoInput.svelte";
     import NotesInput from "./NoteInput.svelte";
     import SectionInput from "./SectionInput.svelte";
@@ -34,7 +36,12 @@
         {:else if type === "section"}
             <SectionInput bind:this={sectionInputRef} on:complete={handleFinished} />
         {:else}
-            <NotesInput bind:this={noteInputRef} on:input={handleInput} on:select={handleSelect} />
+            <div class="flex flex-col gap-2">
+                <NotesInput bind:this={noteInputRef} on:input={handleInput} on:select={handleSelect} />
+                {#if !text.trim() && $blocksByTask.length === 0 }
+                    <span class="p-2">Add Something here!</span>
+                {/if}
+            </div>
         {/if}
     </div>
 </div>

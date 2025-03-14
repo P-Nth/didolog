@@ -169,7 +169,6 @@
 <!-- InputField Styles -->
 <style>
     .input-field, .textarea-field {
-        padding: 0 .63em;
         border-radius: .25em;
         width: 100%;
     }

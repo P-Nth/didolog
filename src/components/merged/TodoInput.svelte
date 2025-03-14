@@ -302,7 +302,7 @@ Example:
         />
 
         <div class="input-action">
-            <Button size="small" onClick={addItem} disabled={!title || !title.trim()}>
+            <Button onClick={addItem} disabled={!title || !title.trim()}>
                 Add
             </Button>
         </div>

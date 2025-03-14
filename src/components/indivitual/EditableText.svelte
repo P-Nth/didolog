@@ -19,23 +19,25 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import InputField from "./InputField.svelte";
+    import Button from "./Button.svelte";
 
     /**
      * Props: title and description for the editable todo.
      */
-    export let title: string = "";
-    export let description: string = "";
+    export let text: string = "";
 
     /**
      * Local state variables for input fields.
      */
-    let value1: string = title;
-    let value2: string = description ?? '';
+    let value: string = text;
 
     /**
      * Dispatcher for sending events to parent components.
      */
-    const dispatch = createEventDispatcher<{ updateTodo: { title: string; description: string } }>();
+    const dispatch = createEventDispatcher<{
+        updateItem: { text: string };
+        removeItem: null;
+    }>();
 
     /**
      * Handles input for the title field.
@@ -43,20 +45,18 @@
      *
      * Saves the edit whenever the value changes.
      */
-    function handleInput1(newValue: string): void {
-        value1 = newValue;
-        saveEdit();
+    function handleInput(newValue: string): void {
+        value = newValue;
     }
 
     /**
-     * Handles input for the description field.
-     * @param newValue - New value from the input field.
-     *
-     * Saves the edit whenever the value changes.
+     * Saves the edits by dispatching an `updateTodo` event with updated values.
+     * Resets the `hasChanges` flag afterward.
      */
-    function handleInput2(newValue: string): void {
-        value2 = newValue;
-        saveEdit();
+    function handleBackspace(): void {
+        if (!value.trim()) {
+            dispatch('removeItem');
+        }
     }
 
     /**
@@ -64,8 +64,8 @@
      * Resets the `hasChanges` flag afterward.
      */
     function saveEdit(): void {
-        if (value1 !== title || value2 !== description) {
-            dispatch('updateTodo', { title: value1, description: value2 });
+        if (value !== text || !value.trim()) {
+            dispatch('updateItem', { text: value });
         }
     }
 
@@ -80,26 +80,18 @@
     - Saving updates to the store via updateItem.
     - Canceling edits with the Escape key.
 -->
-<div class="editable-text-container flex gap-2">
-    <div class="editable-texts flex flex-col gap-0.5">
-        <div class="editable-title">
-            <InputField
-                    bind:value={value1}
-                    placeholder="Type edited text"
-                    onEnter={() => value1.trim() && saveEdit}
-                    onEscape={() => (value1 = title)}
-                    onInput={handleInput1}
-            />
-        </div>
-        <div class="editable-description">
-            <InputField
-                    bind:value={value2}
-                    placeholder="Description"
-                    onEnter={() => value2.trim() && saveEdit}
-                    onEscape={() => (value2 = description)}
-                    onInput={handleInput2}
-            />
-        </div>
+<div class="editable-text-container flex gap-2 items-center justify-between">
+    <div class="editable-title w-full">
+        <InputField
+                bind:value={value}
+                placeholder="Type edited text"
+                onEnter={() => value.trim() && saveEdit}
+                onEscape={() => (value = text)}
+                onInput={handleInput}
+                onBackspace={handleBackspace}
+                className=""
+        />
     </div>
+    <Button onClick={() => text.trim() && saveEdit()} disabled={value === text || !value.trim()} className="text-sm leading-[unset] border border-gray-600 pl-1 pr-1 disabled:border-gray-300 disabled:text-gray-300">Update</Button>
 </div>
 

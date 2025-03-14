@@ -19,18 +19,18 @@
   - linkedTaskTitle: The title of the task linked to the to-do item.
 -->
 <script lang="ts">
-    import {updateBlock, tasks, selectedTask, deleteBlock,} from '../../store/store';
+    import {updateBlock, deleteBlock, tasks, selectedTask,} from '../../store/store';
     import { toSentenceCase } from "../../hooks/reusable";
     import type {Todo, Task, Block} from '../../store/types';
-    import EditableText from "../indivitual/EditableText.svelte";
-    import Button from "../indivitual/Button.svelte";
-    import Pin from "../indivitual/Pin.svelte";
+    import EditableText from "../../components/indivitual/EditableText.svelte";
+    import Button from "../../components/indivitual/Button.svelte";
+    import Pin from "../../components/indivitual/Pin.svelte";
 
     /**
-     * The to-do item passed to the component.
+     * The to-do block passed to the component.
      * @type {Todo}
      */
-    export let item: Todo = {} as Todo;
+    export let block: Todo = {} as Todo;
 
     /**
      * Reactive variable holding the editable title of the to-do item.
@@ -38,7 +38,7 @@
      * @type {string}
      */
     let editableItemTitle: string;
-    $: editableItemTitle = item.title;
+    $: editableItemTitle = block.title;
 
     /**
      * Reactive variable holding the editable description of the to-do item.
@@ -46,25 +46,36 @@
      * @type {string}
      */
     let editableItemDescription: string;
-    $: editableItemDescription = item.description || '';
+    $: editableItemDescription = block.description || '';
 
     /**
      * Retrieves the title of the task linked to the current to-do item.
      * If no matching task is found, defaults to an empty string.
      * @type {string}
      */
-    const linkedTaskTitle: string = $tasks.find((task: Task) => task.id === item.parentId)?.title ?? "";
+    const linkedTaskTitle: string = $tasks.find((task: Task) => task.id === block.parentId)?.title ?? "";
 
     /**
-     * Handles the update of a to-do item’s title and/or description.
+     * Handles the update of a to-do item’s title.
      *
-     * @param {string} [newTitle] - The new title to update (optional).
-     * @param {string} [newDescription] - The new description to update (optional).
+     * @param {string} [newString] - The new title to update (optional).
      * @returns {void}
      */
-    function handleTodoUpdate(newTitle: string, newDescription: string): void {
-        updateBlock(item.id, { title: newTitle, description: newDescription } as Partial<Block>);
-    }
+    const handleTitleUpdate = (newString: string): void => updateBlock(block.id, { title: newString } as Partial<Block>);
+
+    /**
+     * Handles the update of a to-do item’s description.
+     *
+     * @param {string} [newString] - The new description to update (optional).
+     * @returns {void}
+     */
+    const handleDescUpdate = (newString: string, ): void => updateBlock(block.id, { description: newString } as Partial<Block>);
+
+    /**
+     * Handles the delete a block.
+     *
+     */
+    const handleRemoveBlock = () => deleteBlock(block.id);
 
     /**
      * Handles actions (complete or delete) for the to-do item.
@@ -76,9 +87,9 @@
      */
     function handleAction(action: 'complete' | 'delete'): void {
         if (action === 'complete') {
-            updateBlock(item.id, { isComplete: true } as Partial<Block>);
+            updateBlock(block.id, { isComplete: true } as Partial<Block>);
         } else if (action === 'delete') {
-            deleteBlock(item.id);
+            deleteBlock(block.id);
         }
     }
 </script>
@@ -95,10 +106,10 @@
   - EditableText: Provides editable fields for title and description.
   - Button: Handles complete and delete actions.
 -->
-<div class="item-view-container border border-gray-300 rounded-[5px] p-3 w-full">
+<div class="item-view-container border border-gray-300 rounded-[5px] px-2 py-1.5 w-full">
     {#if ($selectedTask.id !== "inbox")}
         <div class="item-view">
-            {#if item.parentId}
+            {#if block.parentId}
                 <!--
                   Pin component indicating the linked task.
                   Props:
@@ -113,7 +124,7 @@
               Props:
               - status: 'completed' if item.isComplete is true, otherwise 'progressing'
             -->
-            <Pin status={item.isComplete ? 'completed' : 'progressing'} />
+            <Pin status={block.isComplete ? 'completed' : 'progressing'} />
 
             <!--
               EditableText component allowing the user to edit the to-do item's title and description.
@@ -123,11 +134,17 @@
               Events:
               - updateTodo: Triggered when the item is updated, calling handleTodoUpdate with the new title and description.
             -->
-            <EditableText
-                    title={editableItemTitle}
-                    description={editableItemDescription}
-                    on:updateTodo={(e) => handleTodoUpdate(e.detail.title, e.detail.description)}
-            />
+            <div class="flex flex-col gap-1">
+                <EditableText
+                        text={editableItemTitle}
+                        on:updateItem={(e) => handleTitleUpdate(e.detail.text)}
+                        on:removeItem={handleRemoveBlock}
+                />
+                <EditableText
+                        text={editableItemDescription}
+                        on:updateItem={(e) => handleDescUpdate(e.detail.text)}
+                />
+            </div>
 
             <div class="action-buttons mt-3 flex gap-x-2 justify-between">
                 <!--
@@ -138,7 +155,7 @@
                   - size: 'small' for button size.
                   - variant: 'success' to indicate a positive action.
                 -->
-                <Button onClick={() => handleAction("complete")} disabled={item.isComplete} size="small" variant="success">
+                <Button onClick={() => handleAction("complete")} disabled={block.isComplete}>
                     ✅ Complete
                 </Button>
 
@@ -149,7 +166,7 @@
                   - size: 'small' for button size.
                   - variant: 'danger' to indicate a destructive action.
                 -->
-                <Button onClick={() => handleAction("delete")} size="small" variant="danger">
+                <Button onClick={() => handleAction("delete")}>
                     🗑️ Delete
                 </Button>
             </div>
