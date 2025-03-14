@@ -85,13 +85,13 @@
         <InputField
                 bind:value={value}
                 placeholder="Type edited text"
-                onEnter={() => value.trim() && saveEdit}
+                onEnter={() => value.trim() && saveEdit()}
                 onEscape={() => (value = text)}
                 onInput={handleInput}
                 onBackspace={handleBackspace}
                 className=""
         />
     </div>
-    <Button onClick={() => text.trim() && saveEdit()} disabled={value === text || !value.trim()} className="text-sm leading-[unset] border border-gray-600 pl-1 pr-1 disabled:border-gray-300 disabled:text-gray-300">Update</Button>
+    <Button onClick={() => value.trim() && saveEdit()} disabled={value === text || !value.trim()} className="text-sm leading-[unset] border border-gray-600 pl-1 pr-1 disabled:border-gray-300 disabled:text-gray-300">Update</Button>
 </div>
 
