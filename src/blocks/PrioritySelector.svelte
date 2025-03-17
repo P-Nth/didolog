@@ -9,10 +9,10 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { toSentenceCase } from "../../hooks/reusable";
-    import type { Priority } from '../../store/types';
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import DropDownItem from "../indivitual/DropDownItem.svelte";
+    import { toSentenceCase } from "../hooks/reusable";
+    import type { Priority } from '../store/types';
+    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import DropDownItem from "../components/indivitual/DropDownItem.svelte";
 
     /**
      * Array of selectable priority options.

@@ -1,7 +1,7 @@
 <!-- Overview -->
 <script>
-  import ItemList from "../pages/Views/ItemList.svelte";
-  import ItemInput from "../components/merged/ItemInput.svelte";
+  import ItemList from "./ItemList.svelte";
+  import ItemInput from "../blocks/ItemInput.svelte";
 </script>
 
 <div class="overview">
@@ -47,5 +47,4 @@
         border-radius: 8px;
     }
 </style>
-
 

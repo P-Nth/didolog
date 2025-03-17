@@ -18,8 +18,8 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import InputField from "./InputField.svelte";
-    import Button from "./Button.svelte";
+    import InputField from "../indivitual/InputField.svelte";
+    import Button from "../indivitual/Button.svelte";
 
     /**
      * Props: title and description for the editable todo.

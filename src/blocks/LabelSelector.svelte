@@ -1,40 +1,37 @@
 <!--
-  ReminderSelector Component
+  LabelSelector Component
 
-  A dropdown selector for managing reminders in a task or note-taking application.
-  - Allows users to select multiple reminders from a list.
+  A dropdown selector for managing labels in a task or note-taking application.
+  - Allows users to select multiple labels from a list.
+  - Supports searching, selecting, and deselecting labels.
+  - Enables the creation of new labels.
   - Uses event dispatching to notify parent components of selection changes.
 
   Features:
   - Toggles the dropdown menu open/closed.
-  - Handles selection and deselection of reminders.
-  - Emits custom events (`select`, `toggle`) to update external state.
+  - Handles selection and deselection of labels.
+  - Emits custom events (`select`, `toggle`, `create`) to update external state.
   - Implements accessibility features such as keyboard navigation and ARIA attributes.
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import type {Reminder} from "../../store/types";
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import {toSentenceCase} from "../../hooks/reusable";
-    import DropDownItem from "../indivitual/DropDownItem.svelte";
+    import type { Label } from '../store/types';
+    import { addToStore, labels } from '../store/store';
+    import { toSentenceCase } from "../hooks/reusable";
+    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import FilterSearch from "../components/merged/FilterSearch.svelte";
 
     /**
      * Array of label options to display in the dropdown.
-     * @type {Reminder[]}
+     * @type {Label[]}
      */
-    export let options: Reminder[] = [];
+    export let options: Label[] = [];
 
     /**
-     * Array of currently selected reminders.
-     * @type {Reminder[]}
+     * Array of currently selected labels.
+     * @type {Label[]}
      */
-    export let selectedOptions: Reminder[] = [];
-
-    /**
-     * Tracks if a time has been selected.
-     * @type {string}
-     */
-    export let selectedTime: string = "";
+    export let selectedOptions: Label[] = [];
 
     /**
      * Tracks whether the dropdown menu is open or closed.
@@ -49,7 +46,7 @@
     const dispatch = createEventDispatcher();
 
     /**
-     * Toggles the dropdown menu.
+     * Toggles the dropdown menu open or closed.
      */
     function toggleMenu() {
         menuOpen = !menuOpen;
@@ -63,7 +60,7 @@
     }
 
     /**
-     * Clears the selected reminder and dispatches an event.
+     * Clears all selected labels and dispatches the updated empty selection.
      */
     function clearSelection() {
         selectedOptions = [];
@@ -71,26 +68,45 @@
     }
 
     /**
-     * Handles selecting/deselecting a reminder.
-     * - If it's already selected, remove it.
-     * - Otherwise, add it to the selection.
+     * Handles the selection of a label.
+     * - Adds the label if not already selected.
+     * - Removes the label if it's already selected.
+     * - Dispatches a 'select' event with updated selections.
+     *
+     * @param {CustomEvent<Label>} event - The event containing the selected label.
      */
-    function selectReminder(option: Reminder) {
-        const index = selectedOptions.findIndex((r) => r.id === option.id);
+    function handleSelect(event: CustomEvent<Label>) {
+        const selectedLabel = event.detail;
+        const alreadySelected = selectedOptions.some(label => label.id === selectedLabel.id);
 
-        if (index !== -1) {
-            // Remove if already selected
-            selectedOptions = selectedOptions.filter((r) => r.id !== option.id);
-        } else {
-            // Add to selection
-            selectedOptions = [...selectedOptions, option];
-        }
+        selectedOptions = alreadySelected
+            ? selectedOptions.filter(label => label.id !== selectedLabel.id)
+            : [...selectedOptions, selectedLabel];
 
         dispatch('select', selectedOptions);
     }
 
     /**
-     * Handles clicking outside the component to close the menu.
+     * Handles the creation of a new label.
+     * - Adds the newly created label to the store.
+     * - Automatically selects the new label.
+     * - Dispatches the updated selection.
+     *
+     * @param {CustomEvent<{ title: string }>} event - The event containing the new label title.
+     */
+    function handleCreate(event: CustomEvent<{ title: string }>) {
+        const { title } = event.detail;
+        if (!title.trim()) return;
+
+        const baseData = { title: title.trim(), description: "" };
+        addToStore(labels, { ...baseData });
+    }
+
+    /**
+     * Svelte action that detects clicks outside the specified element and triggers a callback.
+     *
+     * @param node - The DOM node to monitor for outside clicks.
+     * @returns An object with a `destroy` method to clean up the event listener.
      */
     function clickOutside(node: HTMLElement) {
         const handleClick = (event: MouseEvent) => {
@@ -106,10 +122,11 @@
             },
         };
     }
+
 </script>
 
 <!--
-  Container for the reminder selector dropdown.
+  Container for the label selector dropdown.
   - Uses the `clickOutside` action to close the menu when clicking outside.
 -->
 <div class="selector-container" use:clickOutside>
@@ -120,7 +137,7 @@
       - `aria-expanded` reflects the menu state for accessibility.
     -->
     <div
-            class="selector-content"
+            class="selector"
             role="button"
             tabindex="0"
             aria-haspopup="menu"
@@ -133,20 +150,16 @@
           - If labels are selected, show the first one.
           - If multiple labels are selected, display the count of additional labels.
         -->
-        <div class="selector">
-            <UniIcon><span>O</span></UniIcon>
-
-            <span>
-                {#if selectedOptions.length > 0}
-                    {toSentenceCase(selectedOptions[0].title)}
-                    {#if selectedOptions.length > 1}
-                        +{selectedOptions.length - 1} more
-                    {/if}
-                {:else}
-                    Add Reminder
-                {/if}
-            </span>
-        </div>
+        <span>
+          {#if selectedOptions.length > 0}
+            {toSentenceCase(selectedOptions[0].title)}
+              {#if selectedOptions.length > 1}
+                  +{selectedOptions.length - 1} more
+              {/if}
+          {:else}
+            Labels  <!-- Default text when no labels are selected -->
+          {/if}
+        </span>
 
         <!--
           Clear selection button:
@@ -161,7 +174,7 @@
                     on:click={clearSelection}
                     on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && clearSelection()}
             >
-                <UniIcon><span>{selectedOptions.length > 0 ? 'X' : 'R'}</span></UniIcon>
+                <UniIcon><span>{selectedOptions.length > 0 ? "X" : "R"}</span></UniIcon>
             </span>
         </div>
     </div>
@@ -174,35 +187,13 @@
     {#if menuOpen}
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
-                {#each options as option}
-                    <div
-                            class="dropdown-item"
-                            role="button"
-                            tabindex="0"
-                            on:click={() => selectReminder(option)}
-                            on:keydown={(e) => (e.key === 'Enter') && selectReminder(option)}
-                    >
-                        <!--
-                         DropDownItem:
-                         - Displays the option title with optional left and right icons.
-                         - Clicking an option triggers a `select` event.
-                       -->
-                        <DropDownItem size="small">
-                            <svelte:fragment slot="leftIcon">
-                                <UniIcon><span>L</span></UniIcon>
-                            </svelte:fragment>
-                            <span>
-                                <span>{option.title}</span>
-                                <span class="reminder-time">{selectedTime === "" ? "(9:45AM)" : ""}</span>
-                            </span>
-                            <svelte:fragment slot="rightIcon">
-                                {#if selectedOptions.some(selected => selected.id === option.id)}
-                                    <UniIcon><span>✔</span></UniIcon>
-                                {/if}
-                            </svelte:fragment>
-                        </DropDownItem>
-                    </div>
-                {/each}
+                <FilterSearch
+                    {options}
+                    selectedOptions={selectedOptions}
+                    itemInputType="label"
+                    on:select={handleSelect}
+                    on:create={handleCreate}
+                />
             </div>
         </div>
     {/if}
@@ -217,7 +208,7 @@
     }
 
     /* Styles for the clickable selector button */
-    .selector-content {
+    .selector {
         cursor: pointer;
         user-select: none;
         gap: 1em;
@@ -231,15 +222,8 @@
     }
 
     /* Hover effect for the selector-content */
-    .selector-content:hover {
+    .selector:hover {
         background-color: #f2f2f2;
-    }
-
-    .selector {
-        gap: .5em;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
 
     .clear-selection {
@@ -249,7 +233,7 @@
 
     /* Dropdown menu styling */
     .dropdown-menu {
-        z-index: 100;
+        z-index: 90;
         left: 0;
         right: 0;
         top: 100%;
@@ -268,26 +252,6 @@
         display: flex;
         flex-direction: column;
         padding: .5em 0;
-    }
-
-    /* Option item styling */
-    .dropdown-item {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        border-radius: .4em;
-        padding: .3em 0;
-        transition: background-color .25s ease-in-out;
-    }
-    .dropdown-item:hover {
-        background-color: #f5f5f5;
-    }
-
-
-    .reminder-time {
-        color: #5781A5;
-        font-size: 11px;
-        font-weight: 300;
     }
 </style>
 

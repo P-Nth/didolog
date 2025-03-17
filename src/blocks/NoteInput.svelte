@@ -1,8 +1,8 @@
 <script lang="ts">
     import {createEventDispatcher, onMount, tick} from "svelte";
-    import type {Note} from "../../store/types";
-    import {addBlock, selectedTask} from '../../store/store';
-    import InputField from '../indivitual/InputField.svelte';
+    import type {Note} from "../store/types";
+    import {addBlock, selectedTask} from '../store/store';
+    import InputField from '../components/indivitual/InputField.svelte';
 
     let title: string = '';
     let type: string = 'note';
@@ -43,8 +43,10 @@
         showMenu = false;
     };
 
-    const addItem = async () => {
-        if (!title.trim()) return;
+    const handleAddItem = async () => {
+        !title.trim() && dispatch("complete");
+
+        // if (!title.trim()) { dispatch("complete"); await tick(); focusNoteInput(); return; }
 
         addBlock<Note>({type: "note", title, parentId: $selectedTask.id});
 
@@ -66,7 +68,7 @@
                 bind:value={title}
                 bind:this={inputRef}
                 placeholder="Type something... (Press '/' to see options)"
-                onEnter={addItem}
+                onEnter={handleAddItem}
         />
     </div>
 

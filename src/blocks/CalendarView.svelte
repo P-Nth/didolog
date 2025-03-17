@@ -1,5 +1,5 @@
 <script>
-  import { todos, tasks } from '../../store/store.ts';
+  import { todos, tasks } from '../store/store.ts';
 
   // Function to get today's date in YYYY-MM-DD format without timezone issues
   function getLocalDateString(date) {

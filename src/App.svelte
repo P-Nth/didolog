@@ -1,6 +1,6 @@
 <script>
   import Layout from './layout/Layout.svelte';
-  import Overview from './main/Overivew.svelte';
+  import Overview from './layout/Overivew.svelte';
 </script>
 
 <Layout>

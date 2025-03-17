@@ -1,8 +1,8 @@
 <script lang="ts">
     import {createEventDispatcher, onMount} from "svelte";
-    import type {Section} from "../../store/types";
-    import { addBlock, selectedTask } from "../../store/store";
-    import InputField from "../indivitual/InputField.svelte";
+    import type {Section} from "../store/types";
+    import { addBlock, selectedTask } from "../store/store";
+    import InputField from "../components/indivitual/InputField.svelte";
 
     let title = "";
 
@@ -19,7 +19,7 @@
     const dispatch = createEventDispatcher();
 
     function handleAddSection() {
-        if (!title.trim()) return;
+        !title.trim() && dispatch("complete");
 
         addBlock<Section>({type: "section", title: title.trim(), parentId: $selectedTask.id,});
 

@@ -2,9 +2,9 @@
 <script lang="ts">
     // Import the UniIcon function.
     import { createEventDispatcher } from 'svelte';
-    import type {Reminder} from "../../store/types";
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import DatePicker from "../indivitual/DatePicker.svelte";
+    import type {Reminder} from "../store/types";
+    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import DatePicker from "../components/merged/DatePicker.svelte";
     import ReminderSelector from "./ReminderSelector.svelte";
 
     /**

@@ -26,7 +26,7 @@ Example:
 <InputItem />
 -->
 <script lang="ts">
-    import {createEventDispatcher, onMount} from "svelte";
+    import {createEventDispatcher, onMount, tick} from "svelte";
     import {
         addBlock,
         tasks,
@@ -34,15 +34,15 @@ Example:
         priorities,
         labels,
         reminders, selectedTask,
-    } from '../../store/store';
-    import type {Task, Todo, Priority, Label, Reminder} from '../../store/types';
+    } from '../store/store';
+    import type {Task, Todo, Priority, Label, Reminder} from '../store/types';
     import TaskSelector from './TaskSelector.svelte';
-    import Button from '../indivitual/Button.svelte';
-    import InputField from '../indivitual/InputField.svelte';
-    import PrioritySelector from "./PrioritySelector.svelte";
-    import LabelSelector from "./LabelSelector.svelte";
-    import DateSelector from "./DateSelector.svelte";
+    import Button from '../components/indivitual/Button.svelte';
     import ItemSelector from "./ItemSelector.svelte";
+    import DateSelector from "./DateSelector.svelte";
+    import LabelSelector from "./LabelSelector.svelte";
+    import InputField from '../components/indivitual/InputField.svelte';
+    import PrioritySelector from "./PrioritySelector.svelte";
 
     /**
      * Currently selected task for the to-do item.
@@ -121,38 +121,46 @@ Example:
      */
     const dispatch = createEventDispatcher();
 
+    const addItem = () => {
+        addBlock<Todo>({
+            type: "todo",
+            title,
+            description,
+            parentId: newSelectedTask.id,
+            dueDate: dueDate,
+            priorityId: selectedPriority.id,
+            labelIds: selectedLabels.map(label => label.id),
+            reminderIds: selectedReminders.map(reminder => reminder.id),
+            locationId: "",
+            isComplete: false
+        });
+    }
     /**
      * Adds a new to-do item to the `todos` store.
      * - Requires a non-empty `title`.
      * - Links the to-do item to the selected task, default priority, default reminder, and isComplete.
      * - Clears the form fields after successful addition.
      */
-    const addItem = () => {
-        if (title.trim()) {
+    const handleAddItem = async () => {
+        // If the title is empty dispatch and return
+        if (!title.trim()) { dispatch("complete"); addItem(); return; }
 
-            addBlock<Todo>({
-                type: "todo",
-                title,
-                description,
-                parentId: newSelectedTask.id,
-                dueDate: dueDate,
-                priorityId: selectedPriority.id,
-                labelIds: selectedLabels.map(label => label.id),
-                reminderIds: selectedReminders.map(reminder => reminder.id),
-                locationId: '',
-                isComplete: false
-            })
+        // Only add the todo if the title is not empty
+        addItem();
 
-            title = '';
-            description = '';
-            newSelectedTask = $selectedTask;
-            dueDate = ["", ""];
-            selectedPriority = $priorities.find(item => item.isDefault)!;
-            selectedLabels = [];
-            selectedReminders = [];
+        dispatch("complete", "todo");
 
-            dispatch("complete");
-        }
+        await tick();
+        focusTodoInput();
+
+        // Reset all form fields regardless of whether we added a todo
+        title = "";
+        description = "";
+        newSelectedTask = $selectedTask;
+        dueDate = ["", ""];
+        selectedPriority = $priorities.find(item => item.isDefault)!;
+        selectedLabels = [];
+        selectedReminders = [];
     };
 
     /**
@@ -241,13 +249,13 @@ Example:
                 bind:value={title}
                 bind:this={inputRef}
                 placeholder="Type a todo"
-                onEnter={addItem}
+                onEnter={handleAddItem}
                 onBackspace={handleBackspace}
         />
         <InputField
                 bind:value={description}
                 placeholder="Notes"
-                onEnter={addItem}
+                onEnter={handleAddItem}
         />
     </div>
 
@@ -302,7 +310,7 @@ Example:
         />
 
         <div class="input-action">
-            <Button onClick={addItem} disabled={!title || !title.trim()}>
+            <Button onClick={handleAddItem} disabled={!title || !title.trim()}>
                 Add
             </Button>
         </div>

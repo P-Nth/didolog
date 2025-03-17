@@ -1,4 +1,3 @@
-<!-- UniversalIcon component -->
 <!--
   IconStyle Component
   -------------------

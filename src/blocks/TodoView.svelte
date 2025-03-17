@@ -19,12 +19,12 @@
   - linkedTaskTitle: The title of the task linked to the to-do item.
 -->
 <script lang="ts">
-    import {updateBlock, deleteBlock, tasks, selectedTask,} from '../../store/store';
-    import { toSentenceCase } from "../../hooks/reusable";
-    import type {Todo, Task, Block} from '../../store/types';
-    import EditableText from "../../components/indivitual/EditableText.svelte";
-    import Button from "../../components/indivitual/Button.svelte";
-    import Pin from "../../components/indivitual/Pin.svelte";
+    import {updateBlock, deleteBlock, tasks, selectedTask,} from '../store/store';
+    import { toSentenceCase } from "../hooks/reusable";
+    import type {Todo, Task, Block} from '../store/types';
+    import EditableText from "../components/merged/EditableText.svelte";
+    import Button from "../components/indivitual/Button.svelte";
+    import Pin from "../components/indivitual/Pin.svelte";
 
     /**
      * The to-do block passed to the component.

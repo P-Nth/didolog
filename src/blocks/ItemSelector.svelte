@@ -19,10 +19,10 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import { toSentenceCase } from "../../hooks/reusable";
-    import InputField from "../indivitual/InputField.svelte";
-    import DropDownItem from "../indivitual/DropDownItem.svelte";
+    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import { toSentenceCase } from "../hooks/reusable";
+    import InputField from "../components/indivitual/InputField.svelte";
+    import DropDownItem from "../components/indivitual/DropDownItem.svelte";
 
     /**
      * Type of the selectable items, passed from parent component

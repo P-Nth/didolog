@@ -37,12 +37,12 @@ Example:
 />
 -->
 <script lang="ts">
-    import {addBlock, selectedWorkspace} from '../../store/store';
-    import { toSentenceCase } from "../../hooks/reusable";
+    import {addBlock, selectedWorkspace} from '../store/store';
+    import { toSentenceCase } from "../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
-    import type {Task} from '../../store/types';
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import FilterSearch from "./FilterSearch.svelte";
+    import type {Task} from '../store/types';
+    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import FilterSearch from "../components/merged/FilterSearch.svelte";
 
     /**
      * List of selectable task options.
