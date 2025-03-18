@@ -31,6 +31,13 @@
      */
     let value: string = text;
 
+    let inputRef: InputField | null = null; // Reference to the input field
+
+    // Function to focus the input field
+    export function focusInput() {
+        inputRef?.focusInput();
+    }
+
     /**
      * Dispatcher for sending events to parent components.
      */
@@ -84,6 +91,7 @@
     <div class="editable-title w-full">
         <InputField
                 bind:value={value}
+                bind:this={inputRef}
                 placeholder="Type edited text"
                 onEnter={() => value.trim() && saveEdit()}
                 onEscape={() => (value = text)}

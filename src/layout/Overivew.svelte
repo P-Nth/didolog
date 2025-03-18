@@ -1,14 +1,14 @@
 <!-- Overview -->
 <script>
-  import ItemList from "./ItemList.svelte";
+  import ItemList from "../blocks/ItemList.svelte";
   import ItemInput from "../blocks/ItemInput.svelte";
 </script>
 
-<div class="overview">
+<div class="overview flex flex-col gap-6">
     <h1 class="text-base text-black-300">Overview</h1>
 
     <section class="list-items">
-        <div class="todos">
+        <div class="items flex flex-col">
             <div class="list-section">
                 <ItemList />
             </div>
@@ -18,33 +18,9 @@
         </div>
     </section>
 
-    <section class="calendar">
+    <section class="calendar rounded-lg p-4 bg-[e3e3e3]">
         <h2>Calendar View</h2>
         <!--        <CalendarView />-->
     </section>
 </div>
-
-<style>
-    .overview {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .list-items {
-        display: flex;
-        gap: 1rem;
-    }
-
-    .todos {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .calendar {
-        background: #e3e3e3;
-        padding: 1rem;
-        border-radius: 8px;
-    }
-</style>
 
