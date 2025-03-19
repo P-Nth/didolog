@@ -114,14 +114,14 @@
   - Search Input: Provides a field for users to type and filter options.
   - Results List: Displays filtered options. Users can select an option or create a new one.
 -->
-<div class="filter-search">
+<div class="filter-search flex flex-col gap-[0.5em] w-full">
 
     <!--
       Search Input Section:
       - Displays an input field for users to type their search query.
       - The input is bound to `filterQuery` for real-time filtering.
     -->
-    <div class="filter-input-container">
+    <div class="filter-input-container flex items-center border-b border-[#eee] pb-[0.5em]">
         <InputField
                 bind:value={filterQuery}
                 placeholder={toSentenceCase(filterPlaceholder)}
@@ -134,10 +134,10 @@
       - If options are found: Displays them as clickable items.
       - If no options match: Shows a "not found" message and a button to create a new item.
     -->
-    <div class="filter-results">
+    <div class="filter-results max-h-[200px] overflow-y-auto">
         {#if !filterQuery && itemInputType !== "label"}
             <!-- Default Option -->
-            <div class="option-item"
+            <div class="option-item cursor-pointer flex flex-col rounded-[0.4em] py-[0.3em] transition-colors duration-200 hover:bg-[#f5f5f5]"
                  role="button"
                  tabindex="0"
                  on:click={() => handleSelect(filteredOptions[0])}
@@ -162,7 +162,7 @@
         <!-- List Options -->
         {#each filteredOptions as option}
             {#if option.title !== defaultOption?.title || filterQuery || itemInputType === "label"}
-                <div class="option-item"
+                <div class="option-item cursor-pointer flex flex-col rounded-[0.4em] py-[0.3em] transition-colors duration-200 hover:bg-[#f5f5f5]"
                      role="button"
                      tabindex="0"
                      on:click={() => handleSelect(option)}
@@ -193,7 +193,7 @@
           - Provides a button to create a new item with the current search query.
         -->
         {#if filteredOptions.length === 0}
-            <div class="no-results">
+            <div class="no-results flex flex-col gap-[0.5em] text-[#666]">
                 <span class="no-type">Add a {capitalizeWords(itemInputType)}.</span>
                 <Button onClick={handleCreate} size="small" variant="tertiary">
                     + Create "{filterQuery}"
@@ -202,46 +202,4 @@
         {/if}
     </div>
 </div>
-
-<!-- Search Filter Styles -->
-<style>
-    .filter-search {
-        gap: .5em;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .filter-input-container {
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid #eee;
-        padding-bottom: .5em;
-    }
-
-    .filter-results {
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    .option-item {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        border-radius: .4em;
-        padding: .3em 0;
-        transition: background-color .25s ease-in-out;
-    }
-
-    .option-item:hover {
-        background-color: #f5f5f5;
-    }
-
-    .no-results {
-        gap: .5em;
-        display: flex;
-        flex-direction: column;
-        color: #666;
-    }
-</style>
 

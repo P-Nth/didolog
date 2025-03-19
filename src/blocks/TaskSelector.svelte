@@ -163,7 +163,7 @@ Example:
   Container for the task selector dropdown.
   - Uses the `clickOutside` action to detect clicks outside and close the menu.
 -->
-<div class="selector-container" use:clickOutside>
+<div class="selector-container relative flex" use:clickOutside>
 
     <!--
       Selector button that displays the currently selected option.
@@ -175,7 +175,7 @@ Example:
           - "X" icon with a clickable area to clear the selection if a non-default option is selected.
     -->
     <div
-            class="selector"
+            class="selector cursor-pointer select-none flex items-center gap-[1em] bg-white rounded-[0.25em] border border-[#1d2846] px-[0.4em] w-full hover:bg-[#f2f2f2]"
             role="button"
             tabindex="0"
             aria-haspopup="listbox"
@@ -197,7 +197,7 @@ Example:
                   - Clicking or pressing 'Enter'/'Space' clears the selection.
                 -->
                 <span
-                        class="clear-selection"
+                        class="clear-selection flex rounded-[0.25em]"
                         role="button"
                         tabindex="0"
                         on:click={clearSelection}
@@ -214,8 +214,8 @@ Example:
       Contains a searchable list of task options and an option to create new tasks.
     -->
     {#if menuOpen}
-        <div class="dropdown-menu">
-            <div class="dropdown-menu-content">
+        <div class="dropdown-menu absolute left-0 right-0 top-full z-[90] bg-white rounded-[0.25em] border border-[#ccc] shadow-[0_2px_5px_rgba(0,0,0,0.15)] w-[200px] p-[0.3em]">
+            <div class="dropdown-menu-content flex rounded-[0.25em]">
                 <FilterSearch
                         {options}
                         {defaultOption}
@@ -228,60 +228,4 @@ Example:
         </div>
     {/if}
 </div>
-
-<!-- Selector Styles -->
-<style>
-    /* Container for the selector and its dropdown menu */
-    .selector-container {
-        position: relative;
-        display: flex;
-    }
-
-    /* Styles for the clickable selector button */
-    .selector {
-        cursor: pointer;
-        user-select: none;
-        gap: 1em;
-        display: flex;
-        align-items: center;
-        background-color: white;
-        border-radius: .25em;
-        border: 1px solid #1d2846;
-        padding: 0 .4em;
-        width: 100%;
-    }
-
-    /* Hover effect for the selector-content */
-    .selector:hover {
-        background-color: #f2f2f2;
-    }
-
-    .clear-selection {
-        display: flex;
-        border-radius: .25em;
-    }
-
-    /* Dropdown menu styling */
-    .dropdown-menu {
-        z-index: 90;
-        left: 0;
-        right: 0;
-        top: 100%;
-        position: absolute;
-        background: white;
-        border-radius: .25em;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        width: 200px;
-        padding: .3em .3em;
-    }
-
-    /* Dropdown item styling */
-    .dropdown-menu-content {
-        gap: .2em;
-        display: flex;
-        flex-direction: column;
-        padding: .5em 0;
-    }
-</style>
 

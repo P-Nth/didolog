@@ -29,18 +29,9 @@
 
 <!-- A span parent for the content in slot -->
 <span
-        class="icon-style"
+        class="icon-style inline-flex items-center justify-center"
         style="font-size: {size}; width: {width}; height: {height};"
 >
   <slot />
 </span>
-
-<!-- Style for the Universal Icon-->
-<style>
-    .icon-style {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
 

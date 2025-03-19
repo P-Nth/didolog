@@ -50,18 +50,10 @@
 <!--
   Displays the status indicator with an icon, status text, and linked task if applicable.
 -->
-<span class="status-indicator">
+<span class="status-indicator gap-2 flex font-bold">
     <span style="color: {color};">{icon} {text}</span>
     {#if status === "linked" && linkedTask}
         {linkedTask}
     {/if}
 </span>
 
-<!-- Pin Styles -->
-<style>
-    .status-indicator {
-        gap: 0.5rem;
-        display: flex;
-        font-weight: bold;
-    }
-</style>

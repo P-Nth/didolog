@@ -230,7 +230,7 @@ Example:
 <!--
   Container for the entire input section, including fields for the to-do title, description, task selector, and add button.
 -->
-<div class="input-container">
+<div class="input-container flex flex-col gap-4">
 
     <!--
       Section containing input fields for the to-do item's title and description.
@@ -244,7 +244,7 @@ Example:
           - Triggers `addItem` on pressing Enter.
           - Placeholder guides the user to add notes.
     -->
-    <div class="input-section">
+    <div class="input-section flex flex-col gap-1.5">
         <InputField
                 bind:value={title}
                 bind:this={inputRef}
@@ -263,7 +263,7 @@ Example:
       Placeholder for additional action buttons or future enhancements.
       Currently empty.
     -->
-    <div class="add-actions">
+    <div class="add-actions flex gap-2">
         <DateSelector
                 selectorTitle={dueDate}
                 on:select={handleDateSelect}
@@ -301,7 +301,7 @@ Example:
           - Adds the to-do item when clicked.
           - Disabled if `title` is empty or contains only whitespace.
     -->
-    <div class="type-selector">
+    <div class="type-selector flex gap-4 justify-between">
         <TaskSelector
                 options={$tasks}
                 defaultOption={$selectedTask}
@@ -316,30 +316,4 @@ Example:
         </div>
     </div>
 </div>
-
-<!-- TodoItem Styles -->
-<style>
-    .input-container {
-        gap: 1em;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .input-section {
-        gap: .3em;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .add-actions {
-        gap: .5em;
-        display: flex;
-    }
-
-    .type-selector {
-        gap: 1rem;
-        display: flex;
-        justify-content: space-between;
-    }
-</style>
 

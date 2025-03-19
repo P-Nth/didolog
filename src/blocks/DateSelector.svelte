@@ -143,10 +143,10 @@
   Container for the Date selector dropdown.
   - Uses the `clickOutside` action to close the menu when clicking outside.
 -->
-<div class="selector-container" use:clickOutside>
+<div class="selector-container relative flex" use:clickOutside>
     <!-- Selector button to open the dropdown menu -->
     <div
-            class="selector"
+            class="selector cursor-pointer select-none flex gap-4 items-center bg-white hover:bg-[#f2f2f2] border border-[#1d2846] rounded gap-x-2 w-full"
             role="button"
             tabindex="0"
             aria-haspopup="menu"
@@ -168,7 +168,7 @@
               - Clicking or pressing 'Enter' clears the selection.
             -->
             <span
-                    class="clear-selection"
+                    class="clear-selection flex rounded"
                     role="button"
                     tabindex="0"
                     on:click={clearSelection}
@@ -181,8 +181,8 @@
 
     <!-- Dropdown menu for date and time selection -->
     {#if menuOpen}
-        <div class="dropdown-menu">
-            <div class="dropdown-menu-content">
+        <div class="dropdown-menu z-[90] left-0 right-0 top-[100%] absolute bg-white rounded border border-[#ccc] w-[250] p-1.5 shadow-primary">
+            <div class="dropdown-menu-content flex flex-col gap-4 py-2">
                 <!-- DatePicker component allows selecting date and time -->
                 <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />
                 <ReminderSelector
@@ -195,61 +195,4 @@
         </div>
     {/if}
 </div>
-
-<!-- Selector Styles -->
-<style>
-    /* Container for the selector and its dropdown menu */
-    .selector-container {
-        position: relative;
-        display: flex;
-    }
-
-    /* Styles for the clickable selector */
-    .selector {
-        cursor: pointer;
-        user-select: none;
-        gap: 1em;
-        display: flex;
-        align-items: center;
-        background-color: white;
-        border-radius: .25em;
-        border: 1px solid #1d2846;
-        padding: 0 .4em;
-        width: 100%;
-    }
-
-    /* Hover effect for the selector */
-    .selector:hover {
-        background-color: #f2f2f2;
-    }
-
-
-    .clear-selection {
-        display: flex;
-        border-radius: .25em;
-    }
-
-    /* Dropdown menu styling */
-    .dropdown-menu {
-        z-index: 90;
-        left: 0;
-        right: 0;
-        top: 100%;
-        position: absolute;
-        background: white;
-        border-radius: .25em;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        width: 250px;
-        padding: .3em .3em;
-    }
-
-    /* Dropdown item styling */
-    .dropdown-menu-content {
-        gap: 1em;
-        display: flex;
-        flex-direction: column;
-        padding: .5em 0;
-    }
-</style>
 

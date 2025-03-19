@@ -11,11 +11,10 @@
     export let text: string = "Select";
 
     /**
-    * The size of the button.
-    * This can be used to apply size-related styling (e.g., "small", "medium", "large").
+    * The classNames of the button.
     * @type {string}
     */
-    export let size: string = "medium";
+    export let className: string = "";
 
     /**
      * Whether the checkbox is checked.
@@ -42,7 +41,7 @@
   - Text content (either passed as a prop or via the default slot)
 -->
 <div
-    class="dropdown-item"
+    class="dropdown-item gap-4 flex items-center justify-between px-1.5 cursor-pointer select-none"
     role="button"
     tabindex="0"
     on:click={toggleCheck}
@@ -54,46 +53,14 @@
         </span>
     {/if}
 
-    <span class="dropdown-text {size}">
+    <span class="dropdown-text flex flex-1 items-center" class:className>
         <slot>{text}</slot>
     </span>
 
     {#if $$slots.leftIcon}
-        <span class="icon right">
+        <span class="icon inline-flex items-center right">
             <slot name="rightIcon" />
         </span>
     {/if}
 </div>
-
-<!-- Dropdown Item Styles -->
-<style>
-    /* Base styles for the dropdown item container */
-    .dropdown-item {
-        gap: 1em;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 .3rem;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    /* Styles for any icons within the dropdown item */
-    .icon {
-        display: inline-flex;
-        align-items: center;
-    }
-
-    /* Ensures the text content takes available space */
-    .dropdown-text {
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Sizes */
-    .small { font-size: .88em; }
-    .medium { font-size: 1em; }
-    .large { font-size: 1.1em; }
-</style>
 

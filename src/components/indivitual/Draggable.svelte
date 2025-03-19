@@ -54,7 +54,7 @@
 -->
 <div
         id={id}
-        class={`draggable ${customClass} ${isHovered ? "hovered" : ""}`}
+        class="draggable cursor-grab relative flex items-center active:cursor-grabbing" class:customClass class:hovered={isHovered}
         draggable="true"
         role="listitem"
         aria-grabbed="false"
@@ -65,38 +65,11 @@
         on:mouseleave={() => (isHovered = false)}
 >
     <!-- Draggable Icon (Visible Only on Hover) -->
-    <span class="drag-icon">
+    <span class="drag-icon px-1.5 opacity-0 text-[20px] font-semibold transition-opacity duration-200 ease-in-out" class:opacity-1={isHovered}>
         ::
     </span>
 
     <!-- Content Slot -->
     <slot />
 </div>
-
-<!-- Draggable Styling-->
-<style>
-    .draggable {
-        cursor: grab;
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .draggable:active {
-        cursor: grabbing;
-    }
-
-    /* Draggable icon (Hidden by default, appears on hover) */
-    .drag-icon {
-        padding: 0 .3em;
-        opacity: 0;
-        font-size: 20px;
-        font-weight: 600;
-        transition: opacity 0.2s ease-in-out;
-    }
-
-    .hovered .drag-icon {
-        opacity: 1;
-    }
-</style>
 

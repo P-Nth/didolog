@@ -254,14 +254,14 @@
                 </span>
             </div>
         {:else}
-            <div class="selector">
+            <div class="selector flex items-center border border-[#ddd] rounded-[4px] px-2 focus-within:border-[#5781A5] focus-within:shadow-secondary">
                 <!-- Selected items display as pins -->
-                <div class="pins">
+                <div class="pins flex gap-1">
                     {#each selectedOptions as option}
-                        <div class="pin">
+                        <div class="pin cursor-pointer flex items-center bg-[#f0f4f8] rounded-[16px] px-2 py-1 m-0.5 text-sm gap-1.5">
                             <span class="pin-text">{toSentenceCase(option.title)}</span>
                             <span
-                                    class="pin-remove"
+                                    class="pin-remove flex items-center justify-center text-[12px]"
                                     role="button"
                                     tabindex="0"
                                     aria-label={`Remove ${option.title}`}
@@ -286,7 +286,7 @@
                 />
 
                 <!-- Action buttons (clear selection) -->
-                <div class="selector-actions">
+                <div class="selector-actions flex items-center">
                     <span
                             class="clear-selection"
                             role="button"
@@ -304,19 +304,18 @@
 
     <!-- Dropdown menu -->
     {#if menuOpen}
-        <div id="option-dropdown" class="dropdown-menu">
-            <div class="dropdown-menu-content" role="listbox">
+        <div id="option-dropdown" class="dropdown-menu absolute left-0 right-0 top-full z-[90] bg-white rounded-[0.25em] border border-[#ccc] shadow-md w-[200px] p-[0.3em]">
+            <div class="dropdown-menu-content flex flex-col gap-[0.2em] py-[0.5em]" role="listbox">
                 <!-- Filtered options -->
                 {#if filteredOptions.length > 0}
                     {#each filteredOptions as option}
-                        <div
-                                class="option-item"
-                                class:selected={selectedOptions.some(item => item.id === option.id)}
-                                role="option"
-                                tabindex="0"
-                                aria-selected={selectedOptions.some(item => item.id === option.id)}
-                                on:click|stopPropagation={() => selectOption(option)}
-                                on:keydown={(e) => (e.key === 'Enter') && selectOption(option)}
+                        <div class="option-item cursor-pointer flex flex-col rounded-[0.4em] p-[0.3em] transition-colors duration-250 ease-in-out hover:bg-[#f5f5f5] focus:bg-[#f5f5f5]"
+                             class:bg-[#f5f5f5]={selectedOptions.some(item => item.id === option.id)}
+                             role="option"
+                             tabindex="0"
+                             aria-selected={selectedOptions.some(item => item.id === option.id)}
+                             on:click|stopPropagation={() => selectOption(option)}
+                             on:keydown={(e) => (e.key === 'Enter') && selectOption(option)}
                         >
                             <DropDownItem text={toSentenceCase(option.title)} size="small">
                                 <svelte:fragment slot="leftIcon">
@@ -332,7 +331,7 @@
                     <!-- Create new option when searching -->
                     {#if canCreateNew}
                         <div
-                                class="option-item create-new"
+                                class="option-item create-new text-[#4a90e2] italic"
                                 role="option"
                                 tabindex="0"
                                 aria-selected={searchInput.trim() !== ""}
@@ -344,7 +343,7 @@
                     {/if}
                 {:else}
                     <!-- No options message -->
-                    <div class="option-item no-options">
+                    <div class="option-item no-options text-[#888] italic">
                         Start typing...
                     </div>
                 {/if}
@@ -352,97 +351,4 @@
         </div>
     {/if}
 </div>
-
-<!-- ItemSelector Styles-->
-<style>
-    .selector {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 0 .4em;
-    }
-
-    .selector:focus-within {
-        border-color: #5781A5;
-        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-    }
-
-    .pins {
-        gap: 0.25rem;
-        display: flex;
-    }
-
-    .pin {
-        cursor: pointer;
-        gap: .3rem;
-        display: flex;
-        align-items: center;
-        background-color: #f0f4f8;
-        border-radius: 16px;
-        padding: 0.25rem 0.5rem;
-        margin: 0.125rem;
-        font-size: 0.875rem;
-    }
-
-    .pin-remove {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-    }
-
-    .selector-actions {
-        display: flex;
-        align-items: center;
-    }
-
-    .dropdown-menu {
-        z-index: 90;
-        left: 0;
-        right: 0;
-        top: 100%;
-        position: absolute;
-        background: white;
-        border-radius: .25em;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        width: 200px;
-        padding: .3em .3em;
-    }
-
-    .dropdown-menu-content {
-        gap: .2em;
-        display: flex;
-        flex-direction: column;
-        padding: .5em 0;
-    }
-
-    .option-item {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        border-radius: .4em;
-        padding: .3em 0;
-        transition: background-color .25s ease-in-out;
-    }
-
-    .option-item:hover, .option-item:focus {
-        background-color: #f5f5f5;
-    }
-
-    .option-item.selected {
-        background-color: #f5f5f5;
-    }
-
-    .create-new {
-        color: #4a90e2;
-        font-style: italic;
-    }
-
-    .no-options {
-        color: #888;
-        font-style: italic;
-    }
-</style>
 

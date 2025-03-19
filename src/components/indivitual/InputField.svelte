@@ -135,7 +135,8 @@
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {className}"
+            class="input-field rounded w-full"
+            class:className
     />
 {:else if type === "note"}
     <textarea
@@ -147,7 +148,8 @@
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="textarea-field {className}"
+            class="textarea-field resize-none overflow-hidden whitespace-pre-wrap box-border border-none outline-none bg-transparent"
+            class:className
     />
 {:else if type === "time"}
     <input
@@ -160,28 +162,10 @@
             on:focus={() => onInput(value)}
             on:click={() => onInput(value)}
             on:keydown={handleKeydown}
-            class="input-field {className}"
+            class="input-field rounded w-full"
+            class:className
     />
 {:else}
     <span>No Input</span>
 {/if}
-
-<!-- InputField Styles -->
-<style>
-    .input-field, .textarea-field {
-        border-radius: .25em;
-        width: 100%;
-    }
-
-    .textarea-field {
-        resize: none;
-        overflow: hidden;
-        white-space: pre-wrap;
-        box-sizing: border-box;
-        border: none;
-        outline: none;
-        background: transparent;
-        font-size: inherit;
-    }
-</style>
 
