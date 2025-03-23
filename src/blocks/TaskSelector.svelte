@@ -41,7 +41,7 @@ Example:
     import { toSentenceCase } from "../hooks/reusable";
     import { createEventDispatcher } from 'svelte';
     import type {Task} from '../store/types';
-    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import UniIcon from "../components/individual/UniIcon.svelte";
     import FilterSearch from "../components/merged/FilterSearch.svelte";
 
     /**

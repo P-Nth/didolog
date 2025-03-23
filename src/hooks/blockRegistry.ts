@@ -1,7 +1,7 @@
-import { derived, type Readable } from "svelte/store";
+import {derived, get, type Readable} from "svelte/store";
 
-import type { Block } from "../store/types";
-import { blockStore, selectedTask } from "../store/store";
+import type {Block} from "../store/types";
+import {blockByParent, blockStore, selectedTask} from "../store/store";
 
 import TodoInput from "../blocks/TodoInput.svelte";
 import NoteInput from "../blocks/NoteInput.svelte";
@@ -18,14 +18,11 @@ import SectionView from "../blocks/SectionView.svelte";
  * @constant {Readable<Block[]>} blocksByTask - A store containing blocks related to the selected task.
  */
 export const blocksByTask: Readable<Block[]> = derived(
-    [blockStore, selectedTask],
-    ([$blockStore, $selectedTask]) =>
-        Object.values($blockStore)
-            .filter((block) => block.parentId === $selectedTask?.id)
-            .sort(
-                (a, b) =>
-                    new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime()
-            )
+    [selectedTask, blockStore],
+    ([$selectedTask]) => {
+        if (!$selectedTask) return [];
+        return get(blockByParent($selectedTask.id));
+    }
 );
 
 /**

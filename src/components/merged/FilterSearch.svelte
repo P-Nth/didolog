@@ -16,10 +16,10 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import {capitalizeWords, toSentenceCase} from "../../hooks/reusable.ts";
-  import Button from "../indivitual/Button.svelte";
-  import UniIcon from "../indivitual/UniIcon.svelte";
-  import InputField from "../indivitual/InputField.svelte";
-  import DropDownItem from "../indivitual/DropDownItem.svelte";
+  import Button from "../individual/Button.svelte";
+  import UniIcon from "../individual/UniIcon.svelte";
+  import InputField from "../individual/InputField.svelte";
+  import DropDownItem from "../individual/DropDownItem.svelte";
 
   /**
    * @component SearchFilter

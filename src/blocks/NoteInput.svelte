@@ -2,7 +2,7 @@
     import {createEventDispatcher, onMount, tick} from "svelte";
     import type {Note} from "../store/types";
     import {addBlock, selectedTask} from '../store/store';
-    import InputField from '../components/indivitual/InputField.svelte';
+    import InputField from '../components/individual/InputField.svelte';
 
     let title: string = '';
     let type: string = 'note';

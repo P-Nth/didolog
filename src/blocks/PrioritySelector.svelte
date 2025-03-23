@@ -11,8 +11,8 @@
     import { createEventDispatcher } from 'svelte';
     import { toSentenceCase } from "../hooks/reusable";
     import type { Priority } from '../store/types';
-    import UniIcon from "../components/indivitual/UniIcon.svelte";
-    import DropDownItem from "../components/indivitual/DropDownItem.svelte";
+    import UniIcon from "../components/individual/UniIcon.svelte";
+    import DropDownItem from "../components/individual/DropDownItem.svelte";
 
     /**
      * Array of selectable priority options.
@@ -174,7 +174,7 @@
                           - Displays the option title with optional left and right icons.
                           - Clicking an option triggers a `select` event.
                         -->
-                        <DropDownItem text={toSentenceCase(option.title)} size="small">
+                        <DropDownItem text={toSentenceCase(option.title)}>
                             <svelte:fragment slot="leftIcon">
                                 <UniIcon><span>L</span></UniIcon>
                             </svelte:fragment>

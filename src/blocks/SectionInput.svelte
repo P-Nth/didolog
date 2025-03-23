@@ -2,7 +2,7 @@
     import {createEventDispatcher, onMount} from "svelte";
     import type {Section} from "../store/types";
     import { addBlock, selectedTask } from "../store/store";
-    import InputField from "../components/indivitual/InputField.svelte";
+    import InputField from "../components/individual/InputField.svelte";
 
     let title = "";
 

@@ -3,7 +3,7 @@
     // Import the UniIcon function.
     import { createEventDispatcher } from 'svelte';
     import type {Reminder} from "../store/types";
-    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import UniIcon from "../components/individual/UniIcon.svelte";
     import DatePicker from "../components/merged/DatePicker.svelte";
     import ReminderSelector from "./ReminderSelector.svelte";
 

@@ -9,7 +9,7 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import FlatCalender from "../indivitual/FlatCalender.svelte";
+    import FlatCalender from "../individual/FlatCalender.svelte";
     import TimePicker from "./TimePicker.svelte";
 
     /**

@@ -37,11 +37,11 @@ Example:
     } from '../store/store';
     import type {Task, Todo, Priority, Label, Reminder} from '../store/types';
     import TaskSelector from './TaskSelector.svelte';
-    import Button from '../components/indivitual/Button.svelte';
+    import Button from '../components/individual/Button.svelte';
     import ItemSelector from "./ItemSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
-    import InputField from '../components/indivitual/InputField.svelte';
+    import InputField from '../components/individual/InputField.svelte';
     import PrioritySelector from "./PrioritySelector.svelte";
 
     /**

@@ -66,9 +66,9 @@ export const addBlock = <T extends Block>(block: Omit<T, "id" | "createdAt" | "u
         ...store,
         [id]: {
             id,
+            ...block,
             createdAt: now,
             updatedAt: now,
-            ...block
         }
     }));
 };
@@ -91,6 +91,35 @@ export const deleteBlock = (id: string) => {
     });
 };
 
+export function updateBlockOrder(blockId: string, newPosition: number) {
+    blockStore.update(blocks => {
+        const parentId = blocks[blockId]?.parentId;
+        if (!parentId) return blocks;
+
+        // Get all blocks under the same parent and sort by order or createdAt
+        let parentBlocks = Object.values(blocks)
+            .filter(b => b.parentId === parentId)
+            .sort((a, b) => (a.order ?? new Date(a.createdAt ?? 0).getTime()) -
+                (b.order ?? new Date(b.createdAt ?? 0).getTime()));
+
+        // Remove dragged block
+        const blockIndex = parentBlocks.findIndex(b => b.id === blockId);
+        if (blockIndex === -1) return blocks;
+        const [movedBlock] = parentBlocks.splice(blockIndex, 1);
+
+        // Insert at new position
+        parentBlocks.splice(newPosition, 0, movedBlock);
+
+        // Recalculate order and return a **new object** to ensure reactivity
+        const updatedBlocks = { ...blocks };
+        parentBlocks.forEach((b, index) => {
+            updatedBlocks[b.id] = { ...b, order: index };
+        });
+
+        return updatedBlocks;
+    });
+}
+
 /* -------------------------- 📦 Block Store Definitions -------------------------- */
 /** 🌍 Store for all blocks (tasks, sections, todos, notes) */
 export const blockStore: Writable<BlockStore> = writable({
@@ -104,14 +133,20 @@ export const blockStore: Writable<BlockStore> = writable({
         description: "Default task for all new items",
         isSelected: true,
         isComplete: false,
+        order: 0,
     },
 });
-export const blocksByParent = (parentId: string) => {derived(blockStore, ($blockStore) =>
+export const blockByParent = (parentId: string) => derived(blockStore, ($blockStore) =>
         Object.values($blockStore)
             .filter(block => block.parentId === parentId)
-            .sort((a, b) => new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime())
+            .sort((a, b) => {
+                // Use 'order' if available, otherwise fallback to 'createdAt'
+                const orderA = a.order ?? new Date(a.createdAt ?? 0).getTime();
+                const orderB = b.order ?? new Date(b.createdAt ?? 0).getTime();
+
+                return orderA - orderB;
+            })
     );
-}
 
 /** 🌍 Store for all tasks */
 export const tasks = derived(blockStore, ($blockStore) =>

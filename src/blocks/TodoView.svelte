@@ -23,8 +23,8 @@
     import { toSentenceCase } from "../hooks/reusable";
     import type {Todo, Task, Block} from '../store/types';
     import EditableText from "../components/merged/EditableText.svelte";
-    import Button from "../components/indivitual/Button.svelte";
-    import Pin from "../components/indivitual/Pin.svelte";
+    import Button from "../components/individual/Button.svelte";
+    import Pin from "../components/individual/Pin.svelte";
 
     /**
      * The to-do block passed to the component.
@@ -106,7 +106,7 @@
   - EditableText: Provides editable fields for title and description.
   - Button: Handles complete and delete actions.
 -->
-<div class="item-view-container border border-gray-300 rounded-[5px] px-2 py-1.5 w-full">
+<div class="item-view-container border-none rounded-[5px] px-2 py-1.5 w-full">
     {#if ($selectedTask.id !== "inbox")}
         <div class="item-view">
             {#if block.parentId}

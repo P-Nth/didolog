@@ -15,7 +15,7 @@
 
 </script>
 
-<div class="item-view-container border border-black-300 rounded-[5px] px-2 py-1.5 w-full">
+<div class="item-view-container border-none rounded-[5px] px-2 py-1.5 w-full">
     <EditableText
             text={editableItemTitle}
             on:updateItem={(e) => handleTitleUpdate(e.detail.text)}

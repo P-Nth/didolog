@@ -10,9 +10,9 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import {toSentenceCase} from "../../hooks/reusable";
-    import UniIcon from "../indivitual/UniIcon.svelte";
-    import InputField from "../indivitual/InputField.svelte";
-    import DropDownItem from "../indivitual/DropDownItem.svelte";
+    import UniIcon from "../individual/UniIcon.svelte";
+    import InputField from "../individual/InputField.svelte";
+    import DropDownItem from "../individual/DropDownItem.svelte";
 
     let selectedTime: string = getNextNearestTime();
     let timeOptions = generateTimeOptions();

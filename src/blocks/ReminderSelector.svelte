@@ -14,9 +14,9 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import type {Reminder} from "../store/types";
-    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import UniIcon from "../components/individual/UniIcon.svelte";
     import {toSentenceCase} from "../hooks/reusable";
-    import DropDownItem from "../components/indivitual/DropDownItem.svelte";
+    import DropDownItem from "../components/individual/DropDownItem.svelte";
 
     /**
      * Array of label options to display in the dropdown.

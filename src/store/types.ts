@@ -34,6 +34,7 @@ export interface Block {
     parentId: string;
     createdAt?: string;
     updatedAt?: string;
+    order?: number;
 }
 
 export interface Task extends Block {

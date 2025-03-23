@@ -18,7 +18,7 @@
     import type { Label } from '../store/types';
     import { addToStore, labels } from '../store/store';
     import { toSentenceCase } from "../hooks/reusable";
-    import UniIcon from "../components/indivitual/UniIcon.svelte";
+    import UniIcon from "../components/individual/UniIcon.svelte";
     import FilterSearch from "../components/merged/FilterSearch.svelte";
 
     /**
