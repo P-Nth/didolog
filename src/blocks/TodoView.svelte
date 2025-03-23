@@ -106,7 +106,7 @@
   - EditableText: Provides editable fields for title and description.
   - Button: Handles complete and delete actions.
 -->
-<div class="item-view-container border-none rounded-[5px] px-2 py-1.5 w-full">
+<div class="item-view-container border-none rounded-[5px] px-2 w-full">
     {#if ($selectedTask.id !== "inbox")}
         <div class="item-view">
             {#if block.parentId}

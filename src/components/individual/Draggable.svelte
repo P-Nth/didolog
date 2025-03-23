@@ -55,7 +55,7 @@
         class:className
         {...$$restProps}
 >
-    <span class="left-0 p-2.5 font-semibold text-[20px]" class:opacity-10={!isHovered} class:opacity-100={isHovered}>
+    <span class="px-2.5 font-semibold text-[20px]" class:opacity-10={!isHovered} class:opacity-100={isHovered}>
         ::
     </span>
     <slot></slot>
@@ -69,3 +69,4 @@
         border-bottom: 2px solid blue;
     }
 </style>
+
