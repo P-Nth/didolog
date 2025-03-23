@@ -19,12 +19,10 @@
   - linkedTaskTitle: The title of the task linked to the to-do item.
 -->
 <script lang="ts">
-    import {updateBlock, deleteBlock, tasks, selectedTask,} from '../store/store';
-    import { toSentenceCase } from "../hooks/reusable";
-    import type {Todo, Task, Block} from '../store/types';
+    import {updateBlock, deleteBlock, selectedTask,} from '../store/store';
+    import type {Todo, Block} from '../store/types';
     import EditableText from "../components/merged/EditableText.svelte";
     import Button from "../components/individual/Button.svelte";
-    import Pin from "../components/individual/Pin.svelte";
 
     /**
      * The to-do block passed to the component.
@@ -47,13 +45,6 @@
      */
     let editableItemDescription: string;
     $: editableItemDescription = block.description || '';
-
-    /**
-     * Retrieves the title of the task linked to the current to-do item.
-     * If no matching task is found, defaults to an empty string.
-     * @type {string}
-     */
-    const linkedTaskTitle: string = $tasks.find((task: Task) => task.id === block.parentId)?.title ?? "";
 
     /**
      * Handles the update of a to-do item’s title.
@@ -109,23 +100,6 @@
 <div class="item-view-container border-none rounded-[5px] px-2 w-full">
     {#if ($selectedTask.id !== "inbox")}
         <div class="item-view">
-            {#if block.parentId}
-                <!--
-                  Pin component indicating the linked task.
-                  Props:
-                  - status: 'linked' (displays the linked task status)
-                  - linkedTask: The title of the linked task (formatted to sentence case)
-                -->
-                <Pin status='linked' linkedTask={toSentenceCase(linkedTaskTitle)} />
-            {/if}
-
-            <!--
-              Pin component showing the to-do item's completion status.
-              Props:
-              - status: 'completed' if item.isComplete is true, otherwise 'progressing'
-            -->
-            <Pin status={block.isComplete ? 'completed' : 'progressing'} />
-
             <!--
               EditableText component allowing the user to edit the to-do item's title and description.
               Props:

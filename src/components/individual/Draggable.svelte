@@ -1,22 +1,41 @@
-<!-- Draggable.svelte -->
+<!--
+    This component represents a draggable block in a list, enabling drag-and-drop functionality.
+    It handles the start and end of drag operations, provides visual feedback by highlighting
+    the nearest block’s top or bottom border during dragging, and integrates with a global
+    store to track the dragged position. The component uses HTML5 Drag and Drop API and
+    applies styles to indicate dragging state and drop targets.
+-->
 <script lang="ts">
     import {createEventDispatcher, onDestroy} from 'svelte';
     import {draggedPosition} from "../../store/store";
 
+    /** Unique identifier for the block.
+    * Position of the block in the list.
+    * Optional CSS class name to apply to the draggable element.
+    */
     export let blockId: string;
     export let position: number;
     export let className: string | null = "";
 
+    /** Tracks whether the mouse is hovering over the element
+     * Indicates if the element is currently being dragged.
+     * Reference to the DOM element for direct manipulation.
+     */
     let isHovered = false;
     let isDragging = false;
     let element: HTMLElement;
 
+    /** Event dispatcher for drag-related events. */
     const dispatch = createEventDispatcher<{
         drop: { blockId: string; position: number; };
         dragstart: { blockId: string; position: number; };
         dragend: { blockId: string; position: number; };
     }>();
 
+    /**
+     * Handles the start of a drag operation.
+     * @param {DragEvent} e - The drag start event.
+     */
     function handleDragStart(e: DragEvent) {
         if (!e.dataTransfer) return;
 
@@ -34,6 +53,10 @@
         dispatch('dragstart', {blockId: blockId, position});
     }
 
+    /**
+     * Handles the end of a drag operation, cleaning up state and listeners.
+     * @param {DragEvent} e - The drag end event.
+     */
     function handleDragEnd(e: DragEvent) {
         if (!e.dataTransfer) return;
 
@@ -51,6 +74,11 @@
         dispatch('dragend', {blockId: blockId, position});
     }
 
+    /**
+     * Handles global dragover events to provide visual feedback on draggable blocks.
+     * Detects the nearest block and applies top/bottom border indicators.
+     * @param {DragEvent} e - The dragover event.
+     */
     function handleGlobalDragOver(e: DragEvent) {
         e.preventDefault();
 
@@ -86,6 +114,9 @@
         });
     }
 
+    /**
+     * Clears drag feedback (top/bottom borders) from all draggable blocks.
+     */
     function clearDragFeedback() {
         const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
 
@@ -105,6 +136,7 @@
 
 </script>
 
+<!-- The root div is the draggable container for the block -->
 <div
         bind:this={element}
         draggable="true"
@@ -118,7 +150,7 @@
         class:cursor-grabbing={isDragging}
         class:className
 >
-    <span class="px-2.5 font-semibold text-[20px]" class:opacity-10={!isHovered} class:opacity-100={isHovered}>
+    <span class="px-2.5 font-semibold text-[20px]" class:opacity-5={!isHovered} class:opacity-100={isHovered}>
         ::
     </span>
     <slot></slot>
