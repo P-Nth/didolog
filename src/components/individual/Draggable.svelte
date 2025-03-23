@@ -1,6 +1,7 @@
 <!-- Draggable.svelte -->
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+    import {createEventDispatcher, onDestroy} from 'svelte';
+    import {draggedPosition} from "../../store/store";
 
     export let blockId: string;
     export let position: number;
@@ -26,6 +27,9 @@
 
         element.classList.add('dragging');
 
+        $draggedPosition = position;
+        document.addEventListener('dragover', handleGlobalDragOver);
+
         // Dispatch dragstart event
         dispatch('dragstart', {blockId: blockId, position});
     }
@@ -37,9 +41,67 @@
 
         element.classList.remove('dragging', 'drag-over-top', 'drag-over-bottom');
 
+        $draggedPosition = null;
+
+        document.removeEventListener('dragover', handleGlobalDragOver);
+
+        clearDragFeedback();
+
         // Dispatch dragend event
         dispatch('dragend', {blockId: blockId, position});
     }
+
+    function handleGlobalDragOver(e: DragEvent) {
+        e.preventDefault();
+
+        const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
+
+        let nearestDraggable: HTMLElement | null = null;
+        let minDistance = Infinity;
+
+        // Find the nearest draggable block
+        draggableBlocks.forEach((draggableBlock) => {
+            const rect = draggableBlock.getBoundingClientRect();
+            const centerY = rect.top + rect.height / 2;
+            const distance = Math.abs(e.clientY - centerY);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestDraggable = draggableBlock;
+            }
+        })
+
+        // Apply border feedback
+        draggableBlocks.forEach((draggableBlock) => {
+            draggableBlock.classList.remove('drag-over-top', 'drag-over-bottom');
+            const pos = parseInt(draggableBlock.dataset.position || '');
+            if (draggableBlock === nearestDraggable && pos !== $draggedPosition) {
+                const rect = draggableBlock.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+                if (e.clientY < midpoint) {
+                    draggableBlock.classList.add('drag-over-top');
+                } else {
+                    draggableBlock.classList.add('drag-over-bottom');
+                }
+            }
+        });
+    }
+
+    function clearDragFeedback() {
+        const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
+
+        draggableBlocks.forEach((draggableBlock) => {
+            draggableBlock.classList.remove('drag-over-top', 'drag-over-bottom');
+        });
+    }
+
+    // Clean up listener if component is destroyed while dragging
+    onDestroy(() => {
+        if (isDragging) {
+            document.removeEventListener('dragover', handleGlobalDragOver);
+            $draggedPosition = null;
+            clearDragFeedback();
+        }
+    });
 
 </script>
 
@@ -55,20 +117,10 @@
         class:opacity-50={isDragging}
         class:cursor-grabbing={isDragging}
         class:className
-        {...$$restProps}
 >
     <span class="px-2.5 font-semibold text-[20px]" class:opacity-10={!isHovered} class:opacity-100={isHovered}>
         ::
     </span>
     <slot></slot>
 </div>
-
-<style>
-    .drag-over-top {
-        border-top: 2px solid blue;
-    }
-    .drag-over-bottom {
-        border-bottom: 2px solid blue;
-    }
-</style>
 

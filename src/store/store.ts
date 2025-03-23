@@ -279,3 +279,5 @@ export const reminders: Writable<Reminder[]> = writable<Reminder[]>([
  */
 export const locations: Writable<Loc[]> = writable<Loc[]>([]);
 
+export const draggedPosition = writable<number | null>(null);
+

@@ -91,3 +91,10 @@ body {
 	background-color: #fafafa;
 	color: #333;
 }
+
+.drag-over-top {
+	border-top: 2px solid blue;
+}
+.drag-over-bottom {
+	border-bottom: 2px solid blue;
+}
