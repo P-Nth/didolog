@@ -51,7 +51,9 @@
         on:dragend={handleDragEnd}
         on:mouseenter={() => isHovered = true}
         on:mouseleave={() => isHovered = false}
-        class="relative flex items-center cursor-grab {className} {isDragging ? 'opacity-50' && 'cursor-grabbing' : ''}"
+        class="relative flex items-center cursor-grab {className}"
+        class:opacity-50={isDragging}
+        class:cursor-grabbing={isDragging}
         class:className
         {...$$restProps}
 >

@@ -24,6 +24,7 @@
         role="list"
         on:drop={handleDrop}
         on:dragover={(e) => e.preventDefault()}
+        {...$$restProps}
 >
     <slot></slot>
 </div>

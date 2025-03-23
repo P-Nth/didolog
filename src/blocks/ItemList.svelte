@@ -8,63 +8,66 @@
 
     let draggedPosition: number | null = null;
 
-    function handleDrop(event: CustomEvent<{ blockId: string; position: number }>) {
-        updateBlockOrder(event.detail.blockId, event.detail.position);
-
-        clearDragFeedback();
-    }
-
-    function handleDragStart(event: CustomEvent<{ blockId: string; position: number }>) {
+    const handleDragStart = (event: CustomEvent<{ blockId: string; position: number }>) => {
         draggedPosition = event.detail.position;
+
         document.addEventListener('dragover', handleGlobalDragOver);
     }
 
-    function handleDragEnd() {
-        draggedPosition = null;
-        clearDragFeedback();
-        document.removeEventListener('dragover', handleGlobalDragOver);
-    }
-
-    function handleGlobalDragOver(e: DragEvent) {
+    const handleGlobalDragOver = (e: DragEvent) => {
         e.preventDefault();
-        const draggableBlocks = document.querySelectorAll('.draggable');
-        let nearestDraggable: HTMLElement | null = null;
+
         let minDistance = Infinity;
+        let nearestDraggable: HTMLElement | null = null;
+
+        const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
 
         // Find the nearest draggable block
         draggableBlocks.forEach((draggableBlock) => {
-            const el = draggableBlock as HTMLElement; // Type assertion
-            const rect = el.getBoundingClientRect();
+            const rect = draggableBlock.getBoundingClientRect();
             const centerY = rect.top + rect.height / 2;
             const distance = Math.abs(e.clientY - centerY);
             if (distance < minDistance) {
                 minDistance = distance;
-                nearestDraggable = el;
+                nearestDraggable = draggableBlock;
             }
         });
 
-        // Apply border feedback and determine target dropzone
+        // Apply border feedback
         draggableBlocks.forEach((draggableBlock) => {
-            const el = draggableBlock as HTMLElement; // Type assertion
-            el.classList.remove('drag-over-top', 'drag-over-bottom');
-            const pos = parseInt(el.dataset.position || '');
-            if (el === nearestDraggable && pos !== draggedPosition) {
-                const rect = el.getBoundingClientRect();
+            draggableBlock.classList.remove('drag-over-top', 'drag-over-bottom');
+            const pos = parseInt(draggableBlock.dataset.position || '');
+            if (draggableBlock === nearestDraggable && pos !== draggedPosition) {
+                const rect = draggableBlock.getBoundingClientRect();
                 const midpoint = rect.top + rect.height / 2;
                 if (e.clientY < midpoint) {
-                    el.classList.add('drag-over-top');
+                    draggableBlock.classList.add('drag-over-top'); // Dropzone above this block
                 } else {
-                    el.classList.add('drag-over-bottom');
+                    draggableBlock.classList.add('drag-over-bottom'); // Dropzone below this block
                 }
             }
         });
     }
 
-    function clearDragFeedback() {
-        const draggableBlocks = document.querySelectorAll('.draggable');
+    const handleDragEnd = () => {
+        draggedPosition = null;
+
+        clearDragFeedback();
+
+        document.removeEventListener('dragover', handleGlobalDragOver);
+    }
+
+    const handleDrop = (event: CustomEvent<{ blockId: string; position: number }>) => {
+        updateBlockOrder(event.detail.blockId, event.detail.position);
+
+        clearDragFeedback();
+    }
+
+    const clearDragFeedback = () => {
+        const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
+
         draggableBlocks.forEach((draggableBlock) => {
-            const el = draggableBlock as HTMLElement; // Type assertion
-            el.classList.remove('drag-over-top', 'drag-over-bottom');
+            draggableBlock.classList.remove('drag-over-top', 'drag-over-bottom');
         });
     }
 
@@ -72,7 +75,7 @@
 
 <div class="blocks-container flex flex-col">
     {#each $blocksByTask as block, position (block.id)}
-        <Dropzone {position} on:drop={handleDrop}>
+        <Dropzone {position} on:drop={handleDrop} data-position={position}>
             <Draggable
                     blockId={block.id}
                     {position}
