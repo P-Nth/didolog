@@ -1,5 +1,6 @@
 <script lang="ts">
     import  { createEventDispatcher } from 'svelte';
+    import Icon from "@iconify/svelte";
 
     import {toSentenceCase} from "../../hooks/reusable";
     import type {IconItem} from "../types/types";
@@ -17,16 +18,9 @@
 
     const dispatch = createEventDispatcher();
 
-    // Toggle dropdown
-    const toggleMenu = () => {
-        menuOpen = !menuOpen;
-        dispatch('toggle', { menuOpen });
-    }
-
     // Handle icon click
     const handleIconClick = (icon: IconItem) => {
         icon.action();
-        dispatch('iconClick', { icon });
     }
 
     // Handle icon click
@@ -62,28 +56,31 @@
                 class="title-button flex-1 flex items-center justify-between "
                 role="menu"
                 tabindex="0"
-                on:click={toggleMenu}
-                on:keydown={(e) => (e.key === "Enter" || e.key === " ") && toggleMenu()}
+                on:click={() => menuOpen = !menuOpen}
+                on:keydown={(e) => (e.key === "Enter" || e.key === " ") && (menuOpen = !menuOpen)}
 
         >
             <span class="title">{title}</span>
-            <span class="material-icons dropdown-icon">
-                {menuOpen ? 'expand_less' : 'expand_more'}
-            </span>
+            <Icon
+                    icon="mdi-light:chevron-down"
+                    class="text-gray-800 text-[24px] ml-2 transition-transform duration-200 {menuOpen ? 'rotate-180' : 'rotate-0'}"
+                    on:click={() => menuOpen = !menuOpen}
+                    on:keydown={(e) => (e.key === "Enter" || e.key === " ") && (menuOpen = !menuOpen)}
+            />
         </div>
 
         {#if icons.length > 0}
-            <div class="icons-container">
-                {#each icons as iconItem}
+            <div class="icons-container flex gap-1 ml-1">
+                {#each icons as iconItem, i}
                     <div
-                            class="cursor-pointer bg-none hover:bg-[#333]"
+                            class="cursor-pointer bg-none p-[3px] rounded hover:bg-blue-100"
                             role="button"
-                            tabindex="0"
+                            tabindex={i}
                             title={iconItem.title}
                             on:click={() => handleIconClick(iconItem)}
                             on:keydown={(e) => (e.key === 'Enter') && handleIconClick(iconItem)}
                     >
-                        <span class="material-icons">{iconItem.icon}</span>
+                        <Icon icon={iconItem.icon} class="text-[16px]" />
                     </div>
                 {/each}
             </div>

@@ -1,24 +1,51 @@
 <script lang="ts">
     import type {Block} from "../../store/types";
+    import type { IconItem } from "../types/types";
     import { blocksByWorkSpace } from "../../hooks/blockRegistry";
-    import {selectedWorkspace, selectedTask, updateBlock} from "../../store/store";
+    import { workspaceStore, selectedWorkspace, selectedTask, updateBlock } from "../../store/store";
 
     import DropDown from "./DropDown.svelte";
 
-    let menuOpen: boolean = true;
-
-    // Handle dropdown toggle event
-    const handleToggle = (event: CustomEvent<{ menuOpen: boolean }>) => {
-        menuOpen = event.detail.menuOpen;
+    // Define icon actions
+    const addBlock = () => {
+        if ($selectedWorkspace) {
+            console.log("Adding new block to workspace:", $selectedWorkspace.title);
+            // Add your block creation logic here
+        }
     };
 
-    // Handle icon click event
-    const handleIconClick = () => {
-        console.log("An icon was clicked.");
+    const editWorkspace = () => {
+        console.log("Editing workspace:", $selectedWorkspace?.title);
+        // Add edit workspace logic here
     };
+
+    // Icon definitions using Iconify (Material Design Icons prefix: "mdi:")
+    const icons: IconItem[] = [
+        { icon: "mdi:plus", action: addBlock, title: "Add New Block" },
+        { icon: "mdi:dots-vertical", action: editWorkspace, title: "Edit Workspace" },
+    ];
+
+    // Handle workspace selection
+    const selectWorkspace = (workspaceId: string) => {
+        // Deselect all workspaces
+        Object.values($workspaceStore).forEach(ws => {
+            if (ws.id !== workspaceId && ws.isSelected) {
+                workspaceStore.update(store => {
+                    store[ws.id].isSelected = false;
+                    return store;
+                });
+            }
+        });
+
+        // Select the clicked workspace
+        workspaceStore.update(store => {
+            store[workspaceId].isSelected = true;
+            return store;
+        });
+    }
 
     // Handle option selection event
-    const handleSelect = (event: CustomEvent) => {
+    const handleTaskSelect = (event: CustomEvent) => {
         const newTask = event.detail;
         const prevTask = $selectedTask;
 
@@ -34,15 +61,26 @@
 </script>
 
 <div class="workspace-list flex flex-col">
-    <DropDown
-            title={$selectedWorkspace?.title}
-            options={$blocksByWorkSpace ?? []}
-            selectedOption={$selectedTask}
-            icons={[]}
-            isOpenByDefault={menuOpen}
-            on:toggle={handleToggle}
-            on:iconClick={handleIconClick}
-            on:select={handleSelect}
-    />
+    {#each Object.values($workspaceStore) as workspace, i}
+        <div
+                class="workspace-item rounded px-2"
+                class:bg-blue-50={workspace.isSelected}
+                role="option"
+                aria-selected="true"
+                tabindex={i}
+                on:click={() => selectWorkspace(workspace.id)}
+                on:keydown={(e) => (e.key === 'Enter') && selectWorkspace(workspace.id)}
+
+        >
+            <DropDown
+                    title={$selectedWorkspace?.title}
+                    options={$blocksByWorkSpace ?? []}
+                    selectedOption={$selectedTask}
+                    {icons}
+                    isOpenByDefault={workspace.isSelected}
+                    on:select={handleTaskSelect}
+            />
+        </div>
+    {/each}
 </div>
 
