@@ -13,41 +13,32 @@
   - Use the `filterPlaceholder` prop to customize the search input placeholder.
   - Listen to `select` and `create` events to handle user actions in the parent component.
 -->
-<script>
+<script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import {capitalizeWords, toSentenceCase} from "../../hooks/reusable.ts";
+  import {capitalizeWords, toSentenceCase} from "../../hooks/reusable";
+
   import Button from "../individual/Button.svelte";
   import UniIcon from "../individual/UniIcon.svelte";
   import InputField from "../individual/InputField.svelte";
   import DropDownItem from "../individual/DropDownItem.svelte";
 
-  /**
-   * @component SearchFilter
-   * @description
-   * A reusable component for searching, selecting, and creating items (e.g., tasks or workspaces).
-   *
-   * Events:
-   * - `select`: Fired when an existing option is selected.
-   * - `create`: Fired when a new option is created.
-   */
-
   // Props
   /**
    * @prop {Array<{ title: string, [key: string]: any }>} options - Array of selectable options.
    */
-  export let options = [];
+  export let options: any[] = [];
 
   /** @type {string} itemInput - Checks if parent is an Item Input component (todos) */
-  export let itemInputType = '';
+  export let itemInputType: string = '';
 
   /** @type {Object} defaultOption - default option */
-  export let defaultOption = {};
+  export let defaultOption: any;
 
   /** @type {string} workspaceTitle - the workspace title */
-  export let workspaceTitle = "";
+  export let workspaceTitle: string = "";
 
   /** @type {Array} selectedLabels - Array of selected labels workspace title */
-  export let selectedOptions = [];
+  export let selectedOptions: any[] = [];
 
   // Internal state
   /**
@@ -57,10 +48,10 @@
   let filterPlaceholder =`Type a ${itemInputType} name`;
 
   /** @type {string} filterQuery - User's search input. */
-  let filterQuery = '';
+  let filterQuery: string = '';
 
   /** @type {Array} filteredOptions - Options filtered based on the search query. */
-  let filteredOptions = [];
+  let filteredOptions: any[] = [];
 
   // Event dispatcher
   /** @const dispatch - Emits 'select' and 'create' events for parent components. */
@@ -89,7 +80,7 @@
    *
    * @param {Object} option - The selected option object.
    */
-  function handleSelect(option) {
+  function handleSelect(option: any) {
     dispatch('select', option);
   }
 
@@ -97,7 +88,7 @@
    * Handles the creation of a new option when no existing options match the query.
    * Emits the `create` event with the newly created option.
    */
-  function handleCreate() {
+  const handleCreate = () => {
     if (!filterQuery.trim()) return;
 
     const newOption = {
@@ -140,8 +131,8 @@
             <div class="option-item cursor-pointer flex flex-col rounded-[0.4em] py-[0.3em] transition-colors duration-200 hover:bg-[#f5f5f5]"
                  role="button"
                  tabindex="0"
-                 on:click={() => handleSelect(filteredOptions[0])}
-                 on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(filteredOptions[0])}
+                 on:click={() => handleSelect(defaultOption)}
+                 on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(defaultOption)}
             >
                 <!--
                       DropDownItem:
@@ -176,7 +167,7 @@
                     <DropDownItem text={option.title}>
                         <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
                         <svelte:fragment slot="rightIcon">
-                            {#if selectedOptions.some(selected => selected.id === option.id)}
+                            {#if selectedOptions.some(selected => selected?.id === option.id)}
                                 <UniIcon><span>✔</span></UniIcon>
                             {:else}
                                 <UniIcon><span>R</span></UniIcon>
