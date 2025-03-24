@@ -91,14 +91,14 @@
     </div>
 
     {#if menuOpen}
-        <div class="dropdown-list absolute top-full left-0 right-0 bg-white border border-blue-100 rounded mt-1 list-none z-50 overflow-y-auto transition-all duration-200 ease-in-out">
+        <div class="dropdown-list absolute top-full left-0 right-0 bg-white border border-blue-50 rounded mt-1 list-none z-50 overflow-y-auto transition-all duration-200 ease-in-out">
             {#if options.length === 0}
                 <span class="no-options">Nothing to see here!</span>
             {:else}
                 {#each options as option}
                     <div
                             class="option-item cursor-pointer flex flex-col rounded-[0.4em] py-[0.3em] transition-colors duration-200 ease-in-out hover:bg-[#f5f5f5]"
-                            class:text-blue-700={selectedOption?.id === option.id}
+                            class:text-blue-400={selectedOption?.id === option.id}
                             class:underline={selectedOption?.id === option.id}
                             role="option"
                             tabindex="0"

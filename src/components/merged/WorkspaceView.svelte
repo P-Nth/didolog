@@ -5,9 +5,11 @@
 
     import DropDown from "./DropDown.svelte";
 
+    let menuOpen: boolean = true;
+
     // Handle dropdown toggle event
     const handleToggle = (event: CustomEvent<{ menuOpen: boolean }>) => {
-        console.log("Dropdown toggled:", event.detail.menuOpen);
+        menuOpen = event.detail.menuOpen;
     };
 
     // Handle icon click event
@@ -37,7 +39,7 @@
             options={$blocksByWorkSpace ?? []}
             selectedOption={$selectedTask}
             icons={[]}
-            isOpenByDefault={true}
+            isOpenByDefault={menuOpen}
             on:toggle={handleToggle}
             on:iconClick={handleIconClick}
             on:select={handleSelect}
