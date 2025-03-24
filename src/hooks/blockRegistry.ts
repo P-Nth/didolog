@@ -1,7 +1,7 @@
 import {derived, get, type Readable} from "svelte/store";
 
 import type {Block} from "../store/types";
-import {blockByParent, blockStore, selectedTask} from "../store/store";
+import {blockByParent, blockStore, selectedWorkspace, selectedTask} from "../store/store";
 
 import TodoInput from "../blocks/TodoInput.svelte";
 import NoteInput from "../blocks/NoteInput.svelte";
@@ -10,6 +10,20 @@ import SectionInput from "../blocks/SectionInput.svelte";
 import TodoView from "../blocks/TodoView.svelte";
 import NoteView from "../blocks/NoteView.svelte";
 import SectionView from "../blocks/SectionView.svelte";
+
+/**
+ * A derived store that provides a list of blocks associated with the currently selected workspace.
+ * It filters blocks by `parentId` matching the selected workspaces ID and sorts them by creation date.
+ *
+ * @constant {Readable<Block[]>} blocksByWorkSpace - A store containing blocks related to the selected workspace.
+ */
+export const blocksByWorkSpace: Readable<Block[]> = derived(
+    [selectedWorkspace, blockStore],
+    ([$selectedWorkSpace]) => {
+        if (!$selectedWorkSpace) return [];
+        return get(blockByParent($selectedWorkSpace.id));
+    }
+);
 
 /**
  * A derived store that provides a list of blocks associated with the currently selected task.
