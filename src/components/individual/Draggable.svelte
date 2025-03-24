@@ -20,10 +20,12 @@
     /** Tracks whether the mouse is hovering over the element
      * Indicates if the element is currently being dragged.
      * Reference to the DOM element for direct manipulation.
+     * Reference to the DOM element for dragging effect.
      */
     let isHovered = false;
     let isDragging = false;
     let element: HTMLElement;
+    let dragPlaceholder: HTMLElement;
 
     /** Event dispatcher for drag-related events. */
     const dispatch = createEventDispatcher<{
@@ -31,6 +33,18 @@
         dragstart: { blockId: string; position: number; };
         dragend: { blockId: string; position: number; };
     }>();
+
+    /**
+     * Creates a placeholder element to use as the drag image.
+     * @returns {HTMLElement} The placeholder element.
+     */
+    const createPlaceholder = (): HTMLElement => {
+        const div = document.createElement('div');
+        div.textContent = '+';
+        div.className = 'drag-placeholder';
+        document.body.appendChild(div);
+        return div;
+    }
 
     /**
      * Handles the start of a drag operation.
@@ -44,7 +58,9 @@
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', JSON.stringify({blockId: blockId, position}));
 
-        element.classList.add('dragging');
+        // Create and set the placeholder as the drag image
+        dragPlaceholder = createPlaceholder();
+        e.dataTransfer.setDragImage(dragPlaceholder, 4, 4); // Offset from cursor
 
         $draggedPosition = position;
         document.addEventListener('dragover', handleGlobalDragOver);
@@ -62,13 +78,19 @@
 
         isDragging = false;
 
-        element.classList.remove('dragging', 'drag-over-top', 'drag-over-bottom');
+        element.classList.remove('drag-over-top', 'drag-over-bottom');
 
         $draggedPosition = null;
 
         document.removeEventListener('dragover', handleGlobalDragOver);
 
         clearDragFeedback();
+
+        // Clean up the placeholder
+        if (dragPlaceholder) {
+            document.body.removeChild(dragPlaceholder);
+            dragPlaceholder = null!;
+        }
 
         // Dispatch dragend event
         dispatch('dragend', {blockId: blockId, position});
@@ -87,7 +109,7 @@
         let nearestDraggable: HTMLElement | null = null;
         let minDistance = Infinity;
 
-        // Find the nearest draggable block
+        // Find the nearest draggable block based on mouse position
         draggableBlocks.forEach((draggableBlock) => {
             const rect = draggableBlock.getBoundingClientRect();
             const centerY = rect.top + rect.height / 2;
@@ -98,7 +120,7 @@
             }
         })
 
-        // Apply border feedback
+        // Apply border feedback to indicate dragging position
         draggableBlocks.forEach((draggableBlock) => {
             draggableBlock.classList.remove('drag-over-top', 'drag-over-bottom');
             const pos = parseInt(draggableBlock.dataset.position || '');
@@ -106,9 +128,9 @@
                 const rect = draggableBlock.getBoundingClientRect();
                 const midpoint = rect.top + rect.height / 2;
                 if (e.clientY < midpoint) {
-                    draggableBlock.classList.add('drag-over-top');
+                    draggableBlock.classList.add('drag-over-top'); // Indicates drop above
                 } else {
-                    draggableBlock.classList.add('drag-over-bottom');
+                    draggableBlock.classList.add('drag-over-bottom'); // Indicates drop below
                 }
             }
         });
@@ -129,8 +151,12 @@
     onDestroy(() => {
         if (isDragging) {
             document.removeEventListener('dragover', handleGlobalDragOver);
+
             $draggedPosition = null;
+
             clearDragFeedback();
+
+            dragPlaceholder && document.body.removeChild(dragPlaceholder);
         }
     });
 
@@ -148,11 +174,12 @@
         class="relative flex items-center cursor-grab {className}"
         class:opacity-50={isDragging}
         class:cursor-grabbing={isDragging}
-        class:className
 >
-    <span class="px-2.5 font-semibold text-[20px]" class:opacity-5={!isHovered} class:opacity-100={isHovered}>
+    <!-- Drag handle that appears on hover -->
+    <span class="px-2.5 font-semibold text-[20px] transition-opacity duration-200" class:opacity-5={!isHovered} class:opacity-100={isHovered}>
         ::
     </span>
-    <slot></slot>
+    <!-- Slot for rendering the block content -->
+    <span class="drag-content w-full rounded-[2px]"><slot></slot></span>
 </div>
 

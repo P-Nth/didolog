@@ -92,6 +92,21 @@ body {
 	color: #333;
 }
 
-.drag-over-top .drag-over-bottom {
-	border-top: 2px solid #0051ff;
+/* Dragging global Styles */
+.drag-over-top, .drag-over-bottom {
+	.drag-content {
+		border-top: 2px solid #004be8;
+	}
+}
+.drag-placeholder {
+	background-color: rgba(0, 29, 67, 0.1);
+	padding: 3px 8px;
+	border-radius: 4px;
+	font-size: 14px;
+	font-weight: bold;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: -9999px;
+	max-width: 30px;
 }
