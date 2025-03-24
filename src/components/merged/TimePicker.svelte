@@ -144,7 +144,7 @@
                     on:keydown={() => handleSelect(time)}
             >
                 <!-- Dropdown Item: Displays the time option -->
-                <DropDownItem text={toSentenceCase(time)} size="small">
+                <DropDownItem text={toSentenceCase(time)}>
                     <svelte:fragment slot="leftIcon">
                         <!-- Left Icon for each option -->
                         <UniIcon><span>L</span></UniIcon>

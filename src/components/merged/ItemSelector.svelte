@@ -19,10 +19,10 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import UniIcon from "../components/individual/UniIcon.svelte";
-    import { toSentenceCase } from "../hooks/reusable";
-    import InputField from "../components/individual/InputField.svelte";
-    import DropDownItem from "../components/individual/DropDownItem.svelte";
+    import UniIcon from "../individual/UniIcon.svelte";
+    import { toSentenceCase } from "../../hooks/reusable";
+    import InputField from "../individual/InputField.svelte";
+    import DropDownItem from "../individual/DropDownItem.svelte";
 
     /**
      * Type of the selectable items, passed from parent component
@@ -317,7 +317,7 @@
                              on:click|stopPropagation={() => selectOption(option)}
                              on:keydown={(e) => (e.key === 'Enter') && selectOption(option)}
                         >
-                            <DropDownItem text={toSentenceCase(option.title)} size="small">
+                            <DropDownItem text={toSentenceCase(option.title)}>
                                 <svelte:fragment slot="leftIcon">
                                     <UniIcon><span>L</span></UniIcon>
                                 </svelte:fragment>

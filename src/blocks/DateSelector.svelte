@@ -181,7 +181,7 @@
 
     <!-- Dropdown menu for date and time selection -->
     {#if menuOpen}
-        <div class="dropdown-menu z-[90] left-0 right-0 top-[100%] absolute bg-white rounded border border-[#ccc] w-[250] p-1.5 shadow-primary">
+        <div class="dropdown-menu z-[90] left-0 right-0 top-[100%] absolute bg-white rounded border border-[#ccc] w-[250px] p-1.5 shadow-primary">
             <div class="dropdown-menu-content flex flex-col gap-4 py-2">
                 <!-- DatePicker component allows selecting date and time -->
                 <DatePicker selectedDateTime={selectorTitle} on:select={handleSelect} />

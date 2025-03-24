@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {updateBlockOrder} from "../store/store";
+    import {updateBlockOrder} from "../../store/store";
 
-    import { blockRegistry, blocksByTask } from "../hooks/blockRegistry";
+    import { blockRegistry, blocksByTask } from "../../hooks/blockRegistry";
 
-    import Draggable from '../components/individual/Draggable.svelte';
-    import Dropzone from '../components/individual/DropZone.svelte';
+    import Draggable from '../individual/Draggable.svelte';
+    import Dropzone from '../individual/DropZone.svelte';
 
     const handleDrop = (event: CustomEvent<{ blockId: string; position: number }>) => {
         updateBlockOrder(event.detail.blockId, event.detail.position);

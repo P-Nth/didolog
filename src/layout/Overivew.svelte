@@ -1,13 +1,17 @@
 <!-- Overview -->
 <script>
-  import ItemList from "../blocks/ItemList.svelte";
+  import ItemList from "../components/merged/ItemList.svelte";
   import ItemInput from "../blocks/ItemInput.svelte";
+  import WorkspaceView from "../components/merged/WorkspaceView.svelte";
 </script>
 
 <div class="overview flex flex-col gap-6">
     <h1 class="text-base text-black-300">Overview</h1>
 
-    <section class="list-items">
+    <section class="list-items flex gap-6">
+        <div class="items flex flex-col">
+            <WorkspaceView />
+        </div>
         <div class="items flex flex-col">
             <div class="list-section">
                 <ItemList />

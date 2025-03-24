@@ -38,7 +38,7 @@ Example:
     import type {Task, Todo, Priority, Label, Reminder} from '../store/types';
     import TaskSelector from './TaskSelector.svelte';
     import Button from '../components/individual/Button.svelte';
-    import ItemSelector from "./ItemSelector.svelte";
+    import ItemSelector from "../components/merged/ItemSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
     import InputField from '../components/individual/InputField.svelte';
@@ -47,9 +47,8 @@ Example:
     /**
      * Currently selected task for the to-do item.
      * Defaults to the predefined default task.
-     * @type {Task}
      */
-    let newSelectedTask: Task = $selectedTask;
+    $: newSelectedTask = $selectedTask;
 
     /**
      * Title of the to-do item entered by the user.

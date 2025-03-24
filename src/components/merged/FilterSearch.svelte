@@ -148,7 +148,7 @@
                       - Displays the option title with optional left and right icons.
                       - Clicking an option triggers a `select` event.
                     -->
-                <DropDownItem text={capitalizeWords(defaultOption?.title)} size="small">
+                <DropDownItem text={capitalizeWords(defaultOption?.title)}>
                     <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
                     <svelte:fragment slot="rightIcon"><UniIcon><span>R</span></UniIcon></svelte:fragment>
                 </DropDownItem>
@@ -173,7 +173,7 @@
                       - Displays the option title with optional left and right icons.
                       - Clicking an option triggers a `select` event.
                     -->
-                    <DropDownItem text={option.title} size="small" >
+                    <DropDownItem text={option.title}>
                         <svelte:fragment slot="leftIcon"><UniIcon><span>L</span></UniIcon></svelte:fragment>
                         <svelte:fragment slot="rightIcon">
                             {#if selectedOptions.some(selected => selected.id === option.id)}
@@ -195,7 +195,7 @@
         {#if filteredOptions.length === 0}
             <div class="no-results flex flex-col gap-[0.5em] text-[#666]">
                 <span class="no-type">Add a {capitalizeWords(itemInputType)}.</span>
-                <Button onClick={handleCreate} size="small" variant="tertiary">
+                <Button onClick={handleCreate}>
                     + Create "{filterQuery}"
                 </Button>
             </div>

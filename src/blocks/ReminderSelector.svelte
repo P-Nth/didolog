@@ -187,7 +187,7 @@
                          - Displays the option title with optional left and right icons.
                          - Clicking an option triggers a `select` event.
                        -->
-                        <DropDownItem size="small">
+                        <DropDownItem>
                             <svelte:fragment slot="leftIcon">
                                 <UniIcon><span>L</span></UniIcon>
                             </svelte:fragment>
