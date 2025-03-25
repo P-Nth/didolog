@@ -85,9 +85,7 @@
     /**
      * Ensures focus is on the input
      */
-    export function focusInput() {
-        inputRef?.focus();
-    }
+    export const focusInput = () => inputRef?.focus();
 
     /**
      * Adjusts textarea dynamically.

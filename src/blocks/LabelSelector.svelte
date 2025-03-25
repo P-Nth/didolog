@@ -48,21 +48,17 @@
     /**
      * Toggles the dropdown menu open or closed.
      */
-    function toggleMenu() {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
      * Closes the dropdown menu.
      */
-    function closeMenu() {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
      * Clears all selected labels and dispatches the updated empty selection.
      */
-    function clearSelection() {
+    const clearSelection = () => {
         selectedOptions = [];
         dispatch('select', selectedOptions);
     }
@@ -75,7 +71,7 @@
      *
      * @param {CustomEvent<Label>} event - The event containing the selected label.
      */
-    function handleSelect(event: CustomEvent<Label>) {
+    const handleSelect = (event: CustomEvent<Label>) => {
         const selectedLabel = event.detail;
         const alreadySelected = selectedOptions.some(label => label.id === selectedLabel.id);
 
@@ -94,7 +90,7 @@
      *
      * @param {CustomEvent<{ title: string }>} event - The event containing the new label title.
      */
-    function handleCreate(event: CustomEvent<{ title: string }>) {
+    const handleCreate = (event: CustomEvent<{ title: string }>) => {
         const { title } = event.detail;
         if (!title.trim()) return;
 
@@ -108,7 +104,7 @@
      * @param node - The DOM node to monitor for outside clicks.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();

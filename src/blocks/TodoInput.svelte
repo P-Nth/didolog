@@ -104,16 +104,12 @@ Example:
      * Focuses the todo input field.
      * Calls the `focusInput()` method exposed by the `InputField` component.
      */
-    export function focusTodoInput() {
-        inputRef?.focusInput();
-    }
+    export const focusTodoInput = () => inputRef?.focusInput();
 
     /**
      * Ensures focus is on the input on mount
      */
-    onMount(() => {
-        focusTodoInput();
-    });
+    onMount(() => { focusTodoInput(); });
 
     /**
      * Creates a Svelte event dispatcher for emitting custom events.
@@ -168,9 +164,7 @@ Example:
      * - Requires an empty `title`.
      * - Dispatches an event complete if the title is empty & backspace is being pressed
      */
-    const handleBackspace = () => {
-        title.trim() === "" && dispatch("complete");
-    }
+    const handleBackspace = () => title.trim() === "" && dispatch("complete");
 
     /**
      * Handles the selection of a task from the `ItemSelector` component.
@@ -178,13 +172,9 @@ Example:
      *
      * @param {CustomEvent<Task>} event - The custom event containing the selected task.
      */
-    const handleTaskSelect = (event: CustomEvent<Task>) => {
-        newSelectedTask = event.detail;
-    };
+    const handleTaskSelect = (event: CustomEvent<Task>) => newSelectedTask = event.detail;
 
-    const handleDateSelect = (event: CustomEvent<[string, string]>) => {
-        dueDate = event.detail;
-    }
+    const handleDateSelect = (event: CustomEvent<[string, string]>) => dueDate = event.detail;
 
     /**
      * Handles the selection of a priority from the priority selector component.
@@ -192,9 +182,7 @@ Example:
      *
      * @param {CustomEvent<Priority>} event - The custom event containing the selected priority in its `detail` property.
      */
-    const handlePrioritySelect = (event: CustomEvent<Priority>) => {
-        selectedPriority = event.detail;
-    };
+    const handlePrioritySelect = (event: CustomEvent<Priority>) => selectedPriority = event.detail;
 
     /**
      * Handles selection of one or more labels.
@@ -202,9 +190,7 @@ Example:
      *
      * @param {CustomEvent<Label[]>} event - Event containing an array of selected labels.
      */
-    const handleLabelSelect = (event: CustomEvent<Label[]>) => {
-        selectedLabels = event.detail;
-    };
+    const handleLabelSelect = (event: CustomEvent<Label[]>) => selectedLabels = event.detail;
 
     // Handle new label creation
     const handleLabelCreate = (event: CustomEvent<{title: string, description: string}>) => {
@@ -221,9 +207,7 @@ Example:
      *
      * @param {CustomEvent<Reminder>} event - Event containing an array of selected labels.
      */
-    const handleReminderSelect = (event: CustomEvent<Reminder[]>) => {
-        selectedReminders = event.detail;
-    };
+    const handleReminderSelect = (event: CustomEvent<Reminder[]>) => selectedReminders = event.detail;
 
 </script>
 

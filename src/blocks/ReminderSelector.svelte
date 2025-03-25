@@ -51,21 +51,17 @@
     /**
      * Toggles the dropdown menu.
      */
-    function toggleMenu() {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
      * Closes the dropdown menu.
      */
-    function closeMenu() {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
      * Clears the selected reminder and dispatches an event.
      */
-    function clearSelection() {
+    const clearSelection = () => {
         selectedOptions = [];
         dispatch('select', selectedOptions);
     }
@@ -75,7 +71,7 @@
      * - If it's already selected, remove it.
      * - Otherwise, add it to the selection.
      */
-    function selectReminder(option: Reminder) {
+    const selectReminder = (option: Reminder) => {
         const index = selectedOptions.findIndex((r) => r.id === option.id);
 
         if (index !== -1) {
@@ -92,7 +88,7 @@
     /**
      * Handles clicking outside the component to close the menu.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();

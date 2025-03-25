@@ -7,16 +7,13 @@
     let title: string = '';
     let type: string = 'note';
     let showMenu: boolean = false;
-
     let inputRef: InputField | null = null;
 
-    export function focusNoteInput() {
-        inputRef?.focusInput();
-    }
+    export const focusNoteInput = () => inputRef?.focusInput();
 
-    onMount(() => {
-        focusNoteInput();
-    });
+    const dispatch = createEventDispatcher();
+
+    onMount( () => { focusNoteInput(); });
 
     $: {
         if (title.startsWith("/") && title.length === 1) {
@@ -25,8 +22,6 @@
             showMenu = false;
         }
     }
-
-    const dispatch = createEventDispatcher();
 
     const options = [
         { id: 1, type: "todo" },

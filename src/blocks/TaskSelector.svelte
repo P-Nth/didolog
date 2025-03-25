@@ -83,22 +83,18 @@ Example:
     /**
      * Toggles the visibility of the dropdown menu.
      */
-    function toggleMenu() {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
      * Closes the dropdown menu by setting `menuOpen` to `false`.
      */
-    function closeMenu() {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
      * Clears the current task selection by resetting it to the default option.
      * Dispatches a `select` event with the `defaultOption`.
      */
-    function clearSelection() {
+    const clearSelection = () => {
         dispatch('select', defaultOption);
         closeMenu();
     }
@@ -109,7 +105,7 @@ Example:
      *
      * @param {CustomEvent<Task>} event - Event containing the selected task.
      */
-    function handleSelect(event: CustomEvent<Task>) {
+    const handleSelect = (event: CustomEvent<Task>) => {
         dispatch('select', event.detail);
         closeMenu();
     }
@@ -122,7 +118,7 @@ Example:
      *
      * @param {CustomEvent<{ title: string }>} event - Event containing the title of the new task.
      */
-    function handleCreate(event: CustomEvent<{ title: string }>) {
+    const handleCreate = (event: CustomEvent<{ title: string }>) => {
         const { title } = event.detail;
         if (!title.trim()) return;
 
@@ -142,7 +138,7 @@ Example:
      * @param node - The DOM node to monitor for outside clicks.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();
@@ -189,7 +185,7 @@ Example:
         <div class="flex items-center gap-2">
             {#if selectedOption?.id === defaultOption?.id}
                 <!-- Icon indicating the default option is selected -->
-                <UniIcon size="16px"><span>R</span></UniIcon>
+                <UniIcon><span>R</span></UniIcon>
             {:else}
                 <!--
                   Clear selection button:

@@ -50,22 +50,18 @@
     /**
      * Toggles the visibility of the dropdown menu.
      */
-    function toggleMenu() {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
      * Closes the dropdown menu by setting `menuOpen` to `false`.
      */
-    function closeMenu() {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
      * Clears the current priority selection by resetting it to the default option.
      * Dispatches a `select` event with the `defaultOption`.
      */
-    function clearSelection() {
+    const clearSelection = () => {
         dispatch('select', defaultOption);
         closeMenu();
     }
@@ -76,7 +72,7 @@
      *
      * @param {Priority} option - The selected priority option.
      */
-    function handleSelect(option: Priority) {
+    const handleSelect = (option: Priority) => {
         dispatch('select', option);
         closeMenu();
     }
@@ -87,7 +83,7 @@
      * @param node - The DOM node to monitor for outside clicks.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();
@@ -132,7 +128,7 @@
         <div class="flex items-center gap-2">
             {#if selectedOption?.id === defaultOption?.id}
                 <!-- Icon indicating the default option is selected -->
-                <UniIcon size="16px"><span>R</span></UniIcon>
+                <UniIcon><span>R</span></UniIcon>
             {:else}
                 <!--
                   Clear selection button:

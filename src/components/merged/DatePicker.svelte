@@ -37,9 +37,7 @@
     /**
      * Sets the selected date to today.
      */
-    const selectToday = () => {
-        selectedDate = formatDate(new Date());
-    };
+    const selectToday = () => selectedDate = formatDate(new Date());
 
     /**
      * Sets the selected date to tomorrow.
@@ -74,17 +72,13 @@
      * Reset both the selected date and time.
      *
      */
-    const clearDate = () => {
-        selectedTime = "";
-    };
+    const clearDate = () => selectedTime = "";
 
     /**
      * Handle when the user selects a date.
      * Handles selection of Date from the Datepicker component from flowbite.
      */
-    const handleDateSelect = (event: CustomEvent) => {
-        selectedDate = event.detail[1];
-    }
+    const handleDateSelect = (event: CustomEvent) => selectedDate = event.detail[1];
 
     /**
      * Checks if the given time has already passed today.

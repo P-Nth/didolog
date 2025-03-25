@@ -45,9 +45,7 @@
      * Updates the `text` variable with the new input value.
      * @param {CustomEvent<string>} event - The input event containing the new text value.
      */
-    const handleInput = (event: CustomEvent<string>) => {
-        text = event.detail;
-    };
+    const handleInput = (event: CustomEvent<string>) => text = event.detail;
 
     /**
      * Handles selection of a new block type.

@@ -99,23 +99,17 @@
     /**
      * Opens the dropdown menu.
      */
-    const toggleMenu = () => {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
      * Opens the dropdown menu.
      */
-    const openMenu = () => {
-        menuOpen = true;
-    }
+    const openMenu = () => menuOpen = true;
 
     /**
      * Closes the dropdown menu.
      */
-    const closeMenu = () => {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
      * Clears all selected items and dispatches the updated empty selection.

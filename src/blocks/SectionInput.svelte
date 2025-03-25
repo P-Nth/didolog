@@ -8,13 +8,9 @@
 
     let inputRef: InputField | null = null;
 
-    export function focusSecInput() {
-        inputRef?.focusInput();
-    }
+    export const focusSecInput = () => inputRef?.focusInput();
 
-    onMount(() => {
-        focusSecInput();
-    });
+    onMount(() => { focusSecInput(); });
 
     const dispatch = createEventDispatcher();
 

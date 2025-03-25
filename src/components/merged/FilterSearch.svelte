@@ -32,10 +32,10 @@
   export let itemInputType: string = '';
 
   /** @type {Object} defaultOption - default option */
-  export let defaultOption: any;
+  export let defaultOption: any | null = null;
 
   /** @type {string} workspaceTitle - the workspace title */
-  export let workspaceTitle: string = "";
+  export let workspaceTitle: string | null = "";
 
   /** @type {Array} selectedLabels - Array of selected labels workspace title */
   export let selectedOptions: any[] = [];
@@ -80,9 +80,7 @@
    *
    * @param {Object} option - The selected option object.
    */
-  const handleSelect = (option: any) => {
-    dispatch('select', option);
-  }
+  const handleSelect = (option: any) => dispatch('select', option);
 
   /**
    * Handles the creation of a new option when no existing options match the query.
@@ -146,7 +144,7 @@
             </div>
 
             {#if filteredOptions.length > 1}
-                <span>{capitalizeWords(workspaceTitle)}</span>
+                <span>{workspaceTitle && capitalizeWords(workspaceTitle)}</span>
             {/if}
         {/if}
 

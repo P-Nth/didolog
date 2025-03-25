@@ -35,9 +35,7 @@
     let inputRef: InputField | null = null; // Reference to the input field
 
     // Function to focus the input field
-    export const focusInput = () => {
-        inputRef?.focusInput();
-    }
+    export const focusInput = () => inputRef?.focusInput();
 
     /**
      * Dispatcher for sending events to parent components.
@@ -53,9 +51,7 @@
      *
      * Saves the edit whenever the value changes.
      */
-    const handleInput = (newValue: string): void => {
-        value = newValue;
-    }
+    const handleInput = (newValue: string): void => { value = newValue; }
 
     /**
      * Saves the edits by dispatching an `updateTodo` event with updated values.

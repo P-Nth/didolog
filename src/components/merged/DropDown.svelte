@@ -19,14 +19,10 @@
     const dispatch = createEventDispatcher();
 
     // Handle icon click
-    const handleIconClick = (icon: IconItem) => {
-        icon.action();
-    }
+    const handleIconClick = (icon: IconItem) => icon.action();
 
     // Handle icon click
-    const handleOptionSelect = (option: any) => {
-        dispatch('select', option);
-    }
+    const handleOptionSelect = (option: any) => dispatch('select', option);
 
     /**
      * Svelte action that detects clicks outside the specified element and triggers a callback.

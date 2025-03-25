@@ -38,16 +38,12 @@
     /**
     * Toggle the dropdown menu open/close state.
     */
-    const toggleMenu = () => {
-        menuOpen = !menuOpen;
-    }
+    const toggleMenu = () => menuOpen = !menuOpen;
 
     /**
     * Close the dropdown menu.
     */
-    const closeMenu = () => {
-        menuOpen = false;
-    }
+    const closeMenu = () => menuOpen = false;
 
     /**
     * Clear the selection made.
