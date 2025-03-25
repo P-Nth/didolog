@@ -11,7 +11,7 @@
     import { createEventDispatcher } from 'svelte';
     import { toSentenceCase } from "../hooks/reusable";
     import type { Priority } from '../store/types';
-    import UniIcon from "../components/individual/UniIcon.svelte";
+    import UniIcon from "../components/individual/DdlIcon.svelte";
     import DropDownItem from "../components/individual/DropDownItem.svelte";
 
     /**

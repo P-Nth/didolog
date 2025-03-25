@@ -19,8 +19,9 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import UniIcon from "../individual/UniIcon.svelte";
     import { toSentenceCase } from "../../hooks/reusable";
+
+    import UniIcon from "../individual/DdlIcon.svelte";
     import InputField from "../individual/InputField.svelte";
     import DropDownItem from "../individual/DropDownItem.svelte";
 
@@ -98,28 +99,28 @@
     /**
      * Opens the dropdown menu.
      */
-    function toggleMenu() {
+    const toggleMenu = () => {
         menuOpen = !menuOpen;
     }
 
     /**
      * Opens the dropdown menu.
      */
-    function openMenu() {
+    const openMenu = () => {
         menuOpen = true;
     }
 
     /**
      * Closes the dropdown menu.
      */
-    function closeMenu() {
+    const closeMenu = () => {
         menuOpen = false;
     }
 
     /**
      * Clears all selected items and dispatches the updated empty selection.
      */
-    function clearSelection() {
+    const clearSelection = () => {
         selectedOptions = [];
         dispatch('select', selectedOptions);
     }
@@ -128,7 +129,7 @@
      * Selects an option from the list
      * @param option The option to select
      */
-    function selectOption(option: any) {
+    const selectOption = (option: any) => {
         const alreadySelected = selectedOptions.some(
             item => item.id === option.id
         );
@@ -166,7 +167,7 @@
      * Removes a selected option
      * @param option The option to remove
      */
-    function removeOption(option: any) {
+    const removeOption = (option: any) => {
         selectedOptions = selectedOptions.filter(
             item => item.id !== option.id
         );
@@ -177,7 +178,7 @@
      * Removes the last selected option
      * Used when pressing backspace in an empty input field
      */
-    function removeLastOption() {
+    const removeLastOption = () => {
         if (searchInput === '' && selectedOptions.length > 0) {
             const lastOption = selectedOptions[selectedOptions.length - 1];
             removeOption(lastOption);
@@ -187,7 +188,7 @@
     /**
      * Creates a new item from the search input
      */
-    function createNewOption() {
+    const createNewOption = () => {
         if (!allowAddition || !searchInput.trim() || !canCreateNew) return;
 
         const newOptionTitle = {
@@ -202,7 +203,7 @@
     /**
      * Svelte action that detects clicks outside the specified element
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();

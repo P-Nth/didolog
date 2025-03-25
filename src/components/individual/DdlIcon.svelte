@@ -20,18 +20,12 @@
       <FaUser />
     </IconStyle>
 -->
-<script>
-  // Props to customize the icon dimensions.
-  export let size = "14px";
-  export let width = "14px";
-  export let height = "14px";
+<script lang="ts">
+  export let className: string = "";
 </script>
 
 <!-- A span parent for the content in slot -->
-<span
-        class="icon-style inline-flex items-center justify-center"
-        style="font-size: {size}; width: {width}; height: {height};"
->
+<span class="icon-style inline-flex items-center justify-center {className}">
   <slot />
 </span>
 

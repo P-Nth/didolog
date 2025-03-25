@@ -26,9 +26,7 @@
     const dispatch = createEventDispatcher();
 
     /** Toggles the checkbox state and dispatches the new checked state */
-    function toggleCheck() {
-        dispatch("select", !isChecked);
-    }
+    const toggleCheck = () => dispatch("select", !isChecked);
 
 </script>
 
@@ -41,26 +39,23 @@
   - Text content (either passed as a prop or via the default slot)
 -->
 <div
-    class="dropdown-item gap-4 flex items-center justify-between px-1.5 cursor-pointer select-none"
+    class="dropdown-item gap-4 inline-flex flex-1 items-center justify-between px-1.5 cursor-pointer select-none {className}"
     role="button"
     tabindex="0"
     on:click={toggleCheck}
     on:keydown={(e) => (e.key === "Enter" || e.key === " ") && toggleCheck()}
 >
+    <!-- Left Icon Slot/Icon -->
     {#if $$slots.leftIcon}
-        <span class="icon left">
-          <slot name="leftIcon" />
-        </span>
+      <slot name="leftIcon" />
     {/if}
 
-    <span class="dropdown-text flex flex-1 items-center" class:className>
-        <slot>{text}</slot>
-    </span>
+    <!-- Text Content -->
+    <slot>{text}</slot>
 
+    <!-- Right Icon Slot/Icon -->
     {#if $$slots.leftIcon}
-        <span class="icon inline-flex items-center right">
-            <slot name="rightIcon" />
-        </span>
+        <slot name="rightIcon" />
     {/if}
 </div>
 

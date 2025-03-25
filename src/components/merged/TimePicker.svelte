@@ -10,14 +10,26 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import {toSentenceCase} from "../../hooks/reusable";
-    import UniIcon from "../individual/UniIcon.svelte";
+    import UniIcon from "../individual/DdlIcon.svelte";
     import InputField from "../individual/InputField.svelte";
     import DropDownItem from "../individual/DropDownItem.svelte";
 
     let selectedTime: string = getNextNearestTime();
-    let timeOptions = generateTimeOptions();
+    let timeOptions: string[] = generateTimeOptions();
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{ select: string }>();
+
+    /**
+     * Formats a Date object to a "HH:MM" string.
+     *
+     * @param {Date} date - The date object to format.
+     * @returns {string} - The formatted time in "HH:MM" format.
+     */
+    const formatTime = (date: Date): string => {
+        let hours = date.getHours().toString().padStart(2, "0");
+        let minutes = date.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`;
+    }
 
     /**
      * Gets the next nearest time that aligns with a 30-minute interval.
@@ -84,23 +96,11 @@
     }
 
     /**
-     * Formats a Date object to a "HH:MM" string.
-     *
-     * @param {Date} date - The date object to format.
-     * @returns {string} - The formatted time in "HH:MM" format.
-     */
-    function formatTime(date: Date): string {
-        let hours = date.getHours().toString().padStart(2, "0");
-        let minutes = date.getMinutes().toString().padStart(2, "0");
-        return `${hours}:${minutes}`;
-    }
-
-    /**
      * Updates the selected time and dispatches an event.
      *
      * @param {string} value - The new time value.
      */
-    function setTime(value: string) {
+    const setTime = (value: string) => {
         selectedTime = value;
         dispatch("select", selectedTime);
     }
@@ -111,7 +111,7 @@
      *
      * @param {string} time - The selected time in "HH:MM" format.
      */
-    function handleSelect(time: string) {
+    const handleSelect = (time: string) => {
         selectedTime = time;
         dispatch("select", selectedTime);
     }

@@ -18,7 +18,7 @@
   import {capitalizeWords, toSentenceCase} from "../../hooks/reusable";
 
   import Button from "../individual/Button.svelte";
-  import UniIcon from "../individual/UniIcon.svelte";
+  import UniIcon from "../individual/DdlIcon.svelte";
   import InputField from "../individual/InputField.svelte";
   import DropDownItem from "../individual/DropDownItem.svelte";
 
@@ -80,7 +80,7 @@
    *
    * @param {Object} option - The selected option object.
    */
-  function handleSelect(option: any) {
+  const handleSelect = (option: any) => {
     dispatch('select', option);
   }
 

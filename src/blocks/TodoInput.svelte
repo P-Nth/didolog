@@ -36,13 +36,14 @@ Example:
         reminders, selectedTask,
     } from '../store/store';
     import type {Task, Todo, Priority, Label, Reminder} from '../store/types';
+
     import TaskSelector from './TaskSelector.svelte';
-    import Button from '../components/individual/Button.svelte';
-    import ItemSelector from "../components/merged/ItemSelector.svelte";
     import DateSelector from "./DateSelector.svelte";
     import LabelSelector from "./LabelSelector.svelte";
-    import InputField from '../components/individual/InputField.svelte';
     import PrioritySelector from "./PrioritySelector.svelte";
+    import Button from '../components/individual/Button.svelte';
+    import InputField from '../components/individual/InputField.svelte';
+    import ItemSelector from "../components/merged/ItemSelector.svelte";
 
     /**
      * Currently selected task for the to-do item.

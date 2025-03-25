@@ -1,5 +1,7 @@
 export interface IconItem {
-    icon: string; // Iconify icon name (e.g., "mdi:plus")
+    icon: string;
     action: () => void;
     title?: string;
 }
+
+export type PinStatus = 'completed' | 'progressing' | 'canceled';

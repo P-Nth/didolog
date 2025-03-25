@@ -50,7 +50,7 @@
      * Handles the start of a drag operation.
      * @param {DragEvent} e - The drag start event.
      */
-    function handleDragStart(e: DragEvent) {
+    const handleDragStart = (e: DragEvent) => {
         if (!e.dataTransfer) return;
 
         isDragging = true;
@@ -73,7 +73,7 @@
      * Handles the end of a drag operation, cleaning up state and listeners.
      * @param {DragEvent} e - The drag end event.
      */
-    function handleDragEnd(e: DragEvent) {
+    const handleDragEnd = (e: DragEvent) => {
         if (!e.dataTransfer) return;
 
         isDragging = false;
@@ -101,7 +101,7 @@
      * Detects the nearest block and applies top/bottom border indicators.
      * @param {DragEvent} e - The dragover event.
      */
-    function handleGlobalDragOver(e: DragEvent) {
+    const handleGlobalDragOver = (e: DragEvent) => {
         e.preventDefault();
 
         const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
@@ -139,7 +139,7 @@
     /**
      * Clears drag feedback (top/bottom borders) from all draggable blocks.
      */
-    function clearDragFeedback() {
+    const clearDragFeedback = () => {
         const draggableBlocks = document.querySelectorAll('.draggable') as NodeListOf<HTMLElement>;
 
         draggableBlocks.forEach((draggableBlock) => {

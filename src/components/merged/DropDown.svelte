@@ -6,7 +6,7 @@
     import type {IconItem} from "../types/types";
 
     import DropDownItem from "../individual/DropDownItem.svelte";
-    import UniIcon from "../individual/UniIcon.svelte";
+    import UniIcon from "../individual/DdlIcon.svelte";
 
     export let title: string = "DropDown";
     export let options: any[];
@@ -34,7 +34,7 @@
      * @param node - The DOM node to monitor for outside clicks.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 dispatch('clickOutside', { menuOpen: false });

@@ -5,55 +5,46 @@
 
   Features:
   - Shows status icons and colors for "completed", "progressing", and "linked" statuses.
-  - Displays a linked task name when the status is "linked".
   - Defaults to "progressing" status if no valid status is provided.
 
   Props:
   - status ("completed" | "progressing" | "linked"): The current status of the item (default: "progressing").
-  - linkedTask (string): Optional name of the linked task displayed when the status is "linked".
 -->
 <script lang="ts">
-    /**
-     * Props:
-     * - status: The current status of the item ("completed", "in-progress", or "linked").
-     * - linkedTask: Optional linked task name displayed when status is "linked".
-     */
-    export let status: "completed" | "progressing" | "linked" = "progressing";
-    export let linkedTask: string = "";
+    // Props with default values
+    import type { PinStatus } from "../types/types";
 
-    /**
-     * Type representing the structure of the status information.
-     */
-    type StatusInfo = {
-        icon: string;
-        color: string;
-        text: string;
-        linkedTask?: string;
+    // Props with default values
+    export let text: string = '';
+    export let className: string = '';
+    export let status: PinStatus = 'progressing';
+
+    // Background color configuration based on status
+    const statusBgColors = {
+        completed: 'bg-green-100',
+        progressing: 'bg-blue-100',
+        canceled: "bg-red-100",
     };
 
-    /**
-     * Map of statuses to their corresponding icon, color, and text.
-     */
-    const statusMap: Record<"completed" | "progressing" | "linked", StatusInfo> = {
-        completed: { icon: "✅", color: "green", text: "Completed" },
-        progressing: { icon: "⏳", color: "orange", text: "In Progress" },
-        linked: { icon: "📌", color: "blue", text: "Linked Task", linkedTask },
-    };
-
-    /**
-     * Destructure the appropriate status info from the statusMap.
-     * Defaults to "in-progress" if the provided status is invalid.
-     */
-    let { icon, color, text } = statusMap[status] ?? statusMap["progressing"];
+    // Validate status and get background color, defaulting to progressing
+    $: bgColor = statusBgColors[status in statusBgColors ? status : 'progressing'];
 </script>
 
 <!--
   Displays the status indicator with an icon, status text, and linked task if applicable.
 -->
-<span class="status-indicator gap-2 flex font-bold">
-    <span style="color: {color};">{icon} {text}</span>
-    {#if status === "linked" && linkedTask}
-        {linkedTask}
+<div class="pin-container inline-flex flex-1 items-center justify-between w-fit {bgColor} {className}">
+    <!-- Left Icon Slot/Icon -->
+    {#if $$slots.left}
+        <slot name="left" />
     {/if}
-</span>
+
+    <!-- Text Content -->
+    <slot>{text}</slot>
+
+    <!-- Right Icon Slot/Icon -->
+    {#if $$slots.right}
+        <slot name="right" />
+    {/if}
+</div>
 

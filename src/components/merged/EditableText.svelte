@@ -18,8 +18,9 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import InputField from "../individual/InputField.svelte";
+
     import Button from "../individual/Button.svelte";
+    import InputField from "../individual/InputField.svelte";
 
     /**
      * Props: title and description for the editable todo.
@@ -34,7 +35,7 @@
     let inputRef: InputField | null = null; // Reference to the input field
 
     // Function to focus the input field
-    export function focusInput() {
+    export const focusInput = () => {
         inputRef?.focusInput();
     }
 
@@ -52,7 +53,7 @@
      *
      * Saves the edit whenever the value changes.
      */
-    function handleInput(newValue: string): void {
+    const handleInput = (newValue: string): void => {
         value = newValue;
     }
 
@@ -60,7 +61,7 @@
      * Saves the edits by dispatching an `updateTodo` event with updated values.
      * Resets the `hasChanges` flag afterward.
      */
-    function handleBackspace(): void {
+    const handleBackspace = (): void => {
         if (!value.trim()) {
             dispatch('removeItem');
         }
@@ -70,7 +71,7 @@
      * Saves the edits by dispatching an `updateTodo` event with updated values.
      * Resets the `hasChanges` flag afterward.
      */
-    function saveEdit(): void {
+    const saveEdit = (): void => {
         if (value !== text || !value.trim()) {
             dispatch('updateItem', { text: value });
         }

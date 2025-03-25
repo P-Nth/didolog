@@ -9,8 +9,9 @@
 -->
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import FlatCalender from "../individual/FlatCalender.svelte";
+
     import TimePicker from "./TimePicker.svelte";
+    import FlatCalender from "../individual/FlatCalender.svelte";
 
     /**
      * Props: The currently selected date and time as a tuple [date, time].
@@ -24,7 +25,7 @@
     let selectedTime: string = selectedDateTime[1];
 
     /** Event dispatcher to notify parent components when selection changes */
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{ select: [string, string] }>();
 
     /**
      * Formats a Date object to a string in YYYY-MM-DD format.

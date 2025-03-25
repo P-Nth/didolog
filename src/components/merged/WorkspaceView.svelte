@@ -1,8 +1,9 @@
 <script lang="ts">
     import type {Block} from "../../store/types";
+    import { workspaceStore, selectedWorkspace, selectedTask, updateBlock } from "../../store/store";
+
     import type { IconItem } from "../types/types";
     import { blocksByWorkSpace } from "../../hooks/blockRegistry";
-    import { workspaceStore, selectedWorkspace, selectedTask, updateBlock } from "../../store/store";
 
     import DropDown from "./DropDown.svelte";
 

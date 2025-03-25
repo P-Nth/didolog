@@ -14,7 +14,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import type {Reminder} from "../store/types";
-    import UniIcon from "../components/individual/UniIcon.svelte";
+    import UniIcon from "../components/individual/DdlIcon.svelte";
     import {toSentenceCase} from "../hooks/reusable";
     import DropDownItem from "../components/individual/DropDownItem.svelte";
 

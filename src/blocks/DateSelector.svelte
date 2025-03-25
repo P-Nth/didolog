@@ -3,7 +3,7 @@
     // Import the UniIcon function.
     import { createEventDispatcher } from 'svelte';
     import type {Reminder} from "../store/types";
-    import UniIcon from "../components/individual/UniIcon.svelte";
+    import UniIcon from "../components/individual/DdlIcon.svelte";
     import DatePicker from "../components/merged/DatePicker.svelte";
     import ReminderSelector from "./ReminderSelector.svelte";
 
@@ -38,21 +38,21 @@
     /**
     * Toggle the dropdown menu open/close state.
     */
-    function toggleMenu() {
+    const toggleMenu = () => {
         menuOpen = !menuOpen;
     }
 
     /**
     * Close the dropdown menu.
     */
-    function closeMenu() {
+    const closeMenu = () => {
         menuOpen = false;
     }
 
     /**
     * Clear the selection made.
     */
-    function clearSelection() {
+    const clearSelection = () => {
         selectorTitle = ["", ""];
 
         dispatch("select", selectorTitle);
@@ -65,7 +65,7 @@
      *
      * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
      */
-    function handleSelect(event: CustomEvent<[string, string]>) {
+    const handleSelect = (event: CustomEvent<[string, string]>) => {
         selectorTitle = event.detail;
 
         dispatch("select", selectorTitle);
@@ -109,7 +109,7 @@
      *
      * @param {CustomEvent<[string, string]>} event - The event containing the selected date & time.
      */
-    function handleReminderSelect(event: CustomEvent<Reminder[]>) {
+    const handleReminderSelect = (event: CustomEvent<Reminder[]>) => {
         selectedReminderOptions = event.detail;
 
         handleReminderDate();
@@ -123,7 +123,7 @@
      * @param node - The DOM node to monitor for outside clicks.
      * @returns An object with a `destroy` method to clean up the event listener.
      */
-    function clickOutside(node: HTMLElement) {
+    const clickOutside = (node: HTMLElement) => {
         const handleClick = (event: MouseEvent) => {
             if (!node.contains(event.target as Node)) {
                 closeMenu();
