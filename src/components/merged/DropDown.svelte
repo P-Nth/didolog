@@ -50,7 +50,7 @@
 <div class="dropdown-container relative {className}" use:clickOutside>
     <div class="dropdown-header w-full flex items-center justify-between cursor-pointer">
         <div
-                class="title-button flex-1 flex items-center justify-between "
+                class="title-button flex-1 flex items-center justify-between mr-1"
                 role="menu"
                 tabindex="0"
                 on:click={() => menuOpen = !menuOpen}
@@ -67,7 +67,7 @@
         </div>
 
         {#if icons.length > 0}
-            <div class="icons-container flex gap-1 ml-1">
+            <div class="icons-container flex gap-1">
                 {#each icons as iconItem, i}
                     <div
                             class="cursor-pointer bg-none p-[3px] rounded hover:bg-blue-100"
