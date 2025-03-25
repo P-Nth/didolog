@@ -64,7 +64,7 @@
 <div class="workspace-list flex flex-col">
     {#each Object.values($workspaceStore) as workspace, i}
         <div
-                class="workspace-item rounded px-2"
+                class="workspace-item rounded"
                 class:bg-blue-50={workspace.isSelected}
                 role="option"
                 aria-selected="true"
@@ -80,6 +80,7 @@
                     {icons}
                     isOpenByDefault={workspace.isSelected}
                     on:select={handleTaskSelect}
+                    className="w-full px-2"
             />
         </div>
     {/each}

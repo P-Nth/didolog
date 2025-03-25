@@ -12,6 +12,12 @@
     import { blocksByTask, blockRegistry } from "../hooks/blockRegistry";
 
     /**
+     * Classname for the section
+     * @type {string}
+     */
+    export let className: string = '';
+
+    /**
      * Stores the current text input value for the note input field.
      * Used to determine if a placeholder message should be shown.
      * @type {string}
@@ -74,7 +80,7 @@
     - Binds `inputRefs` to store a reference for each input.
     - Handles events for input completion, selection, and typing.
 -->
-<div class="item-wrapper">
+<div class="item-wrapper {className}">
     <div class="input-wrapper">
         <div class="input-wrapper-content">
             {#if blockRegistry[type]?.[mode]}

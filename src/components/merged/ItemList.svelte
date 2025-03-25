@@ -6,13 +6,15 @@
     import Draggable from '../individual/Draggable.svelte';
     import Dropzone from '../individual/DropZone.svelte';
 
+    export let className: string = '';
+
     const handleDrop = (event: CustomEvent<{ blockId: string; position: number }>) => {
         updateBlockOrder(event.detail.blockId, event.detail.position);
     }
 
 </script>
 
-<div class="blocks-container flex flex-col">
+<div class="blocks-container flex flex-col {className}">
     {#each $blocksByTask as block, position (block.id)}
         <Dropzone {position} on:drop={handleDrop} data-position={position}>
             <Draggable

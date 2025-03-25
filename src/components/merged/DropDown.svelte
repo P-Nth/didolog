@@ -13,6 +13,7 @@
     export let selectedOption: any = null;
     export let icons: IconItem[] = [];
     export let isOpenByDefault: boolean = false;
+    export let className: string = "";
 
     $: menuOpen = isOpenByDefault;
 
@@ -46,8 +47,8 @@
     }
 </script>
 
-<div class="dropdown-container relative w-full" use:clickOutside>
-    <div class="dropdown-header flex items-center justify-between cursor-pointer">
+<div class="dropdown-container relative {className}" use:clickOutside>
+    <div class="dropdown-header w-full flex items-center justify-between cursor-pointer">
         <div
                 class="title-button flex-1 flex items-center justify-between "
                 role="menu"
@@ -84,7 +85,7 @@
     </div>
 
     {#if menuOpen}
-        <div class="dropdown-list absolute top-full left-0 right-0 bg-white border border-blue-50 rounded mt-1 list-none z-50 overflow-y-auto transition-all duration-200 ease-in-out">
+        <div class="dropdown-list absolute top-full w-full left-0 right-0 bg-white border border-blue-50 rounded mt-1 list-none z-50 overflow-y-auto transition-all duration-200 ease-in-out">
             {#if options.length === 0}
                 <span class="no-options">Nothing to see here!</span>
             {:else}
