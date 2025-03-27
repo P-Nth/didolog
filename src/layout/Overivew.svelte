@@ -6,7 +6,9 @@
 </script>
 
 <div class="overview flex flex-col gap-6">
-    <h1 class="text-base text-black-300">Overview</h1>
+    <header>
+        <h1 class="text-base text-black-300">Overview</h1>
+    </header>
 
     <section class="list-items flex gap-6">
         <div class="items flex flex-col">
@@ -20,11 +22,14 @@
                 <ItemInput />
             </div>
         </div>
+        <div class="calendar rounded-lg p-4 bg-[e3e3e3]">
+            <h2>Calendar View</h2>
+            <!--        <CalendarView />-->
+        </div>
     </section>
 
-    <section class="calendar rounded-lg p-4 bg-[e3e3e3]">
-        <h2>Calendar View</h2>
-        <!--        <CalendarView />-->
-    </section>
+    <footer class="footer flex flex-col gap-6">
+
+    </footer>
 </div>
 

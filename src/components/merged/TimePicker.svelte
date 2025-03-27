@@ -20,18 +20,6 @@
     const dispatch = createEventDispatcher<{ select: string }>();
 
     /**
-     * Formats a Date object to a "HH:MM" string.
-     *
-     * @param {Date} date - The date object to format.
-     * @returns {string} - The formatted time in "HH:MM" format.
-     */
-    const formatTime = (date: Date): string => {
-        let hours = date.getHours().toString().padStart(2, "0");
-        let minutes = date.getMinutes().toString().padStart(2, "0");
-        return `${hours}:${minutes}`;
-    }
-
-    /**
      * Gets the next nearest time that aligns with a 30-minute interval.
      * Ensures the selected time is rounded up to the nearest valid selection.
      *
@@ -93,6 +81,18 @@
         }
 
         return times;
+    }
+
+    /**
+     * Formats a Date object to a "HH:MM" string.
+     *
+     * @param {Date} date - The date object to format.
+     * @returns {string} - The formatted time in "HH:MM" format.
+     */
+    function formatTime(date: Date): string {
+        let hours = date.getHours().toString().padStart(2, "0");
+        let minutes = date.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`;
     }
 
     /**
